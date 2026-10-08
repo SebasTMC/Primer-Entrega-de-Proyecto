@@ -316,3 +316,18 @@ erDiagram
     ARTICULO ||--o{ MANTENIMIENTO : "requiere"
     PRODUCTO }|--|{ PROVEEDOR : "es surtido por"
 ```
+
+Justificación de Arquitectura y Limitaciones de Despliegue en GitHub Pages
+Durante la fase de integración del proyecto con entornos de alojamiento público, se evaluó la viabilidad de desplegar el Sistema de Visualización de Datos Sísmicos en GitHub Pages. Sin embargo, se identificaron incompatibilidades técnicas fundamentales que impidieron su hospedaje directo mediante esta plataforma:
+
+Incompatibilidad de Arquitectura (Backend vs. Estático):
+El sistema está concebido bajo una arquitectura dinámica basada en PHP y contenedores Docker, requiriendo un servidor web con motor de procesamiento del lado del servidor (como Apache o Nginx con PHP-FPM) para gestionar la lógica de negocio y las consultas. Por el contrario, GitHub Pages está diseñado exclusivamente para servir archivos estáticos (HTML, CSS, JS) y carece por completo de un entorno de ejecución de backend.
+
+Causa de Falla y Errores Previstos:
+
+Error 404 (File not found): Al no contar con un archivo de entrada estático nativo en la raíz del repositorio y depender de scripts del servidor, el enrutador de GitHub Pages no reconoce la estructura de la aplicación.
+
+Falta de interpretabilidad: Intentar servir archivos con lógica de servidor sin un motor de interpretación genera que el navegador interprete el código de forma incorrecta o muestre texto plano en lugar de la interfaz renderizada.
+
+Conclusión Tecnológica:
+Debido a la naturaleza dinámica del sistema y su dependencia de servicios contenerizados, se determina que GitHub Pages no es apto para este tipo de arquitecturas, siendo recomendable un despliegue en plataformas que soporten contenedores o ejecución de PHP (como Render, Railway, Vercel con serverless, o servidores VPS propios con Docker).
