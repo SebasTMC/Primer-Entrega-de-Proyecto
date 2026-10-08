@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sismicidad Nacional - DSS Sismos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Panel Lateral -->
+        <div class="w-1/4 bg-slate-900 text-white p-6 flex flex-col justify-between shadow-xl">
+            <div>
+                <div class="text-center mb-8">
+                    <span class="bg-blue-600/30 text-blue-400 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider border border-blue-500/30">Data Warehouse OLAP</span>
+                    <h1 class="text-xl font-bold mt-3 text-white tracking-wide">DSS - Sismos & Economía</h1>
+                </div>
+                <div class="space-y-3">
+                    <a href="sismos.html" class="w-full text-left p-3.5 bg-blue-600 rounded-xl font-medium transition block shadow-md">🗺️ Sismicidad Nacional</a>
+                    <a href="poblacion.html" class="w-full text-left p-3.5 bg-slate-800 rounded-xl font-medium transition block text-slate-300 hover:bg-slate-700 shadow-md">👥 Demografía INEGI</a>
+                    <a href="economia.html" class="w-full text-left p-3.5 bg-slate-800 rounded-xl font-medium transition block text-slate-300 hover:bg-slate-700 shadow-md">📈 Impacto Macroeconómico</a>
+                </div>
+            </div>
+            <div class="text-center border-t border-slate-800 pt-4">
+                <a href="../../index.html" class="inline-block bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2.5 rounded-lg text-sm transition font-medium border border-slate-700">← Volver al Menú Principal</a>
+            </div>
+        </div>
+        <!-- Contenido Principal -->
+        <div class="w-3/4 p-10 overflow-y-auto bg-slate-100 flex flex-col justify-between">
+            <div>
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-slate-800">Análisis Multidimensional de Sismicidad</h2>
+                    <p class="text-slate-500 text-sm">Registros consolidados y filtrados desde el Servicio Sismológico Nacional (SSN).</p>
+                </div>
+                <div class="grid grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Eventos Registrados</p>
+                        <p class="text-2xl font-bold text-slate-800 mt-1">4,285</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Magnitud Máxima</p>
+                        <p class="text-2xl font-bold text-red-600 mt-1">7.4 (M)</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Profundidad Promedio</p>
+                        <p class="text-2xl font-bold text-blue-600 mt-1">38.4 km</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100"><h3 class="font-bold text-slate-800">Cubo OLAP: Sismos de Mayor Relevancia</h3></div>
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-600 border-b border-slate-200 text-xs uppercase tracking-wider">
+                                <th class="p-4">Fecha / Hora (UTC)</th><th class="p-4">Magnitud</th><th class="p-4">Epicentro Geográfico</th><th class="p-4">Profundidad</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-700 divide-y divide-slate-100">
+                            <tr class="hover:bg-slate-50"><td class="p-4 font-medium">2026-04-12 14:22</td><td class="p-4"><span class="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold text-xs">6.1 (M)</span></td><td class="p-4">Ometepec, Guerrero</td><td class="p-4">15 km</td></tr>
+                            <tr class="hover:bg-slate-50"><td class="p-4 font-medium">2026-03-05 09:15</td><td class="p-4"><span class="bg-orange-100 text-orange-700 px-2 py-0.5 rounded font-bold text-xs">5.4 (M)</span></td><td class="p-4">Salina Cruz, Oaxaca</td><td class="p-4">32 km</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="mt-8 text-center text-xs text-slate-500 bg-white p-4 rounded-xl border shadow-sm">
+                💡 <strong>Nota técnica:</strong> Vista estática demostrativa. Entorno Docker local en <code class="text-blue-600 font-mono">http://localhost:8080</code>.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
