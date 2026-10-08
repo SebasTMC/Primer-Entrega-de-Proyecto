@@ -3,68 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sismicidad Nacional - DSS Sismos</title>
+    <title>Mapa de sismos registrados en México</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
-<body class="bg-slate-100 font-sans">
-    <div class="flex h-screen overflow-hidden">
-        <!-- Panel Lateral -->
-        <div class="w-1/4 bg-slate-900 text-white p-6 flex flex-col justify-between shadow-xl">
-            <div>
-                <div class="text-center mb-8">
-                    <span class="bg-blue-600/30 text-blue-400 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider border border-blue-500/30">Data Warehouse OLAP</span>
-                    <h1 class="text-xl font-bold mt-3 text-white tracking-wide">DSS - Sismos & Economía</h1>
+<body class="bg-slate-100 font-sans min-h-screen flex flex-col justify-between">
+
+    <div>
+        <!-- Barra superior azul -->
+        <header class="bg-blue-600 text-white shadow-md">
+            <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+                <h1 class="text-base font-bold">Mapa de sismos registrados en México</h1>
+                <a href="../index.html" class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-1.5 rounded text-xs font-medium transition">
+                    ← Volver al Dashboard
+                </a>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-6 py-6 space-y-6">
+            
+            <!-- Banner institucional rojo -->
+            <div class="bg-red-600 text-white rounded-lg shadow-md p-6 text-center">
+                <h2 class="text-2xl font-extrabold tracking-wide">Sistema de Visualización de Datos Sísmicos, MUTVI 2025, UAM Azcapotzalco</h2>
+                <p class="text-red-100 text-xs mt-1">Análisis de la población potencial afectada por actividad sísmica</p>
+            </div>
+
+            <!-- Panel de Filtros -->
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-6 items-center">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Año de Análisis</label>
+                    <select class="border border-slate-300 rounded px-3 py-1.5 text-sm bg-white font-medium text-slate-700 w-32">
+                        <option>2020</option>
+                        <option>2017</option>
+                        <option>2025</option>
+                        <option>2026</option>
+                    </select>
                 </div>
-                <div class="space-y-3">
-                    <a href="sismos.html" class="w-full text-left p-3.5 bg-blue-600 rounded-xl font-medium transition block shadow-md">🗺️ Sismicidad Nacional</a>
-                    <a href="poblacion.html" class="w-full text-left p-3.5 bg-slate-800 rounded-xl font-medium transition block text-slate-300 hover:bg-slate-700 shadow-md">👥 Demografía INEGI</a>
-                    <a href="economia.html" class="w-full text-left p-3.5 bg-slate-800 rounded-xl font-medium transition block text-slate-300 hover:bg-slate-700 shadow-md">📈 Impacto Macroeconómico</a>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Magnitud Mínima</label>
+                    <input type="number" value="5" class="border border-slate-300 rounded px-3 py-1.5 text-sm bg-white w-24 font-medium text-slate-700">
+                </div>
+                <div class="self-end">
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-1.5 rounded text-sm font-semibold transition shadow-sm">
+                        Aplicar Filtros
+                    </button>
                 </div>
             </div>
-            <div class="text-center border-t border-slate-800 pt-4">
-                <a href="../../index.html" class="inline-block bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2.5 rounded-lg text-sm transition font-medium border border-slate-700">← Volver al Menú Principal</a>
-            </div>
-        </div>
-        <!-- Contenido Principal -->
-        <div class="w-3/4 p-10 overflow-y-auto bg-slate-100 flex flex-col justify-between">
-            <div>
-                <div class="mb-6">
-                    <h2 class="text-2xl font-bold text-slate-800">Análisis Multidimensional de Sismicidad</h2>
-                    <p class="text-slate-500 text-sm">Registros consolidados y filtrados desde el Servicio Sismológico Nacional (SSN).</p>
+
+            <!-- Mapa Leaflet con Leyenda -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-3 relative">
+                <div id="map" class="w-full h-[400px] rounded-lg z-0"></div>
+                <div class="absolute bottom-6 right-6 bg-white/95 backdrop-blur p-3 rounded-lg shadow-md border border-slate-200 z-10 text-[10px] space-y-1 w-32">
+                    <p class="font-bold text-slate-800 border-b pb-1">Niveles de Impacto</p>
+                    <div class="flex items-center space-x-1.5"><span class="w-2.5 h-2.5 rounded-full bg-purple-700"></span><span>Extremo</span></div>
+                    <div class="flex items-center space-x-1.5"><span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span><span>Muy alto</span></div>
+                    <div class="flex items-center space-x-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span><span>Alto</span></div>
+                    <div class="flex items-center space-x-1.5"><span class="w-2.5 h-2.5 rounded-full bg-orange-400"></span><span>Medio</span></div>
+                    <div class="flex items-center space-x-1.5"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span><span>Bajo</span></div>
                 </div>
-                <div class="grid grid-cols-3 gap-6 mb-8">
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Eventos Registrados</p>
-                        <p class="text-2xl font-bold text-slate-800 mt-1">4,285</p>
+            </div>
+
+            <!-- Tarjetas de KPIs (Exactas a tu captura 2020) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 text-center">
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total de Sismos</p>
+                    <p class="text-3xl font-extrabold text-blue-600 mt-2">21</p>
+                    <p class="text-[11px] text-slate-500 mt-1">Sismos registrados en el período seleccionado</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 text-center">
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Población Potencialmente Afectada</p>
+                    <p class="text-3xl font-extrabold text-blue-600 mt-2">87,810,893</p>
+                    <p class="text-[11px] text-slate-500 mt-1">Personas en zonas cercanas a epicentros</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 text-center">
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Sismo con Mayor Impacto</p>
+                    <p class="text-3xl font-extrabold text-blue-600 mt-2">5.5</p>
+                    <p class="text-[11px] text-slate-500 mt-1">10/01/2020 - 131 km al SUROESTE DE CIHUATLAN, JAL</p>
+                </div>
+            </div>
+
+            <!-- Sección de Estadísticas y Gráficas -->
+            <div class="space-y-4 pt-4">
+                <h3 class="text-lg font-bold text-slate-800">Estadísticas obtenidas</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Gráfica 1: Distribución de Magnitudes -->
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                        <h4 class="font-bold text-slate-700 text-center text-sm mb-3">Distribución de Magnitudes</h4>
+                        <div class="h-40 flex items-end justify-around border-b border-l border-slate-300 pb-2 px-2">
+                            <div class="w-8 bg-indigo-400 h-[90%] rounded-t"></div>
+                            <div class="w-8 bg-indigo-400 h-[15%] rounded-t"></div>
+                            <div class="w-8 bg-indigo-400 h-[10%] rounded-t"></div>
+                            <div class="w-8 bg-indigo-400 h-[20%] rounded-t"></div>
+                        </div>
+                        <div class="flex justify-around text-[10px] text-slate-500 mt-2 font-medium">
+                            <span>5.0</span><span>5.5</span><span>6.0</span><span>6.5</span><span>7.0</span><span>7.5</span><span>8.0</span>
+                        </div>
                     </div>
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Magnitud Máxima</p>
-                        <p class="text-2xl font-bold text-red-600 mt-1">7.4 (M)</p>
+
+                    <!-- Gráfica 2: Correlación Magnitud vs Profundidad -->
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                        <h4 class="font-bold text-slate-700 text-center text-sm mb-3">Correlación Magnitud vs Profundidad</h4>
+                        <div class="h-40 border-b border-l border-slate-300 relative flex items-center justify-center">
+                            <div class="absolute inset-4 flex justify-between items-center opacity-70">
+                                <span class="w-2 h-2 rounded-full bg-rose-500 absolute top-10 left-6"></span>
+                                <span class="w-2 h-2 rounded-full bg-rose-500 absolute top-20 left-16"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-rose-600 absolute top-4 left-1/2"></span>
+                            </div>
+                            <span class="text-xs text-slate-400">Diagrama de dispersión</span>
+                        </div>
                     </div>
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Profundidad Promedio</p>
-                        <p class="text-2xl font-bold text-blue-600 mt-1">38.4 km</p>
+
+                    <!-- Gráfica 3: Sismos por Mes -->
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                        <h4 class="font-bold text-slate-700 text-center text-sm mb-3">Sismos por Mes</h4>
+                        <div class="h-40 flex items-end justify-around border-b border-l border-slate-300 pb-2 px-2">
+                            <div class="w-4 bg-emerald-500 h-[90%] rounded-t"></div>
+                            <div class="w-4 bg-emerald-500 h-[25%] rounded-t"></div>
+                            <div class="w-4 bg-emerald-500 h-[25%] rounded-t"></div>
+                            <div class="w-4 bg-emerald-500 h-[15%] rounded-t"></div>
+                            <div class="w-4 bg-emerald-500 h-[25%] rounded-t"></div>
+                            <div class="w-4 bg-emerald-500 h-[40%] rounded-t"></div>
+                            <div class="w-4 bg-emerald-500 h-[25%] rounded-t"></div>
+                            <div class="w-4 bg-emerald-500 h-[15%] rounded-t"></div>
+                        </div>
+                        <div class="flex justify-around text-[10px] text-slate-500 mt-2 font-medium">
+                            <span>Ene</span><span>Feb</span><span>Mar</span><span>Abr</span><span>May</span><span>Jun</span><span>Jul</span><span>Ago</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dic</span>
+                        </div>
+                    </div>
+
+                    <!-- Gráfica 4: Población Afectada vs Magnitud -->
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                        <h4 class="font-bold text-slate-700 text-center text-sm mb-3">Población Afectada vs Magnitud</h4>
+                        <div class="h-40 border-b border-l border-slate-300 relative flex items-center justify-center">
+                            <div class="absolute inset-4 flex justify-between items-center opacity-70">
+                                <span class="w-2 h-2 rounded-full bg-purple-600 absolute top-8 left-10"></span>
+                                <span class="w-2 h-2 rounded-full bg-purple-700 absolute top-4 left-24"></span>
+                            </div>
+                            <span class="text-xs text-slate-400">Dispersión poblacional</span>
+                        </div>
                     </div>
                 </div>
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="p-6 border-b border-slate-100"><h3 class="font-bold text-slate-800">Cubo OLAP: Sismos de Mayor Relevancia</h3></div>
-                    <table class="w-full text-left border-collapse text-sm">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-600 border-b border-slate-200 text-xs uppercase tracking-wider">
-                                <th class="p-4">Fecha / Hora (UTC)</th><th class="p-4">Magnitud</th><th class="p-4">Epicentro Geográfico</th><th class="p-4">Profundidad</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-slate-700 divide-y divide-slate-100">
-                            <tr class="hover:bg-slate-50"><td class="p-4 font-medium">2026-04-12 14:22</td><td class="p-4"><span class="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold text-xs">6.1 (M)</span></td><td class="p-4">Ometepec, Guerrero</td><td class="p-4">15 km</td></tr>
-                            <tr class="hover:bg-slate-50"><td class="p-4 font-medium">2026-03-05 09:15</td><td class="p-4"><span class="bg-orange-100 text-orange-700 px-2 py-0.5 rounded font-bold text-xs">5.4 (M)</span></td><td class="p-4">Salina Cruz, Oaxaca</td><td class="p-4">32 km</td></tr>
-                        </tbody>
-                    </table>
-                </div>
             </div>
-            <div class="mt-8 text-center text-xs text-slate-500 bg-white p-4 rounded-xl border shadow-sm">
-                💡 <strong>Nota técnica:</strong> Vista estática demostrativa. Entorno Docker local en <code class="text-blue-600 font-mono">http://localhost:8080</code>.
-            </div>
-        </div>
+
+        </main>
     </div>
+
+    <footer class="text-center py-4 text-xs text-slate-500 border-t border-slate-200 bg-white mt-10">
+        Sistema de Apoyo a Decisiones para Análisis de Sismos en México &copy; 2026
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const map = L.map('map').setView([19.4326, -99.1332], 6);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: 'Leaflet | OpenStreetMap'
+        }).addTo(map);
+    </script>
 </body>
 </html>
