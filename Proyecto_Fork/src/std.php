@@ -21,7 +21,7 @@
             padding: 20px;
         }
         header {
-            background: linear-gradient(135deg, #ff0000, #b71c1c); /* Red background gradient */
+            background: linear-gradient(135deg, #ff0000, #b71c1c);
             color: white;
             padding: 30px;
             text-align: center;
@@ -34,7 +34,7 @@
             font-family: 'Montserrat', sans-serif;
             font-weight: 600;
             font-size: 2.2em;
-            color: #ffffff; /* White text color */
+            color: #ffffff;
         }
         #map {
             height: 600px;
@@ -255,16 +255,14 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Conexión a PostgreSQL (centralized data warehouse)
-$host = getenv('POSTGRES_HOST') ?: 'db';
-$port = "5432";
+$host = getenv('POSTGRES_HOST') ?: 'db';$port = "5432";
 $username = "postgres";
 $password = "postgres";
 $database = "datawarehouse";
 
 function log_error($message) {
-    $log_file = 'dss_error.log';
-    $timestamp = date('Y-m-d H:i:s');
-    file_put_contents($log_file, "[$timestamp] $message\n", FILE_APPEND);
+    $log_file = 'dss_error.log';$timestamp = date('Y-m-d H:i:s');
+    file_put_contents($log_file, "[$timestamp]$message\n", FILE_APPEND);
 }
 
 try {
@@ -275,7 +273,7 @@ try {
     }
 
     // Valores predeterminados
-    $anioSeleccionado = isset($_GET['anio']) ? $_GET['anio'] : "2020";
+    $anioSeleccionado = isset($_GET['anio']) ?$_GET['anio'] : "2020";
     $magnitudMinima = isset($_GET['magnitud']) ? floatval($_GET['magnitud']) : 5.0;
 
     // Obtener datos de sismos desde la fact table
@@ -296,26 +294,24 @@ try {
             AND dt.anio = $2
             ORDER BY ds.magnitud DESC";
     
-    $result = pg_query_params($conn, $sql, array($magnitudMinima, $anioSeleccionado));
+    $result = pg_query_params($conn,$sql, array($magnitudMinima,$anioSeleccionado));
     
     if (!$result) {
         throw new Exception("Query failed: " . pg_last_error($conn));
     }
 
-    $sismosProcesados = [];
-    $totalSismos = 0;
+    $sismosProcesados = [];$totalSismos = 0;
     $poblacionTotalAfectada = 0;
     $sismoConMayorImpacto = null;
     $maxImpactoEconomico = 0;
 
-    while ($row = pg_fetch_assoc($result)) {
-        $totalSismos++;
+    while ($row = pg_fetch_assoc($result)) {$totalSismos++;
         $poblacionTotalAfectada += (int)$row['poblacion_afectada'];
         
         $impacto = floatval($row['impacto_economico']);
-        if ($impacto > $maxImpactoEconomico) {
-            $maxImpactoEconomico = $impacto;
-            $sismoConMayorImpacto = $row;
+        if ($impacto >$maxImpactoEconomico) {
+            $maxImpactoEconomico =$impacto;
+            $sismoConMayorImpacto =$row;
         }
 
         $sismosProcesados[] = [
@@ -353,8 +349,7 @@ try {
                     <select name="anio" id="anio">
                         <?php
                         $anios = range(2025, 1900);
-                        foreach ($anios as $anio) {
-                            $selected = ($anio == $anioSeleccionado) ? "selected" : "";
+                        foreach ($anios as $anio) {$selected = ($anio ==$anioSeleccionado) ? "selected" : "";
                             echo "<option value=\"$anio\" $selected>$anio</option>";
                         }
                         ?>
@@ -516,7 +511,7 @@ try {
         noDataMessage.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
         noDataMessage.style.zIndex = '1000';
         noDataMessage.style.textAlign = 'center';
-        noDataMessage.innerHTML = '<h3 style="margin-top:0; color:#3f51b5;">No hay datos de sismos</h3><p>Intenta con diferentes filtros o parámetrosPRESUPUESTO de búsqueda</p>';
+        noDataMessage.innerHTML = '<h3 style="margin-top:0; color:#3f51b5;">No hay datos de sismos</h3><p>Intenta con diferentes filtros o parámetros de búsqueda</p>';
         document.getElementById('map').appendChild(noDataMessage);
     }
     

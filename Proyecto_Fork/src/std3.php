@@ -214,15 +214,15 @@ $password = "postgres";
 $database = "datawarehouse";
 
 $entidades = array(
-    "01" => "Aguascalientes", "02" => "Baja California", "03" => "Baja California Sur",
-    "04" => "Campeche", "05" => "Coahuila", "06" => "Colima", "07" => "Chiapas",
-    "08" => "Chihuahua", "09" => "Ciudad de México", "10" => "Durango",
-    "11" => "Guanajuato", "12" => "Guerrero", "13" => "Hidalgo", "14" => "Jalisco",
-    "15" => "Estado de México", "16" => "Michoacán", "17" => "Morelos",
-    "18" => "Nayarit", "19" => "Nuevo León", "20" => "Oaxaca", "21" => "Puebla",
-    "22" => "Querétaro", "23" => "Quintana Roo", "24" => "San Luis Potosí",
-    "25" => "Sinaloa", "26" => "Sonora", "27" => "Tabasco", "28" => "Tamaulipas",
-    "29" => "Tlaxcala", "30" => "Veracruz", "31" => "Yucatán", "32" => "Zacatecas"
+    "00" => "Aguascalientes", "01" => "Baja California", "02" => "Baja California Sur",
+    "03" => "Campeche", "04" => "Coahuila", "05" => "Colima", "06" => "Chiapas",
+    "07" => "Chihuahua", "08" => "Ciudad de México", "09" => "Durango",
+    "10" => "Guanajuato", "11" => "Guerrero", "12" => "Hidalgo", "13" => "Jalisco",
+    "14" => "Estado de México", "15" => "Michoacán", "16" => "Morelos",
+    "17" => "Nayarit", "18" => "Nuevo León", "19" => "Oaxaca", "20" => "Puebla",
+    "21" => "Querétaro", "22" => "Quintana Roo", "23" => "San Luis Potosí",
+    "24" => "Sinaloa", "25" => "Sonora", "26" => "Tabasco", "27" => "Tamaulipas",
+    "28" => "Tlaxcala", "29" => "Veracruz", "30" => "Yucatán", "31" => "Zacatecas"
 );
 
 $mapeoGeoJson = array(
@@ -258,13 +258,13 @@ try {
     }
 
     $sql = "SELECT 
-                entidad,
+                id_economia AS entidad,
                 nombre_entidad AS nombre,
                 COALESCE(produccion_bruta_total, 0) AS produccion_total,
                 COALESCE(consumo_intermedio, 0) AS consumo_intermedio,
                 COALESCE(valor_agregado, 0) AS valor_agregado
             FROM dim_economia 
-            ORDER BY entidad";
+            ORDER BY id_economia";
 
     $result = pg_query($conn, $sql);
     if (!$result) {
@@ -566,7 +566,6 @@ try {
         }
     });
 
-    // Gráfico de comparación de indicadores por entidad
     new Chart(document.getElementById('comparacionIndicadores'), {
         type: 'bar',
         data: {
@@ -610,7 +609,6 @@ try {
         }
     });
 
-    // Gráfico de top 10 entidades
     const topEntidades = datosEconomicos.slice(0, 10);
 
     new Chart(document.getElementById('topEntidades'), {

@@ -253,7 +253,7 @@ try {
     $conn_string = "host=$host port=$port dbname=$database user=$username password=$password";
     $conn = pg_connect($conn_string);
     if (!$conn) {
-        throw new Exception("Error en la conexión a la base de datos: " . ($conn ? pg_last_error($conn) : 'Connection refused'));
+        throw new Exception("Error en la conexión a la base de datos: " . pg_last_error());
     }
 
     // Consulta para obtener datos agregados por entidad
@@ -284,10 +284,7 @@ try {
         $poblacionMasculina += (int)$row['poblacion_masculina'];
     }
 
-    // Consulta para obtener datos por municipio (simulada, ya que dim_zonas no incluye municipio)
-    // Nota: La tabla dim_zonas no tiene datos a nivel municipio. Si se desea mantener esta funcionalidad,
-    // se necesitaría una tabla adicional en el data warehouse o un nivel de agregación diferente.
-    $datosMunicipios = []; // Placeholder, ya que no hay datos de municipios en dim_zonas
+    $datosMunicipios = []; 
 
     pg_close($conn);
 
@@ -472,8 +469,6 @@ try {
     }
 
     function createStateCharts(stateName) {
-        // Nota: Como dim_zonas no incluye datos de municipios, esta funcionalidad está limitada
-        // Se muestra un mensaje indicando que no hay datos de municipios
         document.getElementById('selected-state').textContent = stateName;
         document.getElementById('state-statistics').style.display = 'block';
 
