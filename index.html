@@ -3,247 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Integral de Gestión Escolar - Primaria</title>
+    <title>Portafolio de Proyectos - Sistemas de Información</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #1e3a8a;
-            --secondary-color: #3b82f6;
-            --accent-color: #10b981;
-            --bg-color: #f8fafc;
-            --text-color: #334155;
-        }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f6f9;
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #333;
         }
         header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, #1a237e, #283593);
             color: white;
-            padding: 1.5rem;
+            padding: 40px 20px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        nav {
-            display: flex;
-            justify-content: center;
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            padding: 0.5rem;
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            font-size: 2.5em;
         }
-        nav button {
-            background: none;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-            font-weight: bold;
-            color: var(--text-color);
-            cursor: pointer;
-            transition: color 0.3s, border-bottom 0.3s;
+        p.subtitle {
+            margin-top: 10px;
+            opacity: 0.85;
+            font-size: 1.1em;
         }
-        nav button.active {
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--secondary-color);
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            flex-grow: 1;
         }
-        main {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        .tab-content {
-            display: none;
+        .card {
             background: white;
-            border-radius: 8px;
-            padding: 2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        .tab-content.active {
-            display: block;
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
         }
-        h2 {
-            color: var(--primary-color);
+        .card h2 {
+            font-family: 'Montserrat', sans-serif;
+            color: #1a237e;
             margin-top: 0;
+            font-size: 1.5em;
         }
-        .form-group {
-            margin-bottom: 1rem;
+        .card p {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-bottom: 25px;
         }
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-        input, select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
-        button.btn-submit {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        button.btn-submit:hover {
-            background-color: #059669;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-        th, td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        th {
-            background-color: #f1f5f9;
-            color: var(--primary-color);
-        }
-        .alert {
-            padding: 0.75rem;
-            background-color: #d1fae5;
-            color: #065f46;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-            display: none;
-        }
-        .btn-link {
+        .btn {
             display: inline-block;
-            margin-top: 1.5rem;
-            color: var(--secondary-color);
+            background-color: #3f51b5;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 6px;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 500;
+            transition: background-color 0.2s;
         }
-        .btn-link:hover {
-            text-decoration: underline;
+        .btn:hover {
+            background-color: #303f9f;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #e8eaf6;
+            color: #555;
+            font-size: 0.9em;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Sistema de Gestión Escolar - Primaria</h1>
-        <p>Interfaz Operativa y Módulo de Demostración </p>
+        <h1>Portafolio de Sistemas de Información</h1>
+        <p class="subtitle">Evaluación de Proyectos Académicos</p>
     </header>
 
-    <nav>
-        <button class="tab-btn active" onclick="switchTab(event, 'inicio')">Inicio / Dashboard</button>
-        <button class="tab-btn active" onclick="switchTab(event, 'alumnos')" style="border-bottom:none;">Control de Alumnos</button>
-    </nav>
-
-    <main>
-        <!-- SECCIÓN INICIO -->
-        <div id="inicio" class="tab-content active">
-            <h2>Bienvenido al Sistema Operativo</h2>
-            <p>Esta fachada interactiva permite simular la captura de registros y la gestión de control escolar para la primaria de alta demanda.</p>
-            <ul>
-                <li><strong>Gestión Académica:</strong> Registro y control en tiempo real de alumnos y grupos.</li>
-                <li><strong>Arquitectura Escalable:</strong> Diseñado para enlazarse con bases de datos relacionales normalizadas.</li>
-            </ul>
-            <a href="Documentacion.md" class="btn-link">← Ver Documentación Técnica Completa</a>
+    <div class="container">
+        <!-- Proyecto Primaria -->
+        <div class="card">
+            <div>
+                <h2>Sistema de Gestión Escolar</h2>
+                <p>Plataforma interactiva orientada al control operativo, registro de alumnos y gestión académica para una institución de educación primaria.</p>
+            </div>
+            <div>
+                <a href="Proyecto_Primaria/index.html" class="btn">Ver Proyecto Primaria</a>
+            </div>
         </div>
 
-        <!-- SECCIÓN CONTROL DE ALUMNOS (INTERACTIVA) -->
-        <div id="alumnos" class="tab-content">
-            <h2>Registro de Nuevo Alumno</h2>
-            <div id="successAlert" class="alert">¡Alumno registrado y agregado a la tabla exitosamente!</div>
-            
-            <form id="studentForm" onsubmit="addStudent(event)">
-                <div class="form-group">
-                    <label for="nombre">Nombre Completo del Alumno:</label>
-                    <input type="text" id="nombre" required placeholder="Ej. Juan Pérez López">
-                </div>
-                <div class="form-group">
-                    <label for="curp">CURP:</label>
-                    <input type="text" id="curp" required placeholder="Ej. PELJ150312HDF...">
-                </div>
-                <div class="form-group">
-                    <label for="grado">Grado y Grupo:</label>
-                    <select id="grado">
-                        <option value="1° A">1° Grado - Grupo A</option>
-                        <option value="2° B">2° Grado - Grupo B</option>
-                        <option value="3° A">3° Grado - Grupo C</option>
-                        <option value="4° C">4° Grado - Grupo D</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-submit">Registrar Alumno</button>
-            </form>
-
-            <h3 style="margin-top: 2rem;">Alumnos Registrados Recientemente</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>CURP</th>
-                        <th>Grado/Grupo</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody id="studentTableBody">
-                    <tr>
-                        <td>María Fernanda Gómez</td>
-                        <td>GOMF180422MDF...</td>
-                        <td>2° B</td>
-                        <td><span style="color: green; font-weight: bold;">Activo</span></td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- Proyecto Sismos y Economía (Fork) -->
+        <div class="card">
+            <div>
+                <h2>DSS - Sismos y Análisis Económico</h2>
+                <p>Sistema de Apoyo a Decisiones (DSS) con Data Warehouse que integra sismos, demografía y métricas de producción económica en México.</p>
+            </div>
+            <div>
+                <a href="Proyecto_Fork/src/std.php" class="btn">Ver Proyecto Sismos</a>
+            </div>
         </div>
-    </main>
+    </div>
 
-    <script>
-        function switchTab(evt, tabName) {
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(c => c.classList.remove('active'));
-
-            const buttons = document.querySelectorAll('nav button');
-            buttons.forEach(b => b.classList.remove('active'));
-
-            document.getElementById(tabName).classList.add('active');
-            evt.currentTarget.classList.add('active');
-        }
-
-        function addStudent(event) {
-            event.preventDefault();
-            
-            const nombre = document.getElementById('nombre').value;
-            const curp = document.getElementById('curp').value;
-            const grado = document.getElementById('grado').value;
-
-            const tbody = document.getElementById('studentTableBody');
-            const newRow = document.createElement('tr');
-            
-            newRow.innerHTML = `
-                <td>${nombre}</td>
-                <td>${curp}</td>
-                <td>${grado}</td>
-                <td><span style="color: green; font-weight: bold;">Activo</span></td>
-            `;
-            
-            tbody.appendChild(newRow);
-
-            // Mostrar alerta de éxito
-            const alertBox = document.getElementById('successAlert');
-            alertBox.style.display = 'block';
-            setTimeout(() => {
-                alertBox.style.display = 'none';
-            }, 3000);
-
-            // Limpiar formulario
-            document.getElementById('studentForm').reset();
-        }
-    </script>
+    <footer>
+        <p>Entregas Académicas - Ingeniería en Sistemas Computacionales</p>
+    </footer>
 
 </body>
 </html>
