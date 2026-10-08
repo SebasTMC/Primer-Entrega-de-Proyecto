@@ -4,127 +4,237 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestión Escolar - Primaria</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f4f6f9;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-        header {
-            background: linear-gradient(135deg, #1565c0, #1976d2);
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        h1 {
-            font-family: 'Montserrat', sans-serif;
-            margin: 0;
-            font-size: 2.2em;
-        }
-        p.subtitle {
-            margin-top: 8px;
-            opacity: 0.9;
-            font-size: 1.05em;
-        }
-        nav {
-            background-color: #ffffff;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            padding: 12px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        nav a {
-            text-decoration: none;
-            color: #1565c0;
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-        }
-        nav a:hover, nav a.active {
-            background-color: #e3f2fd;
-        }
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        .card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            padding: 30px;
-            margin-bottom: 20px;
-        }
-        .card h2 {
-            font-family: 'Montserrat', sans-serif;
-            color: #1565c0;
-            margin-top: 0;
-        }
-        .card p {
-            color: #555;
-            line-height: 1.6;
-        }
-        ul {
-            color: #555;
-            line-height: 1.6;
-        }
-        .back-link {
-            display: inline-block;
-            margin-top: 15px;
-            color: #1565c0;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #777;
-            font-size: 0.85em;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-slate-100 font-sans">
 
-    <header>
-        <h1>Sistema de Gestión Escolar - Primaria</h1>
-        <p class="subtitle">Interfaz Operativa y Módulo de Demostración</p>
-    </header>
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Panel Lateral de Navegación -->
+        <div class="w-1/4 bg-slate-900 text-white p-6 flex flex-col justify-between shadow-xl">
+            <div>
+                <div class="text-center mb-8">
+                    <span class="bg-emerald-600/30 text-emerald-400 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider border border-emerald-500/30">Control Operativo</span>
+                    <h1 class="text-xl font-bold mt-3 text-white tracking-wide">
+                        Gestión Escolar Primaria
+                    </h1>
+                </div>
+                
+                <div class="space-y-3">
+                    <button onclick="showSection('dashboard')" id="btn-dashboard" class="w-full text-left p-3.5 bg-emerald-600 rounded-xl font-medium transition hover:bg-emerald-500 flex items-center space-x-3 shadow-md">
+                        <span class="text-lg">📊</span> 
+                        <div>
+                            <div class="text-sm font-bold">Dashboard General</div>
+                            <div class="text-xs text-emerald-200">Métricas y Resumen Escolar</div>
+                        </div>
+                    </button>
+                    <button onclick="showSection('alumnos')" id="btn-alumnos" class="w-full text-left p-3.5 bg-slate-800 rounded-xl font-medium transition hover:bg-slate-700 flex items-center space-x-3 text-slate-300 shadow-md">
+                        <span class="text-lg">👩‍🎓</span> 
+                        <div>
+                            <div class="text-sm font-bold">Control de Alumnos</div>
+                            <div class="text-xs text-slate-400">Matrículas, Grupos y Estatus</div>
+                        </div>
+                    </button>
+                    <button onclick="showSection('academico')" id="btn-academico" class="w-full text-left p-3.5 bg-slate-800 rounded-xl font-medium transition hover:bg-slate-700 flex items-center space-x-3 text-slate-300 shadow-md">
+                        <span class="text-lg">📚</span> 
+                        <div>
+                            <div class="text-sm font-bold">Gestión Académica</div>
+                            <div class="text-xs text-slate-400">Docentes, Materias y Calificaciones</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
 
-    <nav>
-        <a href="#" class="active">Inicio / Dashboard</a>
-        <a href="#">Control de Alumnos</a>
-    </nav>
+            <div class="text-center border-t border-slate-800 pt-4">
+                <a href="../index.html" class="inline-block bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2.5 rounded-lg text-sm transition font-medium border border-slate-700">
+                    ← Volver al Menú Principal
+                </a>
+            </div>
+        </div>
 
-    <div class="container">
-        <div class="card">
-            <h2>Bienvenido al Sistema Operativo</h2>
-            <p>Esta fachada interactiva permite simular la captura de registros y la gestión de control escolar para la primaria de alta demanda.</p>
+        <!-- Área Principal de Visualización -->
+        <div class="w-3/4 p-10 overflow-y-auto bg-slate-100 flex flex-col justify-between">
             
-            <ul>
-                <li><strong>Gestión Académica:</strong> Registro y control en tiempo real de alumnos y grupos.</li>
-                <li><strong>Arquitectura Escalable:</strong> Diseñado para enlazarse con bases de datos relacionales normalizadas.</li>
-            </ul>
+            <div>
+                <!-- SECCIÓN 1: DASHBOARD GENERAL -->
+                <div id="section-dashboard" class="content-section">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-slate-800">Panel de Control Institucional</h2>
+                        <p class="text-slate-500 text-sm">Resumen general de la operación del plantel de educación primaria.</p>
+                    </div>
 
-            <a href="#" class="back-link">Ver Documentación Técnica Completa</a>
+                    <!-- Tarjetas KPI -->
+                    <div class="grid grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Matrícula Total Activa</p>
+                            <p class="text-2xl font-bold text-slate-800 mt-1">640 Alumnos</p>
+                            <span class="text-xs text-emerald-600 font-medium">↑ 100% Capacidad Óptima</span>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Docentes Registrados</p>
+                            <p class="text-2xl font-bold text-emerald-600 mt-1">24 Profesores</p>
+                            <span class="text-xs text-slate-500 font-medium">Planta docente completa</span>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Promedio General</p>
+                            <p class="text-2xl font-bold text-blue-600 mt-1">9.1 / 10</p>
+                            <span class="text-xs text-slate-500 font-medium">Rendimiento sobresaliente</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+                        <h3 class="font-bold text-slate-800 mb-4">Arquitectura del Sistema Escolar</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                            Este módulo está diseñado para administrar de forma estructurada el control escolar, permitiendo transacciones normalizadas para la captura de calificaciones, asistencias y expedientes individuales por alumno y grupo.
+                        </p>
+                        <div class="flex gap-4">
+                            <button onclick="showSection('alumnos')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+                                Ver Control de Alumnos →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 2: CONTROL DE ALUMNOS (FUNCIONALIDAD INTEGRADA) -->
+                <div id="section-alumnos" class="content-section hidden">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-slate-800">Módulo de Control de Alumnos</h2>
+                        <p class="text-slate-500 text-sm">Base de datos de inscripciones, expedientes y estatus académico actual.</p>
+                    </div>
+
+                    <!-- Tarjetas KPI -->
+                    <div class="grid grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Alumnos Regulares</p>
+                            <p class="text-2xl font-bold text-emerald-600 mt-1">615</p>
+                            <span class="text-xs text-slate-500 font-medium">Sin adeudos académicos</span>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Alumnos en Seguimiento</p>
+                            <p class="text-2xl font-bold text-amber-600 mt-1">25</p>
+                            <span class="text-xs text-slate-500 font-medium">Apoyo pedagógico</span>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Grupos Totales</p>
+                            <p class="text-2xl font-bold text-blue-600 mt-1">12 Grupos</p>
+                            <span class="text-xs text-slate-500 font-medium">1° a 6° Grado</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                            <h3 class="font-bold text-slate-800">Listado General de Registros Estudiantiles</h3>
+                            <span class="text-xs bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-medium">Base de Datos Activa</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-slate-50 text-slate-600 border-b border-slate-200 text-xs uppercase tracking-wider">
+                                        <th class="p-4">Matrícula</th>
+                                        <th class="p-4">Nombre Completo</th>
+                                        <th class="p-4">Grado y Grupo</th>
+                                        <th class="p-4">Promedio Parcial</th>
+                                        <th class="p-4">Estatus</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-slate-700 divide-y divide-slate-100">
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono font-medium text-slate-900">2026-PRI-001</td><td class="p-4">Sofía Martínez Pérez</td><td class="p-4">3° A</td><td class="p-4 font-semibold text-emerald-600">9.4</td><td class="p-4"><span class="bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded text-xs font-semibold">Regular</span></td></tr>
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono font-medium text-slate-900">2026-PRI-002</td><td class="p-4">Alejandro Gómez Ruiz</td><td class="p-4">4° B</td><td class="p-4 font-semibold text-blue-600">8.9</td><td class="p-4"><span class="bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded text-xs font-semibold">Regular</span></td></tr>
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono font-medium text-slate-900">2026-PRI-003</td><td class="p-4">Valentina Torres López</td><td class="p-4">5° A</td><td class="p-4 font-semibold text-emerald-600">9.7</td><td class="p-4"><span class="bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded text-xs font-semibold">Regular</span></td></tr>
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono font-medium text-slate-900">2026-PRI-004</td><td class="p-4">Mateo Hernández Silva</td><td class="p-4">2° C</td><td class="p-4 font-semibold text-amber-600">7.8</td><td class="p-4"><span class="bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded text-xs font-semibold">Seguimiento</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 3: GESTIÓN ACADÉMICA -->
+                <div id="section-academico" class="content-section hidden">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-slate-800">Administración de Asignaturas y Docentes</h2>
+                        <p class="text-slate-500 text-sm">Control de planes de estudio y asignación de profesores por grado escolar.</p>
+                    </div>
+
+                    <!-- Tarjetas KPI -->
+                    <div class="grid grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Materias Activas</p>
+                            <p class="text-2xl font-bold text-slate-800 mt-1">8 Asignaturas</p>
+                            <span class="text-xs text-slate-500 font-medium">Plan oficial SEP</span>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Eficiencia Terminal</p>
+                            <p class="text-2xl font-bold text-emerald-600 mt-1">98.2%</p>
+                            <span class="text-xs text-slate-500 font-medium">Ciclo escolar actual</span>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Aulas Equipadas</p>
+                            <p class="text-2xl font-bold text-blue-600 mt-1">12 / 12</p>
+                            <span class="text-xs text-slate-500 font-medium">100% Operativas</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                            <h3 class="font-bold text-slate-800">Plantilla Docente y Asignación de Materias</h3>
+                            <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">Asignaciones Vigentes</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-slate-50 text-slate-600 border-b border-slate-200 text-xs uppercase tracking-wider">
+                                        <th class="p-4">Docente Encargado</th>
+                                        <th class="p-4">Grado y Grupo</th>
+                                        <th class="p-4">Especialidad</th>
+                                        <th class="p-4">Carga Horaria</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-slate-700 divide-y divide-slate-100">
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-medium text-slate-900">Lic. María Elena Morales</td><td class="p-4">1° Grado - Grupo A</td><td class="p-4">Pedagogía Infantil</td><td class="p-4">30 hrs/sem</td></tr>
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-medium text-slate-900">Prof. Carlos Alberto Ramírez</td><td class="p-4">3° Grado - Grupo A</td><td class="p-4">Matemáticas y Ciencias</td><td class="p-4">30 hrs/sem</td></tr>
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-medium text-slate-900">Lic. Ana Laura Domínguez</td><td class="p-4">5° Grado - Grupo B</td><td class="p-4">Lengua y Literatura</td><td class="p-4">30 hrs/sem</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Aviso inferior técnico -->
+            <div class="mt-8 text-center text-xs text-slate-500 bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-center space-x-2">
+                <span>💡</span>
+                <span><strong>Nota técnica de exposición:</strong> Módulo escolar estático de alta fidelidad. Para interactuar con formularios de inserción y bases de datos relacionales en backend, consulte el entorno local.</span>
+            </div>
+
         </div>
 
-        <div style="text-align: center;">
-            <a href="../index.html" class="back-link" style="font-size: 1.1em;">← Volver al Menú Principal de Proyectos</a>
-        </div>
     </div>
 
-    <footer>
-        <p>Instituto Politécnico Nacional • ESCOM • Ingeniería en Sistemas Computacionales</p>
-    </footer>
+    <!-- Script de Pestañas Interactivas -->
+    <script>
+        function showSection(sectionName) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.content-section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+            
+            // Restablecer estilos de todos los botones del panel lateral
+            ['dashboard', 'alumnos', 'academico'].forEach(name => {
+                const btn = document.getElementById('btn-' + name);
+                btn.classList.remove('bg-emerald-600', 'text-white');
+                btn.classList.add('bg-slate-800', 'text-slate-300');
+            });
+
+            // Mostrar la sección seleccionada
+            document.getElementById('section-' + sectionName).classList.remove('hidden');
+
+            // Activar el botón correspondiente
+            const activeBtn = document.getElementById('btn-' + sectionName);
+            activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
+            activeBtn.classList.add('bg-emerald-600', 'text-white');
+        }
+    </script>
 
 </body>
 </html>
