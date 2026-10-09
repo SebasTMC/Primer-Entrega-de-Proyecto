@@ -11,42 +11,68 @@
     <div class="flex h-screen overflow-hidden">
         
         <!-- Panel Lateral de Navegación -->
-        <div class="w-1/4 bg-slate-900 text-white p-6 flex flex-col justify-between shadow-xl">
+        <div class="w-1/4 bg-slate-900 text-white p-6 flex flex-col justify-between shadow-xl overflow-y-auto">
             <div>
-                <div class="text-center mb-8">
+                <div class="text-center mb-6">
                     <span class="bg-emerald-600/30 text-emerald-400 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider border border-emerald-500/30">Control Operativo</span>
-                    <h1 class="text-xl font-bold mt-3 text-white tracking-wide">
+                    <h1 class="text-xl font-bold mt-2 text-white tracking-wide">
                         Gestión Escolar Primaria
                     </h1>
                 </div>
                 
-                <div class="space-y-3">
-                    <button onclick="showSection('dashboard')" id="btn-dashboard" class="w-full text-left p-3.5 bg-emerald-600 rounded-xl font-medium transition hover:bg-emerald-500 flex items-center space-x-3 shadow-md">
-                        <span class="text-lg">📊</span> 
+                <div class="space-y-2">
+                    <button onclick="showSection('dashboard')" id="btn-dashboard" class="nav-btn w-full text-left p-3 bg-emerald-600 rounded-xl font-medium transition hover:bg-emerald-500 flex items-center space-x-3 shadow-md text-white" data-active-bg="bg-emerald-600 hover:bg-emerald-500" data-inactive-bg="bg-slate-800 hover:bg-slate-700">
+                        <span class="text-base">📊</span> 
                         <div>
-                            <div class="text-sm font-bold">Dashboard General</div>
-                            <div class="text-xs text-emerald-200">Métricas y Resumen Escolar</div>
+                            <div class="text-xs font-bold">Dashboard General</div>
+                            <div class="text-[10px] text-emerald-200 sub-text">Métricas y Resumen</div>
                         </div>
                     </button>
-                    <button onclick="showSection('alumnos')" id="btn-alumnos" class="w-full text-left p-3.5 bg-slate-800 rounded-xl font-medium transition hover:bg-slate-700 flex items-center space-x-3 text-slate-300 shadow-md">
-                        <span class="text-lg">👩‍🎓</span> 
+
+                    <button onclick="showSection('alumnos')" id="btn-alumnos" class="nav-btn w-full text-left p-3 bg-slate-800 rounded-xl font-medium transition hover:bg-slate-700 flex items-center space-x-3 text-slate-300 shadow-md" data-active-bg="bg-emerald-600 hover:bg-emerald-500" data-inactive-bg="bg-slate-800 hover:bg-slate-700">
+                        <span class="text-base">👩‍🎓</span> 
                         <div>
-                            <div class="text-sm font-bold">Control de Alumnos</div>
-                            <div class="text-xs text-slate-400">Matrículas, Grupos y Estatus</div>
+                            <div class="text-xs font-bold">Alumnos y Tutores</div>
+                            <div class="text-[10px] text-slate-400 sub-text">Matrículas y Responsables</div>
                         </div>
                     </button>
-                    <button onclick="showSection('academico')" id="btn-academico" class="w-full text-left p-3.5 bg-slate-800 rounded-xl font-medium transition hover:bg-slate-700 flex items-center space-x-3 text-slate-300 shadow-md">
-                        <span class="text-lg">📚</span> 
+
+                    <button onclick="showSection('academico')" id="btn-academico" class="nav-btn w-full text-left p-3 bg-slate-800 rounded-xl font-medium transition hover:bg-slate-700 flex items-center space-x-3 text-slate-300 shadow-md" data-active-bg="bg-emerald-600 hover:bg-emerald-500" data-inactive-bg="bg-slate-800 hover:bg-slate-700">
+                        <span class="text-base">📚</span> 
                         <div>
-                            <div class="text-sm font-bold">Gestión Académica</div>
-                            <div class="text-xs text-slate-400">Docentes, Materias y Calificaciones</div>
+                            <div class="text-xs font-bold">Gestión Académica</div>
+                            <div class="text-[10px] text-slate-400 sub-text">Grupos, Materias e Inscripciones</div>
+                        </div>
+                    </button>
+
+                    <button onclick="showSection('personal')" id="btn-personal" class="nav-btn w-full text-left p-3 bg-slate-800 rounded-xl font-medium transition hover:bg-slate-700 flex items-center space-x-3 text-slate-300 shadow-md" data-active-bg="bg-emerald-600 hover:bg-emerald-500" data-inactive-bg="bg-slate-800 hover:bg-slate-700">
+                        <span class="text-base">👔</span> 
+                        <div>
+                            <div class="text-xs font-bold">Personal y Empleados</div>
+                            <div class="text-[10px] text-slate-400 sub-text">Docentes, Apoyo y Salarios</div>
+                        </div>
+                    </button>
+
+                    <button onclick="showSection('servicios')" id="btn-servicios" class="nav-btn w-full text-left p-3 bg-slate-800 rounded-xl font-medium transition hover:bg-slate-700 flex items-center space-x-3 text-slate-300 shadow-md" data-active-bg="bg-emerald-600 hover:bg-emerald-500" data-inactive-bg="bg-slate-800 hover:bg-slate-700">
+                        <span class="text-base">🏥</span> 
+                        <div>
+                            <div class="text-xs font-bold">Servicios Escolares</div>
+                            <div class="text-[10px] text-slate-400 sub-text">Enfermería y Cafetería</div>
+                        </div>
+                    </button>
+
+                    <button onclick="showSection('mantenimiento')" id="btn-mantenimiento" class="nav-btn w-full text-left p-3 bg-slate-800 rounded-xl font-medium transition hover:bg-slate-700 flex items-center space-x-3 text-slate-300 shadow-md" data-active-bg="bg-emerald-600 hover:bg-emerald-500" data-inactive-bg="bg-slate-800 hover:bg-slate-700">
+                        <span class="text-base">🛠️</span> 
+                        <div>
+                            <div class="text-xs font-bold">Mantenimiento</div>
+                            <div class="text-[10px] text-slate-400 sub-text">Instalaciones y Reportes</div>
                         </div>
                     </button>
                 </div>
             </div>
 
-            <div class="text-center border-t border-slate-800 pt-4">
-                <a href="../index.html" class="inline-block bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2.5 rounded-lg text-sm transition font-medium border border-slate-700">
+            <div class="text-center border-t border-slate-800 pt-3 mt-4">
+                <a href="../index.html" class="inline-block bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-lg text-xs transition font-medium border border-slate-700">
                     ← Volver al Menú Principal
                 </a>
             </div>
@@ -56,29 +82,28 @@
         <div class="w-3/4 p-10 overflow-y-auto bg-slate-100 flex flex-col justify-between">
             
             <div>
-                <!-- SECCIÓN 1: DASHBOARD GENERAL -->
+                <!-- 1. DASHBOARD GENERAL -->
                 <div id="section-dashboard" class="content-section">
                     <div class="mb-6">
                         <h2 class="text-2xl font-bold text-slate-800">Panel de Control Institucional</h2>
-                        <p class="text-slate-500 text-sm">Resumen general de la operación del plantel de educación primaria.</p>
+                        <p class="text-slate-500 text-sm">Resumen general y métricas operativas basadas en el modelo relacional del plantel.</p>
                     </div>
 
-                    <!-- Tarjetas KPI -->
                     <div class="grid grid-cols-3 gap-6 mb-8">
                         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                             <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Matrícula Total Activa</p>
                             <p class="text-2xl font-bold text-slate-800 mt-1">640 Alumnos</p>
-                            <span class="text-xs text-emerald-600 font-medium">↑ 100% Capacidad Óptima</span>
+                            <span class="text-xs text-emerald-600 font-medium">↑ Vinculado con Tutores</span>
                         </div>
                         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Docentes Registrados</p>
-                            <p class="text-2xl font-bold text-emerald-600 mt-1">24 Profesores</p>
-                            <span class="text-xs text-slate-500 font-medium">Planta docente completa</span>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Plantilla de Empleados</p>
+                            <p class="text-2xl font-bold text-emerald-600 mt-1">32 Trabajadores</p>
+                            <span class="text-xs text-slate-500 font-medium">Docentes, Apoyo y Servicios</span>
                         </div>
                         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Promedio General</p>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Eficiencia Escolar</p>
                             <p class="text-2xl font-bold text-blue-600 mt-1">9.1 / 10</p>
-                            <span class="text-xs text-slate-500 font-medium">Rendimiento sobresaliente</span>
+                            <span class="text-xs text-slate-500 font-medium">Promedio general ponderado</span>
                         </div>
                     </div>
 
@@ -89,110 +114,195 @@
                         </p>
                         <div class="flex gap-4">
                             <button onclick="showSection('alumnos')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-                                Ver Control de Alumnos →
+                                Ver Alumnos y Tutores →
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- SECCIÓN 2: CONTROL DE ALUMNOS (FUNCIONALIDAD INTEGRADA) -->
+                <!-- 2. CONTROL DE ALUMNOS Y TUTORES -->
                 <div id="section-alumnos" class="content-section hidden">
                     <div class="mb-6">
-                        <h2 class="text-2xl font-bold text-slate-800">Módulo de Control de Alumnos</h2>
-                        <p class="text-slate-500 text-sm">Base de datos de inscripciones, expedientes y estatus académico actual.</p>
-                    </div>
-
-                    <!-- Tarjetas KPI -->
-                    <div class="grid grid-cols-3 gap-6 mb-8">
-                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Alumnos Regulares</p>
-                            <p class="text-2xl font-bold text-emerald-600 mt-1">615</p>
-                            <span class="text-xs text-slate-500 font-medium">Sin adeudos académicos</span>
-                        </div>
-                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Alumnos en Seguimiento</p>
-                            <p class="text-2xl font-bold text-amber-600 mt-1">25</p>
-                            <span class="text-xs text-slate-500 font-medium">Apoyo pedagógico</span>
-                        </div>
-                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Grupos Totales</p>
-                            <p class="text-2xl font-bold text-blue-600 mt-1">12 Grupos</p>
-                            <span class="text-xs text-slate-500 font-medium">1° a 6° Grado</span>
-                        </div>
+                        <h2 class="text-2xl font-bold text-slate-800">Alumnos y Tutores</h2>
+                        <p class="text-slate-500 text-sm">Relación directa entre expedientes estudiantiles y sus responsables legales.</p>
                     </div>
 
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                         <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                            <h3 class="font-bold text-slate-800">Listado General de Registros Estudiantiles</h3>
-                            <span class="text-xs bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-medium">Base de Datos Activa</span>
+                            <h3 class="font-bold text-slate-800">Listado de Alumnos y Contacto de Tutores</h3>
+                            <span class="text-xs bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-medium">Entidades: ALUMNO & TUTOR</span>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse text-sm">
                                 <thead>
                                     <tr class="bg-slate-50 text-slate-600 border-b border-slate-200 text-xs uppercase tracking-wider">
                                         <th class="p-4">Matrícula</th>
-                                        <th class="p-4">Nombre Completo</th>
-                                        <th class="p-4">Grado y Grupo</th>
-                                        <th class="p-4">Promedio Parcial</th>
-                                        <th class="p-4">Estatus</th>
+                                        <th class="p-4">Nombre del Alumno</th>
+                                        <th class="p-4">Grupo</th>
+                                        <th class="p-4">Tutor Responsable</th>
+                                        <th class="p-4">Teléfono de Contacto</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-slate-700 divide-y divide-slate-100">
-                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono font-medium text-slate-900">2026-PRI-001</td><td class="p-4">Sofía Martínez Pérez</td><td class="p-4">3° A</td><td class="p-4 font-semibold text-emerald-600">9.4</td><td class="p-4"><span class="bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded text-xs font-semibold">Regular</span></td></tr>
-                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono font-medium text-slate-900">2026-PRI-002</td><td class="p-4">Alejandro Gómez Ruiz</td><td class="p-4">4° B</td><td class="p-4 font-semibold text-blue-600">8.9</td><td class="p-4"><span class="bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded text-xs font-semibold">Regular</span></td></tr>
-                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono font-medium text-slate-900">2026-PRI-003</td><td class="p-4">Valentina Torres López</td><td class="p-4">5° A</td><td class="p-4 font-semibold text-emerald-600">9.7</td><td class="p-4"><span class="bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded text-xs font-semibold">Regular</span></td></tr>
-                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono font-medium text-slate-900">2026-PRI-004</td><td class="p-4">Mateo Hernández Silva</td><td class="p-4">2° C</td><td class="p-4 font-semibold text-amber-600">7.8</td><td class="p-4"><span class="bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded text-xs font-semibold">Seguimiento</span></td></tr>
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono font-medium text-slate-900">2026-PRI-001</td><td class="p-4">Sofía Martínez Pérez</td><td class="p-4">3° A</td><td class="p-4">Carmen Pérez Gómez</td><td class="p-4 font-mono text-slate-600">55-1234-5678</td></tr>
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono font-medium text-slate-900">2026-PRI-002</td><td class="p-4">Alejandro Gómez Ruiz</td><td class="p-4">4° B</td><td class="p-4">Roberto Gómez Alanís</td><td class="p-4 font-mono text-slate-600">55-8765-4321</td></tr>
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono font-medium text-slate-900">2026-PRI-003</td><td class="p-4">Valentina Torres López</td><td class="p-4">5° A</td><td class="p-4">Lucía López Morales</td><td class="p-4 font-mono text-slate-600">55-9876-5432</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
-                <!-- SECCIÓN 3: GESTIÓN ACADÉMICA -->
+                <!-- 3. GESTIÓN ACADÉMICA -->
                 <div id="section-academico" class="content-section hidden">
                     <div class="mb-6">
-                        <h2 class="text-2xl font-bold text-slate-800">Administración de Asignaturas y Docentes</h2>
-                        <p class="text-slate-500 text-sm">Control de planes de estudio y asignación de profesores por grado escolar.</p>
-                    </div>
-
-                    <!-- Tarjetas KPI -->
-                    <div class="grid grid-cols-3 gap-6 mb-8">
-                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Materias Activas</p>
-                            <p class="text-2xl font-bold text-slate-800 mt-1">8 Asignaturas</p>
-                            <span class="text-xs text-slate-500 font-medium">Plan oficial SEP</span>
-                        </div>
-                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Eficiencia Terminal</p>
-                            <p class="text-2xl font-bold text-emerald-600 mt-1">98.2%</p>
-                            <span class="text-xs text-slate-500 font-medium">Ciclo escolar actual</span>
-                        </div>
-                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Aulas Equipadas</p>
-                            <p class="text-2xl font-bold text-blue-600 mt-1">12 / 12</p>
-                            <span class="text-xs text-slate-500 font-medium">100% Operativas</span>
-                        </div>
+                        <h2 class="text-2xl font-bold text-slate-800">Gestión Académica e Inscripciones</h2>
+                        <p class="text-slate-500 text-sm">Control de materias, calificaciones finales (tabla INSCRIPCION) y asignación de grupos.</p>
                     </div>
 
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                         <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                            <h3 class="font-bold text-slate-800">Plantilla Docente y Asignación de Materias</h3>
-                            <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">Asignaciones Vigentes</span>
+                            <h3 class="font-bold text-slate-800">Historial de Calificaciones por Materia</h3>
+                            <span class="text-xs bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-medium">Relación N:M (Alumnos - Materias)</span>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse text-sm">
                                 <thead>
                                     <tr class="bg-slate-50 text-slate-600 border-b border-slate-200 text-xs uppercase tracking-wider">
-                                        <th class="p-4">Docente Encargado</th>
-                                        <th class="p-4">Grado y Grupo</th>
-                                        <th class="p-4">Especialidad</th>
-                                        <th class="p-4">Carga Horaria</th>
+                                        <th class="p-4">Matrícula</th>
+                                        <th class="p-4">Alumno</th>
+                                        <th class="p-4">Asignatura (Materia)</th>
+                                        <th class="p-4">Créditos</th>
+                                        <th class="p-4">Calificación Final</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-slate-700 divide-y divide-slate-100">
-                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-medium text-slate-900">Lic. María Elena Morales</td><td class="p-4">1° Grado - Grupo A</td><td class="p-4">Pedagogía Infantil</td><td class="p-4">30 hrs/sem</td></tr>
-                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-medium text-slate-900">Prof. Carlos Alberto Ramírez</td><td class="p-4">3° Grado - Grupo A</td><td class="p-4">Matemáticas y Ciencias</td><td class="p-4">30 hrs/sem</td></tr>
-                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-medium text-slate-900">Lic. Ana Laura Domínguez</td><td class="p-4">5° Grado - Grupo B</td><td class="p-4">Lengua y Literatura</td><td class="p-4">30 hrs/sem</td></tr>
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono font-medium">2026-PRI-001</td><td class="p-4">Sofía Martínez Pérez</td><td class="p-4">Matemáticas III</td><td class="p-4">8</td><td class="p-4 font-semibold text-emerald-600">9.5</td></tr>
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono font-medium">2026-PRI-001</td><td class="p-4">Sofía Martínez Pérez</td><td class="p-4">Español III</td><td class="p-4">8</td><td class="p-4 font-semibold text-emerald-600">9.2</td></tr>
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono font-medium">2026-PRI-002</td><td class="p-4">Alejandro Gómez Ruiz</td><td class="p-4">Ciencias Naturales IV</td><td class="p-4">7</td><td class="p-4 font-semibold text-blue-600">8.8</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. PERSONAL Y EMPLEADOS -->
+                <div id="section-personal" class="content-section hidden">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-slate-800">Control de Personal y Roles</h2>
+                        <p class="text-slate-500 text-sm">Implementación de la jerarquía EMPLEADO extendida a Docentes, Cafetería, Enfermería y Mantenimiento.</p>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                            <h3 class="font-bold text-slate-800">Nómina y Especialidades del Personal</h3>
+                            <span class="text-xs bg-amber-50 text-amber-700 px-3 py-1 rounded-full font-medium">Especialización de Empleados</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-slate-50 text-slate-600 border-b border-slate-200 text-xs uppercase tracking-wider">
+                                        <th class="p-4">ID Empleado</th>
+                                        <th class="p-4">Puesto Base</th>
+                                        <th class="p-4">Salario Mensual</th>
+                                        <th class="p-4">Área / Especialidad Específica</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-slate-700 divide-y divide-slate-100">
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono">EMP-101</td><td class="p-4 font-medium">Docente Titular</td><td class="p-4 font-mono">$14,500.00</td><td class="p-4">Matemáticas y Ciencias (3° A)</td></tr>
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono">EMP-102</td><td class="p-4 font-medium">Personal Enfermería</td><td class="p-4 font-mono">$11,200.00</td><td class="p-4">Primeros Auxilios / Área Médica Matutina</td></tr>
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono">EMP-103</td><td class="p-4 font-medium">Personal Cafetería</td><td class="p-4 font-mono">$9,800.00</td><td class="p-4">Turno Matutino - Operación de Caja</td></tr>
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono">EMP-104</td><td class="p-4 font-medium">Mantenimiento</td><td class="p-4 font-mono">$10,500.00</td><td class="p-4">Especialista en Instalaciones Hidráulicas</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. SERVICIOS ESCOLARES (ENFERMERÍA Y CAFETERÍA) -->
+                <div id="section-servicios" class="content-section hidden">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-slate-800">Servicios Escolares Operativos</h2>
+                        <p class="text-slate-500 text-sm">Registro de atención médica a alumnos y transacciones de cafetería.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-6">
+                        <!-- Atención Médica -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div class="p-5 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                                <h3 class="font-bold text-slate-800 text-sm">🏥 Historial de Atención Médica (Enfermería)</h3>
+                                <span class="text-xs bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded font-semibold">ATENCION_MEDICA</span>
+                            </div>
+                            <div class="p-4 overflow-x-auto">
+                                <table class="w-full text-left border-collapse text-xs">
+                                    <thead>
+                                        <tr class="text-slate-500 border-b border-slate-200 uppercase">
+                                            <th class="p-2">Fecha y Hora</th>
+                                            <th class="p-2">Alumno</th>
+                                            <th class="p-2">Diagnóstico</th>
+                                            <th class="p-2">Tratamiento Suministrado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-100 text-slate-700">
+                                        <tr><td class="p-2 font-mono">2026-10-09 10:15</td><td class="p-2">Sofía Martínez (3° A)</td><td class="p-2">Dolor de cabeza leve</td><td class="p-2">Reposo 15 min y hidratación</td></tr>
+                                        <tr><td class="p-2 font-mono">2026-10-08 12:40</td><td class="p-2">Mateo Hernández (2° C)</td><td class="p-2">Rasguño en rodilla</td><td class="p-2">Limpieza con solución antiséptica y curación</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Venta Cafetería -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div class="p-5 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                                <h3 class="font-bold text-slate-800 text-sm">🥪 Registro de Ventas en Cafetería</h3>
+                                <span class="text-xs bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded font-semibold">VENTA_CAFETERIA</span>
+                            </div>
+                            <div class="p-4 overflow-x-auto">
+                                <table class="w-full text-left border-collapse text-xs">
+                                    <thead>
+                                        <tr class="text-slate-500 border-b border-slate-200 uppercase">
+                                            <th class="p-2">ID Venta</th>
+                                            <th class="p-2">Fecha / Hora</th>
+                                            <th class="p-2">Alumno Comprador</th>
+                                            <th class="p-2">Total Pagado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-100 text-slate-700">
+                                        <tr><td class="p-2 font-mono">V-901</td><td class="p-2">2026-10-09 11:05</td><td class="p-2">Alejandro Gómez (4° B)</td><td class="p-2 font-semibold text-emerald-600">$35.00</td></tr>
+                                        <tr><td class="p-2 font-mono">V-902</td><td class="p-2">2026-10-09 11:20</td><td class="p-2">Valentina Torres (5° A)</td><td class="p-2 font-semibold text-emerald-600">$50.00</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. MANTENIMIENTO -->
+                <div id="section-mantenimiento" class="content-section hidden">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-slate-800">Control de Mantenimiento</h2>
+                        <p class="text-slate-500 text-sm">Seguimiento de reportes de infraestructura atendidos por el personal especializado.</p>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                            <h3 class="font-bold text-slate-800">Reportes de Instalaciones y Reparaciones</h3>
+                            <span class="text-xs bg-slate-100 text-slate-700 px-3 py-1 rounded-full font-medium">Entidad: MANTENIMIENTO</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-slate-50 text-slate-600 border-b border-slate-200 text-xs uppercase tracking-wider">
+                                        <th class="p-4">ID Reporte</th>
+                                        <th class="p-4">Ubicación</th>
+                                        <th class="p-4">Descripción de la Incidencia</th>
+                                        <th class="p-4">Fecha</th>
+                                        <th class="p-4">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-slate-700 divide-y divide-slate-100">
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono">MANT-01</td><td class="p-4 font-medium">Edificio A - Salón 302</td><td class="p-4">Reparación de luminaria principal</td><td class="p-4">2026-10-07</td><td class="p-4"><span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded text-xs font-semibold">Completado</span></td></tr>
+                                    <tr class="hover:bg-slate-50/50"><td class="p-4 font-mono">MANT-02</td><td class="p-4 font-medium">Área de Sanitarios Planta Baja</td><td class="p-4">Mantenimiento preventivo en llave de lavabo</td><td class="p-4">2026-10-09</td><td class="p-4"><span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded text-xs font-semibold">En Proceso</span></td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -204,7 +314,7 @@
             <!-- Aviso inferior técnico -->
             <div class="mt-8 text-center text-xs text-slate-500 bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-center space-x-2">
                 <span>💡</span>
-                <span><strong>Nota técnica de exposición:</strong> Módulo escolar estático de alta fidelidad. Para interactuar con formularios de inserción y bases de datos relacionales en backend, consulte el entorno local.</span>
+                <span><strong>Versión Estática GitHub Pages:</strong> Demostración de interfaz acoplada al modelo relacional completo.</span>
             </div>
 
         </div>
@@ -214,16 +324,21 @@
     <!-- Script de Pestañas Interactivas -->
     <script>
         function showSection(sectionName) {
-            // Ocultar todas las secciones
+            // Ocultar todas las secciones de contenido
             document.querySelectorAll('.content-section').forEach(sec => {
                 sec.classList.add('hidden');
             });
             
             // Restablecer estilos de todos los botones del panel lateral
-            ['dashboard', 'alumnos', 'academico'].forEach(name => {
-                const btn = document.getElementById('btn-' + name);
-                btn.classList.remove('bg-emerald-600', 'text-white');
-                btn.classList.add('bg-slate-800', 'text-slate-300');
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-500', 'text-white');
+                btn.classList.add('bg-slate-800', 'hover:bg-slate-700', 'text-slate-300');
+                
+                const sub = btn.querySelector('.sub-text');
+                if (sub) {
+                    sub.classList.remove('text-emerald-200');
+                    sub.classList.add('text-slate-400');
+                }
             });
 
             // Mostrar la sección seleccionada
@@ -231,8 +346,14 @@
 
             // Activar el botón correspondiente
             const activeBtn = document.getElementById('btn-' + sectionName);
-            activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
-            activeBtn.classList.add('bg-emerald-600', 'text-white');
+            activeBtn.classList.remove('bg-slate-800', 'hover:bg-slate-700', 'text-slate-300');
+            activeBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-500', 'text-white');
+
+            const activeSub = activeBtn.querySelector('.sub-text');
+            if (activeSub) {
+                activeSub.classList.remove('text-slate-400');
+                activeSub.classList.add('text-emerald-200');
+            }
         }
     </script>
 
