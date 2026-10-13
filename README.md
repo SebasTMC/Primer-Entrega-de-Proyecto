@@ -61,5 +61,5 @@ El repositorio se organiza en los siguientes directorios:
 * **Herramientas de Diseño:** Mermaid.js para diagramado como código.
 * **Infraestructura:** Docker y Docker Compose (Subproyecto Fork).
 * **Control de Versiones:** Git y GitHub.
-
+ 
 ---
