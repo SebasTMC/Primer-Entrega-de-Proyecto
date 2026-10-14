@@ -13,7 +13,7 @@ El repositorio se organiza en los siguientes directorios:
 * 📂 **`Proyecto_Fork/`**
   Contiene el análisis, configuración y despliegue del "Seismic Data Visualization System". En este subproyecto se trabaja con infraestructura basada en contenedores (Docker) y revisión de código de un repositorio externo (fork).
   > [📄 Ver documentación detallada del Proyecto Fork](./Proyecto_Fork/README.md)
-
+ 
 ---
 
 # Sistema de Visualización de Datos Sísmicos y Módulos Analíticos
