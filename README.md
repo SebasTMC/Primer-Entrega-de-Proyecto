@@ -55,7 +55,7 @@ El repositorio se organiza en los siguientes directorios:
 * **Sitio Web (GitHub Pages):** [https://sebastmc.github.io/Primer-Entrega-de-Proyecto/](https://sebastmc.github.io/Primer-Entrega-de-Proyecto/)
 
 ---
-
+ 
 ## 🛠️ Tecnologías Generales Utilizadas
 * **Modelado de Datos:** Diagramas de Entidad-Relación (ER) y Modelo Relacional extendido (EER).
 * **Herramientas de Diseño:** Mermaid.js para diagramado como código.
