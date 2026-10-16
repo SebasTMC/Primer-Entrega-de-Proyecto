@@ -1,4 +1,4 @@
-﻿# Primer-Entrega-de-Proyecto
+﻿# Primer Entrega de Proyecto
  
 Este repositorio contiene los entregables correspondientes a la primera fase del proyecto de la asignatura. El trabajo está dividido en dos subproyectos principales, cada uno enfocado en resolver problemáticas distintas mediante el diseño de bases de datos y la implementación de sistemas.
 
