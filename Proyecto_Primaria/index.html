@@ -107,7 +107,8 @@ label input,label select{padding:10px 12px;border:1px solid var(--rule);border-r
 
 <!-- Pantalla de Login -->
 <div id="login-view">
-  <form id="login-form">
+  <!-- Agregamos el onsubmit directamente aquí para evitar que recargue la página -->
+  <form id="login-form" onsubmit="iniciarSesion(event)">
     <svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#1b4fd8"/><path d="M10 12h8a2 2 0 0 1 2 2v14a3 3 0 0 0-3-3h-7zM30 12h-8a2 2 0 0 0-2 2v14a3 3 0 0 1 3-3h7z" fill="#fff"/></svg>
     <h2>Iniciar Sesión</h2>
     <label>Perfil de acceso:
@@ -122,7 +123,7 @@ label input,label select{padding:10px 12px;border:1px solid var(--rule);border-r
     <label>Contraseña: 
       <input type="password" name="pass" required value="1234">
     </label>
-    <button class="pri">Entrar al Sistema</button>
+    <button type="submit" class="pri">Entrar al Sistema</button>
   </form>
 </div>
 
@@ -224,19 +225,24 @@ const PERMISOS = {
 
 let db=load(),cur='dash',q='',editing=null, rolActual=null;
 
-$('#login-form').onsubmit = e => {
-  e.preventDefault();
+/* NUEVA FUNCION DE LOGIN DIRECTA Y SEGURA */
+function iniciarSesion(e) {
+  e.preventDefault(); // Esto detiene la recarga de la página (el "?rol=..." de tu barra superior)
   const data = Object.fromEntries(new FormData(e.target));
   
   if(data.pass === '1234') { 
     rolActual = PERMISOS[data.rol];
     $('#login-view').style.display = 'none';
     $('#app-view').style.display = 'flex';
+    
+    // Esto limpia la URL para que quede bonita si se había guardado con el "?rol..."
+    window.history.replaceState({}, document.title, window.location.pathname);
+    
     go('dash'); 
   } else {
     alert('Contraseña incorrecta. Por favor usa "1234" para acceder.');
   }
-};
+}
 
 function logout() {
   rolActual = null;
@@ -270,8 +276,6 @@ function go(k){cur=k;q='';nav();render();scrollTo(0,0)}
 
 function render(){
  const m=M[cur];
- 
- // CORRECCIÓN AQUÍ: Ahora solo verifica 'm.add' si estamos seguros de que NO estamos en la pestaña de resumen
  const btnAgregar = (cur !== 'dash' && rolActual.edita) ? `<button class="pri" onclick="openForm('${cur}')">+ ${m.add}</button>` : '';
 
  $('#head').innerHTML=cur==='dash'
