@@ -19,7 +19,6 @@ aside{width:250px;flex:none;background:#fff;border-right:1px solid var(--rule);p
 .brand b{font:600 19px/1.1 Newsreader,serif;display:block}
 .brand span{font-size:12.5px;color:var(--mut)}
 
-/* Selector de rol rápido en el menú */
 .role-box{background:var(--soft);padding:10px;border-radius:8px;font-size:13px;display:grid;gap:5px;font-weight:600;color:var(--blue-d)}
 .role-box select{width:100%;padding:6px;border:1px solid var(--rule);border-radius:6px;background:#fff;font-weight:500;color:var(--ink)}
 
@@ -108,7 +107,6 @@ label input,label select{padding:10px 12px;border:1px solid var(--rule);border-r
     <div><b>Escuela Primaria</b><span>Gestión escolar</span></div>
   </div>
 
-  <!-- Selector de perfil integrado directamente en el menú lateral -->
   <div class="role-box">
     Perfil activo:
     <select id="rol-selector" onchange="cambiarRol(this.value)">
@@ -152,7 +150,6 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const G=[];for(let g=1;g<=6;g++)['A','B','C'].forEach(l=>G.push(g+'° '+l));
 const ST={'Completado':'ok','En proceso':'wip','Pendiente':'warn'};
 
-/* Base de Datos Local */
 const M={
  alumnos:{t:'Alumnos y tutores',s:'Matrículas y responsables legales de cada alumno.',add:'Agregar alumno',f:[
   {k:'matricula',l:'Matrícula'},{k:'nombre',l:'Nombre del alumno'},{k:'grupo',l:'Grupo',sel:G,badge:1},
@@ -199,7 +196,6 @@ const M={
 };
 const GROUPS=[['',['dash']],['Escuela',['alumnos','academico','personal']],['Servicios',['enfermeria','cafeteria','mantenimiento']]];
 
-/* Sistema de Permisos por Roles */
 const PERMISOS = {
   director: { modulos: ['alumnos', 'academico', 'personal', 'enfermeria', 'cafeteria', 'mantenimiento'], edita: true },
   profesor: { modulos: ['alumnos', 'academico'], edita: true },
@@ -212,7 +208,6 @@ let db=load(), cur='dash', q='', editing=null, rolActual=PERMISOS.director;
 
 function cambiarRol(rol) {
   rolActual = PERMISOS[rol];
-  // Si el usuario cambia a un rol que no tiene acceso al módulo actual, lo mandamos al dash
   if (cur !== 'dash' && !rolActual.modulos.includes(cur)) {
     cur = 'dash';
   }
@@ -221,7 +216,7 @@ function cambiarRol(rol) {
 }
 
 function load(){
- try{const d=JSON.parse(localStorage.getItem(KEY));if(d)return d}catch(e){}
+ try{const d=JSON.parse(localStorage.getItem(KEY));if(d && Object.keys(d).length > 0)return d}catch(e){}
  const d={};for(const k in M)d[k]=M[k].seed.map((r,i)=>({_id:i+1,...r}));return d}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
 const money=n=>'$'+Number(n).toLocaleString('es-MX',{minimumFractionDigits:2});
@@ -253,10 +248,10 @@ function render(){
  if(cur!=='dash')fill()}
 
 function dash(){
- const a=db.alumnos,c=db.academico;
+ const a=db.alumnos || [], c=db.academico || [];
  const prom=c.length?(c.reduce((s,r)=>s+ +r.calificacion,0)/c.length).toFixed(1):'–';
- const abiertos=db.mantenimiento.filter(r=>r.estado!=='Completado').length;
- const fig=[[a.length,'alumnos registrados'],[db.personal.length,'empleados en plantilla'],[prom,'promedio general'],[abiertos,'reportes de mantenimiento abiertos']];
+ const abiertos=(db.mantenimiento || []).filter(r=>r.estado!=='Completado').length;
+ const fig=[[a.length,'alumnos registrados'],[(db.personal || []).length,'empleados en plantilla'],[prom,'promedio general'],[abiertos,'reportes de mantenimiento abiertos']];
  const por={};a.forEach(r=>por[r.grupo]=(por[r.grupo]||0)+1);
  const max=Math.max(1,...Object.values(por));
  
@@ -275,10 +270,11 @@ function table(){
  const m=M[cur];
  const thAcciones = rolActual.edita ? `<th></th>` : ``;
  return `<div class="sheet"><div class="tools"><input type="search" placeholder="Buscar en ${m.t.toLowerCase()}" value="${esc(q)}" oninput="q=this.value.toLowerCase();fill()"><span id="cnt"></span></div>
- <div class="tw"><table><thead><tr>${m.f.map(f=>`<th>${f.l}</th>`).join('')}${thAcciones}</tr></thead><tb id="tb"></tb></table></div></div>`.replace('<tb','<tbody id="tb"');}
+ <div class="tw"><table><thead><tr>${m.f.map(f=>`<th>${f.l}</th>`).join('')}${thAcciones}</tr></thead><tbody id="tb"></tbody></table></div></div>`;
+}
 
 function fill(){
- const m=M[cur],rows=db[cur].filter(r=>!q||m.f.some(f=>String(r[f.k]).toLowerCase().includes(q)));
+ const m=M[cur],rows=(db[cur] || []).filter(r=>!q||m.f.some(f=>String(r[f.k]).toLowerCase().includes(q)));
  $('#cnt').textContent=rows.length+(rows.length===1?' registro':' registros');
  
  const acciones = (id) => rolActual.edita 
@@ -298,7 +294,7 @@ function openForm(k,id){
    ?`<select name="${f.k}">${f.sel.map(o=>`<option${o===v?' selected':''}>${o}</option>`).join('')}</select>`
    :`<input name="${f.k}" type="${f.type||'text'}" value="${esc(v)}" ${f.type==='number'?`step="any" min="0"${f.max?` max="${f.max}"`:''}`:''} ${f.dl?'list="dl"':''} required>`;
   return `<label>${f.l}${inp}</label>`}).join('');
- $('#dl').innerHTML=db.alumnos.map(a=>`<option value="${esc(a.nombre)}">`).join('');
+ $('#dl').innerHTML=(db.alumnos || []).map(a=>`<option value="${esc(a.nombre)}">`).join('');
  $('#dlg').showModal()}
 
 $('#form').onsubmit=e=>{
