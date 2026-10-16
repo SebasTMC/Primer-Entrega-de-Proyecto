@@ -15,9 +15,9 @@ button,input,select{font-family:inherit}
 
 /* --- Pantalla de Login --- */
 #login-view{display:flex;height:100vh;width:100%;align-items:center;justify-content:center;background:var(--bg)}
-#login-form{background:#fff;padding:34px;border-radius:12px;border:1px solid var(--rule);width:100%;max-width:360px;display:grid;gap:20px;box-shadow:0 10px 25px rgba(12,35,64,.05)}
-#login-form h2{color:var(--blue-d);text-align:center;font:600 24px/1.1 Newsreader,serif;margin-bottom:8px}
-#login-form svg{width:48px;height:48px;margin:0 auto;display:block}
+#login-box{background:#fff;padding:34px;border-radius:12px;border:1px solid var(--rule);width:100%;max-width:360px;display:grid;gap:20px;box-shadow:0 10px 25px rgba(12,35,64,.05)}
+#login-box h2{color:var(--blue-d);text-align:center;font:600 24px/1.1 Newsreader,serif;margin-bottom:8px}
+#login-box svg{width:48px;height:48px;margin:0 auto;display:block}
 #app-view{display:none;width:100%;min-height:100vh}
 
 aside{width:250px;flex:none;background:#fff;border-right:1px solid var(--rule);padding:26px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:20px}
@@ -105,13 +105,13 @@ label input,label select{padding:10px 12px;border:1px solid var(--rule);border-r
 </head>
 <body>
 
-<!-- Pantalla de Login -->
+<!-- Pantalla de Login (SIN ETIQUETA FORM PARA EVITAR RECARGAS) -->
 <div id="login-view">
-  <form id="login-form">
+  <div id="login-box" onkeydown="if(event.key === 'Enter') iniciarSesion()">
     <svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#1b4fd8"/><path d="M10 12h8a2 2 0 0 1 2 2v14a3 3 0 0 0-3-3h-7zM30 12h-8a2 2 0 0 0-2 2v14a3 3 0 0 1 3-3h7z" fill="#fff"/></svg>
     <h2>Iniciar Sesión</h2>
     <label>Perfil de acceso:
-      <select name="rol">
+      <select id="rol-input">
         <option value="director">Director</option>
         <option value="profesor">Profesor</option>
         <option value="personal">Personal Administrativo</option>
@@ -120,11 +120,10 @@ label input,label select{padding:10px 12px;border:1px solid var(--rule);border-r
       </select>
     </label>
     <label>Contraseña: 
-      <input type="password" name="pass" required value="1234">
+      <input type="password" id="pass-input" placeholder="Escribe 1234">
     </label>
-    <!-- Botón forzado a ser tipo "button" para que no envíe el formulario nativamente -->
-    <button type="button" class="pri" onclick="iniciarSesion()">Entrar al Sistema</button>
-  </form>
+    <button class="pri" onclick="iniciarSesion()">Entrar al Sistema</button>
+  </div>
 </div>
 
 <!-- Aplicación Principal -->
@@ -225,17 +224,17 @@ const PERMISOS = {
 
 let db=load(),cur='dash',q='',editing=null, rolActual=null;
 
-/* FUNCIÓN DE LOGIN REDISEÑADA PARA NO DEPENDER DEL EVENTO SUBMIT NATIVO */
+/* FUNCIÓN DE LOGIN BLINDADA CONTRA RECARGAS */
 function iniciarSesion() {
-  const form = document.getElementById('login-form');
-  const data = Object.fromEntries(new FormData(form));
+  const rol = document.getElementById('rol-input').value;
+  const pass = document.getElementById('pass-input').value;
   
-  if(data.pass === '1234') { 
-    rolActual = PERMISOS[data.rol];
+  if(pass === '1234') { 
+    rolActual = PERMISOS[rol];
     $('#login-view').style.display = 'none';
     $('#app-view').style.display = 'flex';
     
-    // Limpia cualquier texto extra en la barra de direcciones de forma silenciosa
+    // Asegurar que la URL esté limpia
     window.history.replaceState({}, document.title, window.location.pathname);
     
     go('dash'); 
@@ -248,7 +247,7 @@ function logout() {
   rolActual = null;
   $('#login-view').style.display = 'flex';
   $('#app-view').style.display = 'none';
-  document.getElementById('login-form').reset();
+  document.getElementById('pass-input').value = '';
 }
 
 function load(){
