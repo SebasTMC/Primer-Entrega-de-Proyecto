@@ -18,10 +18,6 @@ aside{width:250px;flex:none;background:#fff;border-right:1px solid var(--rule);p
 .brand svg{width:38px;height:38px;flex:none}
 .brand b{font:600 19px/1.1 Newsreader,serif;display:block}
 .brand span{font-size:12.5px;color:var(--mut)}
-
-.role-box{background:var(--soft);padding:10px;border-radius:8px;font-size:13px;display:grid;gap:5px;font-weight:600;color:var(--blue-d)}
-.role-box select{width:100%;padding:6px;border:1px solid var(--rule);border-radius:6px;background:#fff;font-weight:500;color:var(--ink)}
-
 #nav{display:flex;flex-direction:column;gap:2px;flex:1}
 .grp{font-size:12.5px;color:var(--mut);margin:16px 12px 4px;font-weight:600}
 #nav button{background:none;border:0;border-left:3px solid transparent;text-align:left;cursor:pointer;padding:9px 12px;border-radius:8px;font-size:15px;font-weight:500;color:#33445f}
@@ -106,23 +102,11 @@ label input,label select{padding:10px 12px;border:1px solid var(--rule);border-r
     <svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#1b4fd8"/><path d="M10 12h8a2 2 0 0 1 2 2v14a3 3 0 0 0-3-3h-7zM30 12h-8a2 2 0 0 0-2 2v14a3 3 0 0 1 3-3h7z" fill="#fff"/></svg>
     <div><b>Escuela Primaria</b><span>Gestión escolar</span></div>
   </div>
-
-  <div class="role-box">
-    Perfil activo:
-    <select id="rol-selector" onchange="cambiarRol(this.value)">
-      <option value="director">Director (Total)</option>
-      <option value="profesor">Profesor</option>
-      <option value="personal">Personal Administrativo</option>
-      <option value="tutor">Tutor (Solo lectura)</option>
-      <option value="alumno">Alumno (Solo lectura)</option>
-    </select>
-  </div>
-
   <nav id="nav" aria-label="Módulos"></nav>
-  
   <div class="sf">
+    <a href="../index.html">Volver al menú principal</a>
     <button onclick="reset()">Restaurar datos de ejemplo</button>
-    <small>Todo opera en este navegador.</small>
+    <small>Los cambios se guardan en este navegador.</small>
   </div>
 </aside>
 
@@ -196,93 +180,56 @@ const M={
 };
 const GROUPS=[['',['dash']],['Escuela',['alumnos','academico','personal']],['Servicios',['enfermeria','cafeteria','mantenimiento']]];
 
-const PERMISOS = {
-  director: { modulos: ['alumnos', 'academico', 'personal', 'enfermeria', 'cafeteria', 'mantenimiento'], edita: true },
-  profesor: { modulos: ['alumnos', 'academico'], edita: true },
-  personal: { modulos: ['alumnos', 'enfermeria', 'cafeteria', 'mantenimiento'], edita: true },
-  tutor: { modulos: ['academico', 'enfermeria', 'cafeteria'], edita: false },
-  alumno: { modulos: ['academico', 'cafeteria'], edita: false }
-};
+const EXPORT_BTN='';
 
-let db=load(), cur='dash', q='', editing=null, rolActual=PERMISOS.director;
-
-function cambiarRol(rol) {
-  rolActual = PERMISOS[rol];
-  if (cur !== 'dash' && !rolActual.modulos.includes(cur)) {
-    cur = 'dash';
-  }
-  nav();
-  render();
-}
-
+let db=load(),cur='dash',q='',editing=null;
 function load(){
- try{const d=JSON.parse(localStorage.getItem(KEY));if(d && Object.keys(d).length > 0)return d}catch(e){}
+ try{const d=JSON.parse(localStorage.getItem(KEY));if(d)return d}catch(e){}
  const d={};for(const k in M)d[k]=M[k].seed.map((r,i)=>({_id:i+1,...r}));return d}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
 const money=n=>'$'+Number(n).toLocaleString('es-MX',{minimumFractionDigits:2});
 
 function cell(f,v){
- if(f.badge)return `<span class="tag ${ST[v]\vert{}\vert{}''}">${esc(v)}</span>`;
+ if(f.badge)return `<span class="tag ${ST[v]||''}">${esc(v)}</span>`;
  if(f.money)return money(v);
  if(f.type==='datetime-local')return esc(String(v).replace('T',' '));
  return esc(v)}
 
 function nav(){
- $('#nav').innerHTML=GROUPS.map(([g,ks])=>{
-  const permitidos = ks.filter(k => k === 'dash' || rolActual.modulos.includes(k));
-  if(permitidos.length === 0) return '';
-  return (g?`<p class="grp">${g}</p>`:'')+
-  permitidos.map(k=>`<button class="${k===cur?'on':''}" onclick="go('${k}')">${k==='dash'?'Resumen':M[k].t}</button>`).join('');
- }).join('')}
-
+ $('#nav').innerHTML=GROUPS.map(([g,ks])=>(g?`<p class="grp">${g}</p>`:'')+
+  ks.map(k=>`<button class="${k===cur?'on':''}" onclick="go('${k}')">${k==='dash'?'Resumen':M[k].t}</button>`).join('')).join('')}
 function go(k){cur=k;q='';nav();render();scrollTo(0,0)}
 
 function render(){
  const m=M[cur];
- const btnAgregar = (cur !== 'dash' && rolActual.edita) ? `<button class="pri" onclick="openForm('${cur}')">+ ${m.add}</button>` : '';
-
  $('#head').innerHTML=cur==='dash'
-  ?`<div><h1>Panel de la escuela</h1><p>Ciclo escolar 2026. Lo que hay registrado hoy.</p></div>`
-  :`<div><h1>${m.t}</h1><p>${m.s}</p></div>${btnAgregar}`;
+  ?`<div><h1>Panel de la escuela</h1><p>Ciclo escolar 2026. Lo que hay registrado hoy.</p></div>${EXPORT_BTN}`
+  :`<div><h1>${m.t}</h1><p>${m.s}</p></div><button class="pri" onclick="openForm('${cur}')">+ ${m.add}</button>`;
  $('#view').innerHTML=cur==='dash'?dash():table();
  if(cur!=='dash')fill()}
 
 function dash(){
- const a=db.alumnos || [], c=db.academico || [];
+ const a=db.alumnos,c=db.academico;
  const prom=c.length?(c.reduce((s,r)=>s+ +r.calificacion,0)/c.length).toFixed(1):'–';
- const abiertos=(db.mantenimiento || []).filter(r=>r.estado!=='Completado').length;
- const fig=[[a.length,'alumnos registrados'],[(db.personal || []).length,'empleados en plantilla'],[prom,'promedio general'],[abiertos,'reportes de mantenimiento abiertos']];
+ const abiertos=db.mantenimiento.filter(r=>r.estado!=='Completado').length;
+ const fig=[[a.length,'alumnos registrados'],[db.personal.length,'empleados en plantilla'],[prom,'promedio general'],[abiertos,'reportes de mantenimiento abiertos']];
  const por={};a.forEach(r=>por[r.grupo]=(por[r.grupo]||0)+1);
  const max=Math.max(1,...Object.values(por));
- 
- const quickBtns = rolActual.edita 
-    ? Object.keys(M).filter(k => rolActual.modulos.includes(k)).map(k=>`<button onclick="go('${k}');openForm('${k}')">${M[k].add}</button>`).join('') 
-    : '';
- const panelQuick = quickBtns ? `<section class="panel"><h2>Registro rápido</h2><div class="quick">${quickBtns}</div></section>` : '';
-
  return `<div class="strip">${fig.map(([n,l])=>`<div><b>${n}</b><span>${l}</span></div>`).join('')}</div>
  <div class="two">
-  <section class="panel"><h2>Alumnos por grupo</h2>${Object.keys(por).sort().map(g=>`<div class="bar"><span>${g}</span><i style="width:${por[g]/max*100}%"></i><em>${por[g]}</em></div>`).join('')||'<p class="empty">Aún no hay alumnos. Agrega el primero desde el registro rápido.</p>'}</section>
-  ${panelQuick}
+  <section class="panel"><h2>Alumnos por grupo</h2>${Object.keys(por).sort().map(g=>`<div class="bar"><span>${g}</span><i style="width:${por[g]/max*100}\%"></i><em>${por[g]}</em></div>`).join('')||'<p class="empty">Aún no hay alumnos. Agrega el primero desde el registro rápido.</p>'}</section>
+  <section class="panel"><h2>Registro rápido</h2><div class="quick">${Object.keys(M).map(k=>`<button onclick="go('${k}');openForm('${k}')">${M[k].add}</button>`).join('')}</div></section>
  </div>`}
 
 function table(){
  const m=M[cur];
- const thAcciones = rolActual.edita ? `<th></th>` : ``;
  return `<div class="sheet"><div class="tools"><input type="search" placeholder="Buscar en ${m.t.toLowerCase()}" value="${esc(q)}" oninput="q=this.value.toLowerCase();fill()"><span id="cnt"></span></div>
- <div class="tw"><table><thead><tr>${m.f.map(f=>`<th>${f.l}</th>`).join('')}${thAcciones}</tr></thead><tbody id="tb"></tbody></table></div></div>`;
-}
-
+ <div class="tw"><table><thead><tr>${m.f.map(f=>`<th>${f.l}</th>`).join('')}<th></th></tr></thead><tbody id="tb"></tbody></table></div></div>`}
 function fill(){
- const m=M[cur],rows=(db[cur] || []).filter(r=>!q||m.f.some(f=>String(r[f.k]).toLowerCase().includes(q)));
+ const m=M[cur],rows=db[cur].filter(r=>!q||m.f.some(f=>String(r[f.k]).toLowerCase().includes(q)));
  $('#cnt').textContent=rows.length+(rows.length===1?' registro':' registros');
- 
- const acciones = (id) => rolActual.edita 
-    ? `<td class="act"><button onclick="openForm('${cur}',${id})">Editar</button><button class="del" onclick="del(${id})">Eliminar</button></td>`
-    : ``;
-
- $('#tb').innerHTML=rows.map(r=>`<tr>${m.f.map(f=>`<td>${cell(f,r[f.k])}</td>`).join('')}${acciones(r._id)}</tr>`).join('')
-  ||`<tr><td class="empty" colspan="9">${q?'Ningún resultado. Prueba con otra palabra.':'Aún no hay registros.'}</td></tr>`}
+ $('#tb').innerHTML=rows.map(r=>`<tr>${m.f.map(f=>`<td>${cell(f,r[f.k])}</td>`).join('')}<td class="act"><button onclick="openForm('${cur}',${r._id})">Editar</button><button class="del" onclick="del(${r._id})">Eliminar</button></td></tr>`).join('')
+  ||`<tr><td class="empty" colspan="9">${q?'Ningún resultado. Prueba con otra palabra.':'Aún no hay registros. Usa el botón de arriba para agregar el primero.'}</td></tr>`}
 
 function openForm(k,id){
  const m=M[k],r=id?db[k].find(x=>x._id===id):{};editing={k,id};
@@ -294,7 +241,7 @@ function openForm(k,id){
    ?`<select name="${f.k}">${f.sel.map(o=>`<option${o===v?' selected':''}>${o}</option>`).join('')}</select>`
    :`<input name="${f.k}" type="${f.type||'text'}" value="${esc(v)}" ${f.type==='number'?`step="any" min="0"${f.max?` max="${f.max}"`:''}`:''} ${f.dl?'list="dl"':''} required>`;
   return `<label>${f.l}${inp}</label>`}).join('');
- $('#dl').innerHTML=(db.alumnos || []).map(a=>`<option value="${esc(a.nombre)}">`).join('');
+ $('#dl').innerHTML=db.alumnos.map(a=>`<option value="${esc(a.nombre)}">`).join('');
  $('#dlg').showModal()}
 
 $('#form').onsubmit=e=>{
