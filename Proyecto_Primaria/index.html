@@ -105,9 +105,9 @@ label input,label select{padding:10px 12px;border:1px solid var(--rule);border-r
 </head>
 <body>
 
-<!-- Pantalla de Login (SIN ETIQUETA FORM PARA EVITAR RECARGAS) -->
+<!-- Pantalla de Login -->
 <div id="login-view">
-  <div id="login-box" onkeydown="if(event.key === 'Enter') iniciarSesion()">
+  <div id="login-box">
     <svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#1b4fd8"/><path d="M10 12h8a2 2 0 0 1 2 2v14a3 3 0 0 0-3-3h-7zM30 12h-8a2 2 0 0 0-2 2v14a3 3 0 0 1 3-3h7z" fill="#fff"/></svg>
     <h2>Iniciar Sesión</h2>
     <label>Perfil de acceso:
@@ -120,7 +120,7 @@ label input,label select{padding:10px 12px;border:1px solid var(--rule);border-r
       </select>
     </label>
     <label>Contraseña: 
-      <input type="password" id="pass-input" placeholder="Escribe 1234">
+      <input type="password" id="pass-input" value="1234">
     </label>
     <button class="pri" onclick="iniciarSesion()">Entrar al Sistema</button>
   </div>
@@ -224,7 +224,6 @@ const PERMISOS = {
 
 let db=load(),cur='dash',q='',editing=null, rolActual=null;
 
-/* FUNCIÓN DE LOGIN BLINDADA CONTRA RECARGAS */
 function iniciarSesion() {
   const rol = document.getElementById('rol-input').value;
   const pass = document.getElementById('pass-input').value;
@@ -233,10 +232,7 @@ function iniciarSesion() {
     rolActual = PERMISOS[rol];
     $('#login-view').style.display = 'none';
     $('#app-view').style.display = 'flex';
-    
-    // Asegurar que la URL esté limpia
     window.history.replaceState({}, document.title, window.location.pathname);
-    
     go('dash'); 
   } else {
     alert('Contraseña incorrecta. Por favor usa "1234" para acceder.');
@@ -247,7 +243,7 @@ function logout() {
   rolActual = null;
   $('#login-view').style.display = 'flex';
   $('#app-view').style.display = 'none';
-  document.getElementById('pass-input').value = '';
+  document.getElementById('pass-input').value = '1234';
 }
 
 function load(){
