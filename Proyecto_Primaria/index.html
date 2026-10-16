@@ -119,7 +119,7 @@ label input,label select{padding:10px 12px;border:1px solid var(--rule);border-r
         <option value="alumno">Alumno (Solo lectura)</option>
       </select>
     </label>
-    <label>Contraseña de prueba: 
+    <label>Contraseña: 
       <input type="password" name="pass" required value="1234">
     </label>
     <button class="pri">Entrar al Sistema</button>
@@ -136,7 +136,7 @@ label input,label select{padding:10px 12px;border:1px solid var(--rule);border-r
     <nav id="nav" aria-label="Módulos"></nav>
     <div class="sf">
       <button onclick="logout()">Cerrar sesión</button>
-      <button onclick="reset()">Restaurar datos de ejemplo</button>
+      <button onclick="reset()">Restaurar datos</button>
       <small>Los datos viven en este navegador.</small>
     </div>
   </aside>
@@ -228,7 +228,7 @@ $('#login-form').onsubmit = e => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(e.target));
   
-  if(data.pass === '1234') { // La contraseña es puramente para demostración visual
+  if(data.pass === '1234') { 
     rolActual = PERMISOS[data.rol];
     $('#login-view').style.display = 'none';
     $('#app-view').style.display = 'flex';
@@ -260,7 +260,6 @@ function cell(f,v){
 function nav(){
  if(!rolActual) return;
  $('#nav').innerHTML=GROUPS.map(([g,ks])=>{
-  // Filtramos las vistas para que el menú solo muestre a lo que tiene permiso el rol
   const permitidos = ks.filter(k => k === 'dash' || rolActual.modulos.includes(k));
   if(permitidos.length === 0) return '';
   return (g?`<p class="grp">${g}</p>`:'')+
@@ -271,8 +270,9 @@ function go(k){cur=k;q='';nav();render();scrollTo(0,0)}
 
 function render(){
  const m=M[cur];
- // Oculta el botón "+ Agregar" si el usuario solo tiene acceso de lectura
- const btnAgregar = rolActual.edita ? `<button class="pri" onclick="openForm('${cur}')">+ ${m.add}</button>` : '';
+ 
+ // CORRECCIÓN AQUÍ: Ahora solo verifica 'm.add' si estamos seguros de que NO estamos en la pestaña de resumen
+ const btnAgregar = (cur !== 'dash' && rolActual.edita) ? `<button class="pri" onclick="openForm('${cur}')">+ ${m.add}</button>` : '';
 
  $('#head').innerHTML=cur==='dash'
   ?`<div><h1>Panel de la escuela</h1><p>Ciclo escolar 2026. Lo que hay registrado hoy.</p></div>`
@@ -288,7 +288,6 @@ function dash(){
  const por={};a.forEach(r=>por[r.grupo]=(por[r.grupo]||0)+1);
  const max=Math.max(1,...Object.values(por));
  
- // Oculta los accesos directos de registro si el usuario no puede editar
  const quickBtns = rolActual.edita 
     ? Object.keys(M).filter(k => rolActual.modulos.includes(k)).map(k=>`<button onclick="go('${k}');openForm('${k}')">${M[k].add}</button>`).join('') 
     : '';
@@ -302,7 +301,6 @@ function dash(){
 
 function table(){
  const m=M[cur];
- // Ocultar la cabecera de la columna de acciones si no puede editar
  const thAcciones = rolActual.edita ? `<th></th>` : ``;
  return `<div class="sheet"><div class="tools"><input type="search" placeholder="Buscar en ${m.t.toLowerCase()}" value="${esc(q)}" oninput="q=this.value.toLowerCase();fill()"><span id="cnt"></span></div>
  <div class="tw"><table><thead><tr>${m.f.map(f=>`<th>${f.l}</th>`).join('')}${thAcciones}</tr></thead><tbody id="tb"></tbody></table></div></div>`}
@@ -311,13 +309,12 @@ function fill(){
  const m=M[cur],rows=db[cur].filter(r=>!q||m.f.some(f=>String(r[f.k]).toLowerCase().includes(q)));
  $('#cnt').textContent=rows.length+(rows.length===1?' registro':' registros');
  
- // Imprimir los botones Editar/Eliminar solo si tiene permisos
  const acciones = (id) => rolActual.edita 
     ? `<td class="act"><button onclick="openForm('${cur}',${id})">Editar</button><button class="del" onclick="del(${id})">Eliminar</button></td>`
     : ``;
 
  $('#tb').innerHTML=rows.map(r=>`<tr>${m.f.map(f=>`<td>${cell(f,r[f.k])}</td>`).join('')}${acciones(r._id)}</tr>`).join('')
-  ||`<tr><td class="empty" colspan="9">${q?'Ningún resultado. Prueba con otra palabra.':'Aún no hay registros. Usa el botón de arriba para agregar el primero.'}</td></tr>`}
+  ||`<tr><td class="empty" colspan="9">${q?'Ningún resultado. Prueba con otra palabra.':'Aún no hay registros.'}</td></tr>`}
 
 function openForm(k,id){
  const m=M[k],r=id?db[k].find(x=>x._id===id):{};editing={k,id};
