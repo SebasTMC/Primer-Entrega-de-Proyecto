@@ -13,6 +13,13 @@ body{font:15px/1.5 'Public Sans',system-ui,sans-serif;color:var(--ink);backgroun
 button,input,select{font-family:inherit}
 :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 
+/* --- Pantalla de Login --- */
+#login-view{display:flex;height:100vh;width:100%;align-items:center;justify-content:center;background:var(--bg)}
+#login-form{background:#fff;padding:34px;border-radius:12px;border:1px solid var(--rule);width:100%;max-width:360px;display:grid;gap:20px;box-shadow:0 10px 25px rgba(12,35,64,.05)}
+#login-form h2{color:var(--blue-d);text-align:center;font:600 24px/1.1 Newsreader,serif;margin-bottom:8px}
+#login-form svg{width:48px;height:48px;margin:0 auto;display:block}
+#app-view{display:none;width:100%;min-height:100vh}
+
 aside{width:250px;flex:none;background:#fff;border-right:1px solid var(--rule);padding:26px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:20px}
 .brand{display:flex;gap:11px;align-items:center;padding:0 8px}
 .brand svg{width:38px;height:38px;flex:none}
@@ -84,6 +91,7 @@ label input,label select{padding:10px 12px;border:1px solid var(--rule);border-r
 
 @media(max-width:900px){
  body{flex-direction:column}
+ #app-view{flex-direction:column}
  aside{width:100%;height:auto;position:static;gap:10px;padding:16px}
  #nav{flex-direction:row;overflow-x:auto;flex:none;gap:6px}
  .grp,.sf{display:none}
@@ -97,23 +105,47 @@ label input,label select{padding:10px 12px;border:1px solid var(--rule);border-r
 </head>
 <body>
 
-<aside>
-  <div class="brand">
+<!-- Pantalla de Login -->
+<div id="login-view">
+  <form id="login-form">
     <svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#1b4fd8"/><path d="M10 12h8a2 2 0 0 1 2 2v14a3 3 0 0 0-3-3h-7zM30 12h-8a2 2 0 0 0-2 2v14a3 3 0 0 1 3-3h7z" fill="#fff"/></svg>
-    <div><b>Escuela Primaria</b><span>Gestión escolar</span></div>
-  </div>
-  <nav id="nav" aria-label="Módulos"></nav>
-  <div class="sf">
-    <a href="../index.html">Volver al menú principal</a>
-    <button onclick="reset()">Restaurar datos de ejemplo</button>
-    <small>Los cambios se guardan en este navegador.</small>
-  </div>
-</aside>
+    <h2>Iniciar Sesión</h2>
+    <label>Perfil de acceso:
+      <select name="rol">
+        <option value="director">Director</option>
+        <option value="profesor">Profesor</option>
+        <option value="personal">Personal Administrativo</option>
+        <option value="tutor">Tutor (Solo lectura)</option>
+        <option value="alumno">Alumno (Solo lectura)</option>
+      </select>
+    </label>
+    <label>Contraseña de prueba: 
+      <input type="password" name="pass" required value="1234">
+    </label>
+    <button class="pri">Entrar al Sistema</button>
+  </form>
+</div>
 
-<main>
-  <div id="head"></div>
-  <div id="view"></div>
-</main>
+<!-- Aplicación Principal -->
+<div id="app-view">
+  <aside>
+    <div class="brand">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#1b4fd8"/><path d="M10 12h8a2 2 0 0 1 2 2v14a3 3 0 0 0-3-3h-7zM30 12h-8a2 2 0 0 0-2 2v14a3 3 0 0 1 3-3h7z" fill="#fff"/></svg>
+      <div><b>Escuela Primaria</b><span>Gestión escolar</span></div>
+    </div>
+    <nav id="nav" aria-label="Módulos"></nav>
+    <div class="sf">
+      <button onclick="logout()">Cerrar sesión</button>
+      <button onclick="reset()">Restaurar datos de ejemplo</button>
+      <small>Los datos viven en este navegador.</small>
+    </div>
+  </aside>
+
+  <main>
+    <div id="head"></div>
+    <div id="view"></div>
+  </main>
+</div>
 
 <dialog id="dlg">
   <form id="form">
@@ -134,7 +166,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const G=[];for(let g=1;g<=6;g++)['A','B','C'].forEach(l=>G.push(g+'° '+l));
 const ST={'Completado':'ok','En proceso':'wip','Pendiente':'warn'};
 
-/* Cada módulo = una tabla de la base de datos. f = columnas/campos del formulario. */
+/* Base de Datos Local */
 const M={
  alumnos:{t:'Alumnos y tutores',s:'Matrículas y responsables legales de cada alumno.',add:'Agregar alumno',f:[
   {k:'matricula',l:'Matrícula'},{k:'nombre',l:'Nombre del alumno'},{k:'grupo',l:'Grupo',sel:G,badge:1},
@@ -181,11 +213,38 @@ const M={
 };
 const GROUPS=[['',['dash']],['Escuela',['alumnos','academico','personal']],['Servicios',['enfermeria','cafeteria','mantenimiento']]];
 
-/* Botón de respaldo oculto por ahora. Para mostrarlo, reemplaza '' por:
-   '<button class="ghost" onclick="exportar()">Descargar respaldo (JSON)</button>' */
-const EXPORT_BTN='';
+/* Lógica de Control de Accesos (RBAC) Local */
+const PERMISOS = {
+  director: { modulos: ['alumnos', 'academico', 'personal', 'enfermeria', 'cafeteria', 'mantenimiento'], edita: true },
+  profesor: { modulos: ['alumnos', 'academico'], edita: true },
+  personal: { modulos: ['alumnos', 'enfermeria', 'cafeteria', 'mantenimiento'], edita: true },
+  tutor: { modulos: ['academico', 'enfermeria', 'cafeteria'], edita: false },
+  alumno: { modulos: ['academico', 'cafeteria'], edita: false }
+};
 
-let db=load(),cur='dash',q='',editing=null;
+let db=load(),cur='dash',q='',editing=null, rolActual=null;
+
+$('#login-form').onsubmit = e => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target));
+  
+  if(data.pass === '1234') { // La contraseña es puramente para demostración visual
+    rolActual = PERMISOS[data.rol];
+    $('#login-view').style.display = 'none';
+    $('#app-view').style.display = 'flex';
+    go('dash'); 
+  } else {
+    alert('Contraseña incorrecta. Por favor usa "1234" para acceder.');
+  }
+};
+
+function logout() {
+  rolActual = null;
+  $('#login-view').style.display = 'flex';
+  $('#app-view').style.display = 'none';
+  $('#login-form').reset();
+}
+
 function load(){
  try{const d=JSON.parse(localStorage.getItem(KEY));if(d)return d}catch(e){}
  const d={};for(const k in M)d[k]=M[k].seed.map((r,i)=>({_id:i+1,...r}));return d}
@@ -193,21 +252,31 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
 const money=n=>'$'+Number(n).toLocaleString('es-MX',{minimumFractionDigits:2});
 
 function cell(f,v){
- if(f.badge)return `<span class="tag ${ST[v]||''}">${esc(v)}</span>`;
+ if(f.badge)return `<span class="tag ${ST[v]\vert{}\vert{}''}">${esc(v)}</span>`;
  if(f.money)return money(v);
  if(f.type==='datetime-local')return esc(String(v).replace('T',' '));
  return esc(v)}
 
 function nav(){
- $('#nav').innerHTML=GROUPS.map(([g,ks])=>(g?`<p class="grp">${g}</p>`:'')+
-  ks.map(k=>`<button class="${k===cur?'on':''}" onclick="go('${k}')">${k==='dash'?'Resumen':M[k].t}</button>`).join('')).join('')}
+ if(!rolActual) return;
+ $('#nav').innerHTML=GROUPS.map(([g,ks])=>{
+  // Filtramos las vistas para que el menú solo muestre a lo que tiene permiso el rol
+  const permitidos = ks.filter(k => k === 'dash' || rolActual.modulos.includes(k));
+  if(permitidos.length === 0) return '';
+  return (g?`<p class="grp">${g}</p>`:'')+
+  permitidos.map(k=>`<button class="${k===cur?'on':''}" onclick="go('${k}')">${k==='dash'?'Resumen':M[k].t}</button>`).join('');
+ }).join('')}
+
 function go(k){cur=k;q='';nav();render();scrollTo(0,0)}
 
 function render(){
  const m=M[cur];
+ // Oculta el botón "+ Agregar" si el usuario solo tiene acceso de lectura
+ const btnAgregar = rolActual.edita ? `<button class="pri" onclick="openForm('${cur}')">+ ${m.add}</button>` : '';
+
  $('#head').innerHTML=cur==='dash'
-  ?`<div><h1>Panel de la escuela</h1><p>Ciclo escolar 2026. Lo que hay registrado hoy.</p></div>${EXPORT_BTN}`
-  :`<div><h1>${m.t}</h1><p>${m.s}</p></div><button class="pri" onclick="openForm('${cur}')">+ ${m.add}</button>`;
+  ?`<div><h1>Panel de la escuela</h1><p>Ciclo escolar 2026. Lo que hay registrado hoy.</p></div>`
+  :`<div><h1>${m.t}</h1><p>${m.s}</p></div>${btnAgregar}`;
  $('#view').innerHTML=cur==='dash'?dash():table();
  if(cur!=='dash')fill()}
 
@@ -218,20 +287,36 @@ function dash(){
  const fig=[[a.length,'alumnos registrados'],[db.personal.length,'empleados en plantilla'],[prom,'promedio general'],[abiertos,'reportes de mantenimiento abiertos']];
  const por={};a.forEach(r=>por[r.grupo]=(por[r.grupo]||0)+1);
  const max=Math.max(1,...Object.values(por));
+ 
+ // Oculta los accesos directos de registro si el usuario no puede editar
+ const quickBtns = rolActual.edita 
+    ? Object.keys(M).filter(k => rolActual.modulos.includes(k)).map(k=>`<button onclick="go('${k}');openForm('${k}')">${M[k].add}</button>`).join('') 
+    : '';
+ const panelQuick = quickBtns ? `<section class="panel"><h2>Registro rápido</h2><div class="quick">${quickBtns}</div></section>` : '';
+
  return `<div class="strip">${fig.map(([n,l])=>`<div><b>${n}</b><span>${l}</span></div>`).join('')}</div>
  <div class="two">
   <section class="panel"><h2>Alumnos por grupo</h2>${Object.keys(por).sort().map(g=>`<div class="bar"><span>${g}</span><i style="width:${por[g]/max*100}%"></i><em>${por[g]}</em></div>`).join('')||'<p class="empty">Aún no hay alumnos. Agrega el primero desde el registro rápido.</p>'}</section>
-  <section class="panel"><h2>Registro rápido</h2><div class="quick">${Object.keys(M).map(k=>`<button onclick="go('${k}');openForm('${k}')">${M[k].add}</button>`).join('')}</div></section>
+  ${panelQuick}
  </div>`}
 
 function table(){
  const m=M[cur];
+ // Ocultar la cabecera de la columna de acciones si no puede editar
+ const thAcciones = rolActual.edita ? `<th></th>` : ``;
  return `<div class="sheet"><div class="tools"><input type="search" placeholder="Buscar en ${m.t.toLowerCase()}" value="${esc(q)}" oninput="q=this.value.toLowerCase();fill()"><span id="cnt"></span></div>
- <div class="tw"><table><thead><tr>${m.f.map(f=>`<th>${f.l}</th>`).join('')}<th></th></tr></thead><tbody id="tb"></tbody></table></div></div>`}
+ <div class="tw"><table><thead><tr>${m.f.map(f=>`<th>${f.l}</th>`).join('')}${thAcciones}</tr></thead><tbody id="tb"></tbody></table></div></div>`}
+
 function fill(){
  const m=M[cur],rows=db[cur].filter(r=>!q||m.f.some(f=>String(r[f.k]).toLowerCase().includes(q)));
  $('#cnt').textContent=rows.length+(rows.length===1?' registro':' registros');
- $('#tb').innerHTML=rows.map(r=>`<tr>${m.f.map(f=>`<td>${cell(f,r[f.k])}</td>`).join('')}<td class="act"><button onclick="openForm('${cur}',${r._id})">Editar</button><button class="del" onclick="del(${r._id})">Eliminar</button></td></tr>`).join('')
+ 
+ // Imprimir los botones Editar/Eliminar solo si tiene permisos
+ const acciones = (id) => rolActual.edita 
+    ? `<td class="act"><button onclick="openForm('${cur}',${id})">Editar</button><button class="del" onclick="del(${id})">Eliminar</button></td>`
+    : ``;
+
+ $('#tb').innerHTML=rows.map(r=>`<tr>${m.f.map(f=>`<td>${cell(f,r[f.k])}</td>`).join('')}${acciones(r._id)}</tr>`).join('')
   ||`<tr><td class="empty" colspan="9">${q?'Ningún resultado. Prueba con otra palabra.':'Aún no hay registros. Usa el botón de arriba para agregar el primero.'}</td></tr>`}
 
 function openForm(k,id){
@@ -257,14 +342,8 @@ $('#form').onsubmit=e=>{
 
 function del(id){
  if(confirm('¿Eliminar este registro? Esta acción no se puede deshacer.')){db[cur]=db[cur].filter(r=>r._id!==id);save();render()}}
-function exportar(){
- const a=document.createElement('a');
- a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));
- a.download='escuela-primaria.json';a.click()}
 function reset(){
- if(confirm('Se borrarán tus cambios y volverán los datos de ejemplo.')){localStorage.removeItem(KEY);db=load();render()}}
+ if(confirm('Se borrarán tus cambios y volverán los datos de ejemplo.')){localStorage.removeItem(KEY);db=load();logout()}}
 
-nav();render();
 </script>
-</body>
-</html>
+</body></html>
