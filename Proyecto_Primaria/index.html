@@ -12,7 +12,6 @@
 body{font:15px/1.5 'Public Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);display:flex;min-height:100vh}
 button,input,select{font-family:inherit}
 :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
-
 aside{width:250px;flex:none;background:#fff;border-right:1px solid var(--rule);padding:26px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:20px}
 .brand{display:flex;gap:11px;align-items:center;padding:0 8px}
 .brand svg{width:38px;height:38px;flex:none}
@@ -27,7 +26,7 @@ aside{width:250px;flex:none;background:#fff;border-right:1px solid var(--rule);p
 .sf a,.sf button{color:var(--mut);background:none;border:0;font-size:13px;text-align:left;cursor:pointer;padding:0;text-decoration:none}
 .sf a:hover,.sf button:hover{color:var(--blue)}
 .sf small{color:var(--mut);font-size:12px}
-
+#who{color:var(--ink);font-weight:600;font-size:13px}
 main{flex:1;min-width:0;max-width:1180px;padding:34px 44px 50px}
 #head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding-bottom:20px;margin-bottom:26px;border-bottom:2px solid var(--blue)}
 h1{font:600 34px/1.1 Newsreader,serif;letter-spacing:-.01em}
@@ -35,8 +34,6 @@ h1{font:600 34px/1.1 Newsreader,serif;letter-spacing:-.01em}
 .pri,.ghost{padding:10px 18px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap}
 .pri{background:var(--blue);color:#fff;border:0}.pri:hover{background:var(--blue-d)}
 .ghost{background:#fff;color:var(--blue-d);border:1px solid var(--rule)}.ghost:hover{background:var(--soft)}
-
-/* Hoja de registro */
 .sheet{background:#fff;border:1px solid var(--rule);border-radius:10px;overflow:hidden}
 .tools{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--rule)}
 .tools input{width:min(340px,100%);padding:9px 12px;border:1px solid var(--rule);border-radius:8px;font-size:14px}
@@ -55,14 +52,14 @@ tbody td:first-child{box-shadow:inset 3px 0 var(--blue);font-weight:600}
 .tag{display:inline-block;padding:2px 10px;border-radius:99px;background:var(--soft);color:var(--blue-d);font-size:12.5px;font-weight:600;white-space:nowrap}
 .tag.ok{background:#e3f5ec;color:var(--ok)}.tag.warn{background:#fdf1dc;color:var(--warn)}.tag.wip{background:#dfe9ff;color:var(--blue-d)}
 td.empty{text-align:center;color:var(--mut);padding:36px}
-
-/* Resumen */
 .strip{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border:1px solid var(--rule);border-radius:10px}
+.strip.s3{grid-template-columns:repeat(3,1fr)}
 .strip div{padding:22px 24px;border-right:1px solid var(--rule)}.strip div:last-child{border:0}
 .strip b{display:block;font:600 44px/1 Newsreader,serif;color:var(--blue);margin-bottom:6px}
+.s3 div:first-child b{font-size:24px;line-height:1.2}
 .strip span{color:var(--mut);font-size:14px}
 .two{display:grid;grid-template-columns:3fr 2fr;gap:22px;margin-top:22px}
-.panel{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:22px 24px}
+.panel{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:22px 24px;overflow-x:auto}
 h2{font:600 20px Newsreader,serif;margin-bottom:14px}
 .bar{display:grid;grid-template-columns:48px 1fr 24px;align-items:center;gap:10px;margin:8px 0}
 .bar i{height:12px;background:var(--blue);border-radius:3px}
@@ -70,32 +67,47 @@ h2{font:600 20px Newsreader,serif;margin-bottom:14px}
 .quick{display:flex;flex-direction:column;gap:8px}
 .quick button{text-align:left;background:var(--soft);border:0;color:var(--blue-d);font-weight:600;font-size:14px;padding:10px 14px;border-radius:8px;cursor:pointer}
 .quick button:hover{background:#d6e3fb}
-p.empty{color:var(--mut)}
-
-/* Formulario */
+p.empty,.hint{color:var(--mut)}
+.hint{font-size:12.5px}
 dialog{border:0;border-radius:12px;padding:0;width:min(520px,92vw);box-shadow:0 24px 60px rgba(12,35,64,.3);margin:auto}
 dialog::backdrop{background:rgba(12,35,64,.5)}
-dialog header{background:var(--blue);padding:18px 24px}
-dialog h2{color:#fff;margin:0}
-#ff{padding:22px 24px;display:grid;gap:14px}
+dialog header,#lf header{background:var(--blue);padding:18px 24px}
+dialog h2,#lf h2{color:#fff;margin:0}
+#ff,#lb{padding:22px 24px;display:grid;gap:14px}
 label{display:grid;gap:5px;font-size:13px;font-weight:600;color:#33445f}
 label input,label select{padding:10px 12px;border:1px solid var(--rule);border-radius:8px;font-size:15px;font-weight:400;color:var(--ink);background:#fff}
 .foot{display:flex;justify-content:flex-end;gap:10px;padding:0 24px 22px}
-
+#login{display:none;position:fixed;inset:0;z-index:9;place-items:center;background:var(--bg);padding:18px}
+body.out #login{display:grid}body.out aside,body.out main{display:none}
+#lf{background:#fff;border:1px solid var(--rule);border-radius:12px;width:min(400px,100%);box-shadow:0 20px 50px rgba(12,35,64,.12);overflow:hidden}
+#le{color:#b42318;font-size:13px;min-height:18px}
 @media(max-width:900px){
  body{flex-direction:column}
  aside{width:100%;height:auto;position:static;gap:10px;padding:16px}
  #nav{flex-direction:row;overflow-x:auto;flex:none;gap:6px}
- .grp,.sf{display:none}
+ .grp{display:none}.sf{flex-direction:row;flex-wrap:wrap;gap:6px 14px;padding:8px 0 0;border:0}
  #nav button{white-space:nowrap;border-left:0;border-bottom:3px solid transparent}
  #nav button.on{border-bottom-color:var(--blue)}
  main{padding:24px 18px}
- .strip{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}
+ .strip,.strip.s3{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}
  #head{flex-direction:column;align-items:flex-start}
 }
 </style>
 </head>
-<body>
+<body class="out">
+
+<div id="login">
+ <form id="lf">
+  <header><h2>Iniciar sesión</h2></header>
+  <div id="lb">
+   <label>Usuario<input id="lu" autocomplete="username" required></label>
+   <label>Contraseña<input id="lc" type="password" autocomplete="current-password" required></label>
+   <p id="le" role="alert"></p>
+   <button class="pri">Entrar</button>
+   <p class="hint">Cuentas de ejemplo: director / dir2026 · docente / doc2026 · 2026-PRI-001 / alumno123</p>
+  </div>
+ </form>
+</div>
 
 <aside>
   <div class="brand">
@@ -104,8 +116,10 @@ label input,label select{padding:10px 12px;border:1px solid var(--rule);border-r
   </div>
   <nav id="nav" aria-label="Módulos"></nav>
   <div class="sf">
+    <span id="who"></span>
+    <button onclick="logout()">Cerrar sesión</button>
     <a href="../index.html">Volver al menú principal</a>
-    <button onclick="reset()">Restaurar datos de ejemplo</button>
+    <button id="rst" onclick="reset()">Restaurar datos de ejemplo</button>
     <small>Los cambios se guardan en este navegador.</small>
   </div>
 </aside>
@@ -128,11 +142,18 @@ label input,label select{padding:10px 12px;border:1px solid var(--rule);border-r
 </dialog>
 
 <script>
-const KEY='escuela-primaria-v1';
+const KEY='escuela-primaria-v1',SK='escuela-sesion';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const G=[];for(let g=1;g<=6;g++)['A','B','C'].forEach(l=>G.push(g+'° '+l));
 const ST={'Completado':'ok','En proceso':'wip','Pendiente':'warn'};
+const DIAS=['Lunes','Martes','Miércoles','Jueves','Viernes'];
+const ROLES=['Director','Administrativo','Docente','Enfermería','Cafetería','Mantenimiento','Alumno'];
+/* Permisos: w = ver y editar, r = solo ver. El Director puede todo; el Alumno solo ve "Mi espacio". */
+const PERM={Administrativo:{alumnos:'w',academico:'w',horario:'w',personal:'r'},Docente:{alumnos:'r',academico:'w',horario:'r'},'Enfermería':{alumnos:'r',enfermeria:'w'},'Cafetería':{alumnos:'r',cafeteria:'w'},Mantenimiento:{mantenimiento:'w'}};
+let S=null;
+const lvl=k=>!S?'':S.rol==='Director'?'w':(PERM[S.rol]||{})[k]||'';
+const ok=k=>k==='dash'?['Director','Administrativo'].includes(S.rol):k==='mio'?S.rol==='Alumno':!!lvl(k);
 
 const M={
  alumnos:{t:'Alumnos y tutores',s:'Matrículas y responsables legales de cada alumno.',add:'Agregar alumno',f:[
@@ -150,15 +171,26 @@ const M={
   {matricula:'2026-PRI-001',alumno:'Sofía Martínez Pérez',materia:'Matemáticas III',creditos:8,calificacion:9.5},
   {matricula:'2026-PRI-001',alumno:'Sofía Martínez Pérez',materia:'Español III',creditos:8,calificacion:9.2},
   {matricula:'2026-PRI-002',alumno:'Alejandro Gómez Ruiz',materia:'Ciencias Naturales IV',creditos:7,calificacion:8.8}]},
+ horario:{t:'Horario',s:'Clases por grupo, día y hora.',add:'Agregar clase',f:[
+  {k:'grupo',l:'Grupo',sel:G,badge:1},{k:'dia',l:'Día',sel:DIAS},{k:'hora',l:'Hora',type:'time'},{k:'materia',l:'Asignatura'}],
+  seed:[
+  {grupo:'3° A',dia:'Lunes',hora:'08:00',materia:'Matemáticas III'},
+  {grupo:'3° A',dia:'Lunes',hora:'09:00',materia:'Español III'},
+  {grupo:'3° A',dia:'Martes',hora:'08:00',materia:'Ciencias Naturales III'},
+  {grupo:'3° A',dia:'Miércoles',hora:'08:00',materia:'Matemáticas III'},
+  {grupo:'4° B',dia:'Lunes',hora:'08:00',materia:'Ciencias Naturales IV'},
+  {grupo:'4° B',dia:'Martes',hora:'09:00',materia:'Español IV'}]},
  personal:{t:'Personal',s:'Plantilla, puestos y sueldo mensual de cada empleado.',add:'Agregar empleado',f:[
   {k:'id',l:'ID de empleado'},
   {k:'puesto',l:'Puesto',sel:['Docente titular','Personal de enfermería','Personal de cafetería','Mantenimiento','Administrativo','Dirección'],badge:1},
   {k:'salario',l:'Salario mensual',type:'number',money:1},{k:'area',l:'Área o especialidad'}],
   seed:[
+  {id:'EMP-100',puesto:'Dirección',salario:22000,area:'Dirección general'},
   {id:'EMP-101',puesto:'Docente titular',salario:14500,area:'Matemáticas y Ciencias (3° A)'},
   {id:'EMP-102',puesto:'Personal de enfermería',salario:11200,area:'Primeros auxilios, turno matutino'},
   {id:'EMP-103',puesto:'Personal de cafetería',salario:9800,area:'Turno matutino, operación de caja'},
-  {id:'EMP-104',puesto:'Mantenimiento',salario:10500,area:'Instalaciones hidráulicas'}]},
+  {id:'EMP-104',puesto:'Mantenimiento',salario:10500,area:'Instalaciones hidráulicas'},
+  {id:'EMP-105',puesto:'Administrativo',salario:12000,area:'Control escolar'}]},
  enfermeria:{t:'Enfermería',s:'Atenciones médicas brindadas a los alumnos.',add:'Registrar atención',f:[
   {k:'fecha',l:'Fecha y hora',type:'datetime-local'},{k:'alumno',l:'Alumno',dl:1},
   {k:'diagnostico',l:'Diagnóstico'},{k:'tratamiento',l:'Tratamiento suministrado'}],
@@ -176,37 +208,70 @@ const M={
   {k:'fecha',l:'Fecha',type:'date'},{k:'estado',l:'Estado',sel:['Pendiente','En proceso','Completado'],badge:1}],
   seed:[
   {id:'MANT-01',ubicacion:'Edificio A, salón 302',descripcion:'Reparación de luminaria principal',fecha:'2026-10-07',estado:'Completado'},
-  {id:'MANT-02',ubicacion:'Sanitarios planta baja',descripcion:'Mantenimiento preventivo en llave de lavabo',fecha:'2026-10-09',estado:'En proceso'}]}
+  {id:'MANT-02',ubicacion:'Sanitarios planta baja',descripcion:'Mantenimiento preventivo en llave de lavabo',fecha:'2026-10-09',estado:'En proceso'}]},
+ usuarios:{t:'Usuarios',s:'Cuentas de acceso y el rol de cada una.',add:'Crear usuario',f:[
+  {k:'usuario',l:'Usuario'},{k:'clave',l:'Contraseña',type:'password'},{k:'rol',l:'Rol',sel:ROLES,badge:1},{k:'ref',l:'Matrícula o ID de empleado'}],
+  seed:[
+  {usuario:'director',clave:'dir2026',rol:'Director',ref:'EMP-100'},
+  {usuario:'administrativo',clave:'admin2026',rol:'Administrativo',ref:'EMP-105'},
+  {usuario:'docente',clave:'doc2026',rol:'Docente',ref:'EMP-101'},
+  {usuario:'enfermeria',clave:'enf2026',rol:'Enfermería',ref:'EMP-102'},
+  {usuario:'cafeteria',clave:'caf2026',rol:'Cafetería',ref:'EMP-103'},
+  {usuario:'mantenimiento',clave:'mant2026',rol:'Mantenimiento',ref:'EMP-104'},
+  {usuario:'2026-PRI-001',clave:'alumno123',rol:'Alumno',ref:'2026-PRI-001'},
+  {usuario:'2026-PRI-002',clave:'alumno123',rol:'Alumno',ref:'2026-PRI-002'},
+  {usuario:'2026-PRI-003',clave:'alumno123',rol:'Alumno',ref:'2026-PRI-003'},
+  {usuario:'2026-PRI-004',clave:'alumno123',rol:'Alumno',ref:'2026-PRI-004'}]}
 };
-const GROUPS=[['',['dash']],['Escuela',['alumnos','academico','personal']],['Servicios',['enfermeria','cafeteria','mantenimiento']]];
-
-const EXPORT_BTN='';
+const GROUPS=[['',['dash','mio']],['Escuela',['alumnos','academico','horario','personal']],['Servicios',['enfermeria','cafeteria','mantenimiento']],['Acceso',['usuarios']]];
 
 let db=load(),cur='dash',q='',editing=null;
 function load(){
- try{const d=JSON.parse(localStorage.getItem(KEY));if(d)return d}catch(e){}
- const d={};for(const k in M)d[k]=M[k].seed.map((r,i)=>({_id:i+1,...r}));return d}
+ let d={};try{d=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){}
+ for(const k in M)if(!d[k])d[k]=M[k].seed.map((r,i)=>({_id:i+1,...r}));
+ return d}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
 const money=n=>'$'+Number(n).toLocaleString('es-MX',{minimumFractionDigits:2});
 
+/* Sesión */
+try{S=JSON.parse(sessionStorage.getItem(SK))}catch(e){}
+function start(){
+ document.body.classList.remove('out');
+ $('#who').textContent=S.usuario+' · '+S.rol;
+ $('#rst').hidden=S.rol!=='Director';
+ cur=ok('dash')?'dash':ok('mio')?'mio':Object.keys(PERM[S.rol])[0];q='';nav();render()}
+function logout(){
+ try{sessionStorage.removeItem(SK)}catch(e){}
+ S=null;$('#lf').reset();$('#le').textContent='';document.body.classList.add('out')}
+$('#lf').onsubmit=e=>{
+ e.preventDefault();
+ const u=$('#lu').value.trim().toLowerCase(),c=$('#lc').value;
+ const r=db.usuarios.find(x=>String(x.usuario).toLowerCase()===u&&x.clave===c);
+ if(!r){$('#le').textContent='Usuario o contraseña incorrectos.';return}
+ S={usuario:r.usuario,rol:r.rol,ref:r.ref};
+ try{sessionStorage.setItem(SK,JSON.stringify(S))}catch(e){}
+ $('#lf').reset();$('#le').textContent='';start()};
+
 function cell(f,v){
+ if(f.type==='password')return '••••••';
  if(f.badge)return `<span class="tag ${ST[v]||''}">${esc(v)}</span>`;
  if(f.money)return money(v);
  if(f.type==='datetime-local')return esc(String(v).replace('T',' '));
  return esc(v)}
 
 function nav(){
- $('#nav').innerHTML=GROUPS.map(([g,ks])=>(g?`<p class="grp">${g}</p>`:'')+
-  ks.map(k=>`<button class="${k===cur?'on':''}" onclick="go('${k}')">${k==='dash'?'Resumen':M[k].t}</button>`).join('')).join('')}
+ $('#nav').innerHTML=GROUPS.map(([g,ks])=>{ks=ks.filter(ok);return ks.length?(g?`<p class="grp">${g}</p>`:'')+
+  ks.map(k=>`<button class="${k===cur?'on':''}" onclick="go('${k}')">${k==='dash'?'Resumen':k==='mio'?'Mi espacio':M[k].t}</button>`).join(''):''}).join('')}
 function go(k){cur=k;q='';nav();render();scrollTo(0,0)}
 
 function render(){
- const m=M[cur];
+ const m=M[cur],w=lvl(cur)==='w';
  $('#head').innerHTML=cur==='dash'
-  ?`<div><h1>Panel de la escuela</h1><p>Ciclo escolar 2026. Lo que hay registrado hoy.</p></div>${EXPORT_BTN}`
-  :`<div><h1>${m.t}</h1><p>${m.s}</p></div><button class="pri" onclick="openForm('${cur}')">+ ${m.add}</button>`;
- $('#view').innerHTML=cur==='dash'?dash():table();
- if(cur!=='dash')fill()}
+  ?`<div><h1>Panel de la escuela</h1><p>Ciclo escolar 2026. Lo que hay registrado hoy.</p></div>`
+  :cur==='mio'?`<div><h1>Mi espacio</h1><p>Tu horario y tus calificaciones.</p></div>`
+  :`<div><h1>${m.t}</h1><p>${m.s}${w?'':' Solo lectura.'}</p></div>${w?`<button class="pri" onclick="openForm('${cur}')">+ ${m.add}</button>`:''}`;
+ $('#view').innerHTML=cur==='dash'?dash():cur==='mio'?mine():table();
+ if(m)fill()}
 
 function dash(){
  const a=db.alumnos,c=db.academico;
@@ -217,21 +282,34 @@ function dash(){
  const max=Math.max(1,...Object.values(por));
  return `<div class="strip">${fig.map(([n,l])=>`<div><b>${n}</b><span>${l}</span></div>`).join('')}</div>
  <div class="two">
-  <section class="panel"><h2>Alumnos por grupo</h2>${Object.keys(por).sort().map(g=>`<div class="bar"><span>${g}</span><i style="width:${por[g]/max*100}\%"></i><em>${por[g]}</em></div>`).join('')||'<p class="empty">Aún no hay alumnos. Agrega el primero desde el registro rápido.</p>'}</section>
-  <section class="panel"><h2>Registro rápido</h2><div class="quick">${Object.keys(M).map(k=>`<button onclick="go('${k}');openForm('${k}')">${M[k].add}</button>`).join('')}</div></section>
+  <section class="panel"><h2>Alumnos por grupo</h2>${Object.keys(por).sort().map(g=>`<div class="bar"><span>${g}</span><i style="width:${por[g]/max*100}%"></i><em>${por[g]}</em></div>`).join('')||'<p class="empty">Aún no hay alumnos.</p>'}</section>
+  <section class="panel"><h2>Registro rápido</h2><div class="quick">${Object.keys(M).filter(k=>lvl(k)==='w').map(k=>`<button onclick="go('${k}');openForm('${k}')">${M[k].add}</button>`).join('')}</div></section>
  </div>`}
+
+const tbl=(h,rows)=>rows.length?`<table><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`:'<p class="empty">Sin registros todavía.</p>';
+function mine(){
+ const a=db.alumnos.find(r=>r.matricula===S.ref);
+ if(!a)return '<p class="empty">Tu cuenta no está vinculada a ningún alumno. Pide al director que revise tu matrícula.</p>';
+ const cal=db.academico.filter(r=>r.matricula===a.matricula),
+  hor=db.horario.filter(r=>r.grupo===a.grupo).sort((x,y)=>DIAS.indexOf(x.dia)-DIAS.indexOf(y.dia)||String(x.hora).localeCompare(y.hora)),
+  prom=cal.length?(cal.reduce((s,r)=>s+ +r.calificacion,0)/cal.length).toFixed(1):'–';
+ return `<div class="strip s3"><div><b>${esc(a.nombre)}</b><span>${esc(a.matricula)}</span></div><div><b>${esc(a.grupo)}</b><span>grupo</span></div><div><b>${prom}</b><span>promedio</span></div></div>
+ <div class="two"><section class="panel"><h2>Horario de ${esc(a.grupo)}</h2>${tbl(['Día','Hora','Asignatura'],hor.map(r=>[r.dia,r.hora,r.materia]))}</section>
+ <section class="panel"><h2>Calificaciones</h2>${tbl(['Asignatura','Calificación'],cal.map(r=>[r.materia,r.calificacion]))}</section></div>
+ <p class="hint" style="margin-top:14px">Tutor responsable: ${esc(a.tutor)}</p>`}
 
 function table(){
  const m=M[cur];
  return `<div class="sheet"><div class="tools"><input type="search" placeholder="Buscar en ${m.t.toLowerCase()}" value="${esc(q)}" oninput="q=this.value.toLowerCase();fill()"><span id="cnt"></span></div>
  <div class="tw"><table><thead><tr>${m.f.map(f=>`<th>${f.l}</th>`).join('')}<th></th></tr></thead><tbody id="tb"></tbody></table></div></div>`}
 function fill(){
- const m=M[cur],rows=db[cur].filter(r=>!q||m.f.some(f=>String(r[f.k]).toLowerCase().includes(q)));
+ const m=M[cur],w=lvl(cur)==='w',rows=db[cur].filter(r=>!q||m.f.some(f=>f.type!=='password'&&String(r[f.k]).toLowerCase().includes(q)));
  $('#cnt').textContent=rows.length+(rows.length===1?' registro':' registros');
- $('#tb').innerHTML=rows.map(r=>`<tr>${m.f.map(f=>`<td>${cell(f,r[f.k])}</td>`).join('')}<td class="act"><button onclick="openForm('${cur}',${r._id})">Editar</button><button class="del" onclick="del(${r._id})">Eliminar</button></td></tr>`).join('')
-  ||`<tr><td class="empty" colspan="9">${q?'Ningún resultado. Prueba con otra palabra.':'Aún no hay registros. Usa el botón de arriba para agregar el primero.'}</td></tr>`}
+ $('#tb').innerHTML=rows.map(r=>`<tr>${m.f.map(f=>`<td>${cell(f,r[f.k])}</td>`).join('')}<td class="act">${w?`<button onclick="openForm('${cur}',${r._id})">Editar</button><button class="del" onclick="del(${r._id})">Eliminar</button>`:''}</td></tr>`).join('')
+  ||`<tr><td class="empty" colspan="9">${q?'Ningún resultado. Prueba con otra palabra.':'Aún no hay registros.'}</td></tr>`}
 
 function openForm(k,id){
+ if(lvl(k)!=='w')return;
  const m=M[k],r=id?db[k].find(x=>x._id===id):{};editing={k,id};
  const n=new Date(),p=x=>String(x).padStart(2,'0'),d=`${n.getFullYear()}-${p(n.getMonth()+1)}-${p(n.getDate())}`;
  $('#ft').textContent=id?'Editar registro':m.add;
@@ -247,16 +325,23 @@ function openForm(k,id){
 $('#form').onsubmit=e=>{
  e.preventDefault();
  const {k,id}=editing,d=Object.fromEntries(new FormData(e.target));
+ if(lvl(k)!=='w')return;
+ if(k==='usuarios'){
+  if(db.usuarios.some(x=>x._id!==id&&String(x.usuario).toLowerCase()===d.usuario.toLowerCase()))return alert('Ese usuario ya existe.');
+  if(id&&db.usuarios.find(x=>x._id===id).usuario===S.usuario&&d.rol!==S.rol)return alert('No puedes cambiar tu propio rol.')}
  M[k].f.forEach(f=>{if(f.type==='number')d[f.k]=parseFloat(d[f.k])});
  if(id)Object.assign(db[k].find(x=>x._id===id),d);
  else db[k].push({_id:Math.max(0,...db[k].map(x=>x._id))+1,...d});
  save();$('#dlg').close();render()};
 
 function del(id){
+ if(lvl(cur)!=='w')return;
+ if(cur==='usuarios'&&db.usuarios.find(x=>x._id===id).usuario===S.usuario)return alert('No puedes eliminar tu propia cuenta.');
  if(confirm('¿Eliminar este registro? Esta acción no se puede deshacer.')){db[cur]=db[cur].filter(r=>r._id!==id);save();render()}}
 function reset(){
- if(confirm('Se borrarán tus cambios y volverán los datos de ejemplo.')){localStorage.removeItem(KEY);db=load();render()}}
+ if(S.rol!=='Director')return;
+ if(confirm('Se borrarán tus cambios y volverán los datos de ejemplo. Se cerrará la sesión.')){localStorage.removeItem(KEY);db=load();logout()}}
 
-nav();render();
+if(S&&db.usuarios.some(u=>u.usuario===S.usuario&&u.rol===S.rol))start();else S=null;
 </script>
 </body></html>
