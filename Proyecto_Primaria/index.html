@@ -170,7 +170,9 @@ body.out #login{display:grid}body.out aside,body.out main{display:none}
 
 <script>
 // Cuando despliegues en Render, cambia esta línea por tu URL https://...onrender.com
-const API_URL = "http://localhost:5000";
+const API_URL = ["localhost", "127.0.0.1"].includes(location.hostname)
+  ? "http://localhost:5000"
+  : "https://primer-entrega-de-proyecto.onrender.com";
 const SK = "escuela-sesion-pg";
 
 const $ = s => document.querySelector(s);
