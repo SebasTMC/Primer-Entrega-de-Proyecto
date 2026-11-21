@@ -7,31 +7,31 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#0c2340;--mut:#5a6b85;--blue:#1b4fd8;--blue-d:#123a9e;--soft:#e8effc;--rule:#d3ddef;--bg:#f3f6fb;--ok:#0f7b55;--warn:#a15c07}
+:root{--ink:#0c2340;--mut:#5a6b85;--blue:#1b4fd8;--blue-d:#123a9e;--soft:#e8effc;--rule:#d3ddef;--bg:#f3f6fb;--ok:#0f7b55;--warn:#a15c07;--err:#b42318}
 *{box-sizing:border-box;margin:0}
 body{font:15px/1.5 'Public Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);display:flex;min-height:100vh}
-button,input,select{font-family:inherit}
+button,input,select,textarea{font-family:inherit}
 :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
-aside{width:250px;flex:none;background:#fff;border-right:1px solid var(--rule);padding:26px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:20px}
+aside{width:250px;flex:none;background:#fff;border-right:1px solid var(--rule);padding:26px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:16px;overflow-y:auto}
 .brand{display:flex;gap:11px;align-items:center;padding:0 8px}
 .brand svg{width:38px;height:38px;flex:none}
 .brand b{font:600 19px/1.1 Newsreader,serif;display:block}
 .brand span{font-size:12.5px;color:var(--mut)}
 #nav{display:flex;flex-direction:column;gap:2px;flex:1}
-.grp{font-size:12.5px;color:var(--mut);margin:16px 12px 4px;font-weight:600}
-#nav button{background:none;border:0;border-left:3px solid transparent;text-align:left;cursor:pointer;padding:9px 12px;border-radius:8px;font-size:15px;font-weight:500;color:#33445f}
+.grp{font-size:12px;color:var(--mut);margin:14px 12px 4px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+#nav button{background:none;border:0;border-left:3px solid transparent;text-align:left;cursor:pointer;padding:8px 12px;border-radius:8px;font-size:14.5px;font-weight:500;color:#33445f}
 #nav button:hover{background:var(--soft)}
 #nav button.on{background:var(--soft);color:var(--blue-d);font-weight:700;border-left-color:var(--blue)}
 .sf{display:flex;flex-direction:column;gap:8px;padding:14px 10px 0;border-top:1px solid var(--rule);font-size:13px}
 .sf a,.sf button{color:var(--mut);background:none;border:0;font-size:13px;text-align:left;cursor:pointer;padding:0;text-decoration:none}
 .sf a:hover,.sf button:hover{color:var(--blue)}
-.sf small{color:var(--mut);font-size:12px}
+.sf small{color:var(--ok);font-size:12px;font-weight:600}
 #who{color:var(--ink);font-weight:600;font-size:13px}
-main{flex:1;min-width:0;max-width:1180px;padding:34px 44px 50px}
+main{flex:1;min-width:0;max-width:1200px;padding:34px 44px 50px}
 #head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding-bottom:20px;margin-bottom:26px;border-bottom:2px solid var(--blue)}
 h1{font:600 34px/1.1 Newsreader,serif;letter-spacing:-.01em}
 #head p{color:var(--mut);margin-top:6px}
-.pri,.ghost{padding:10px 18px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap}
+.pri,.ghost{padding:10px 18px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-block;text-align:center}
 .pri{background:var(--blue);color:#fff;border:0}.pri:hover{background:var(--blue-d)}
 .ghost{background:#fff;color:var(--blue-d);border:1px solid var(--rule)}.ghost:hover{background:var(--soft)}
 .sheet{background:#fff;border:1px solid var(--rule);border-radius:10px;overflow:hidden}
@@ -40,22 +40,22 @@ h1{font:600 34px/1.1 Newsreader,serif;letter-spacing:-.01em}
 #cnt{color:var(--mut);font-size:13px}
 .tw{overflow-x:auto}
 table{width:100%;border-collapse:collapse}
-th{text-align:left;font-size:13px;font-weight:600;color:var(--blue-d);background:var(--soft);padding:12px 18px;border-bottom:1px solid var(--rule);white-space:nowrap}
-td{padding:13px 18px;border-bottom:1px solid var(--rule);font-variant-numeric:tabular-nums}
+th{text-align:left;font-size:13px;font-weight:600;color:var(--blue-d);background:var(--soft);padding:12px 16px;border-bottom:1px solid var(--rule);white-space:nowrap}
+td{padding:12px 16px;border-bottom:1px solid var(--rule);font-variant-numeric:tabular-nums;font-size:14px}
 tr:last-child td{border-bottom:0}
 tbody tr:hover{background:#f8faff}
 tbody td:first-child{box-shadow:inset 3px 0 var(--blue);font-weight:600}
 .act{text-align:right;white-space:nowrap}
-.act button{background:none;border:0;color:var(--blue);font-weight:600;font-size:13px;cursor:pointer;padding:4px 8px;border-radius:6px}
+.act button{background:none;border:0;color:var(--blue);font-weight:600;font-size:12.5px;cursor:pointer;padding:4px 8px;border-radius:6px}
 .act button:hover{background:var(--soft)}
-.act .del{color:#b42318}.act .del:hover{background:#fdecea}
-.tag{display:inline-block;padding:2px 10px;border-radius:99px;background:var(--soft);color:var(--blue-d);font-size:12.5px;font-weight:600;white-space:nowrap}
-.tag.ok{background:#e3f5ec;color:var(--ok)}.tag.warn{background:#fdf1dc;color:var(--warn)}.tag.wip{background:#dfe9ff;color:var(--blue-d)}
+.act .del{color:var(--err)}.act .del:hover{background:#fdecea}
+.tag{display:inline-block;padding:2px 10px;border-radius:99px;background:var(--soft);color:var(--blue-d);font-size:12px;font-weight:600;white-space:nowrap}
+.tag.ok{background:#e3f5ec;color:var(--ok)}.tag.warn{background:#fdf1dc;color:var(--warn)}.tag.wip{background:#dfe9ff;color:var(--blue-d)}.tag.err{background:#fdecea;color:var(--err)}
 td.empty{text-align:center;color:var(--mut);padding:36px}
 .strip{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border:1px solid var(--rule);border-radius:10px}
 .strip.s3{grid-template-columns:repeat(3,1fr)}
 .strip div{padding:22px 24px;border-right:1px solid var(--rule)}.strip div:last-child{border:0}
-.strip b{display:block;font:600 44px/1 Newsreader,serif;color:var(--blue);margin-bottom:6px}
+.strip b{display:block;font:600 42px/1 Newsreader,serif;color:var(--blue);margin-bottom:6px}
 .s3 div:first-child b{font-size:24px;line-height:1.2}
 .strip span{color:var(--mut);font-size:14px}
 .two{display:grid;grid-template-columns:3fr 2fr;gap:22px;margin-top:22px}
@@ -69,18 +69,35 @@ h2{font:600 20px Newsreader,serif;margin-bottom:14px}
 .quick button:hover{background:#d6e3fb}
 p.empty,.hint{color:var(--mut)}
 .hint{font-size:12.5px}
+.toast{margin-bottom:16px;padding:11px 14px;border-radius:8px;font-size:13.5px;display:none}
+.toast.ok{display:block;background:#e3f5ec;color:var(--ok);border:1px solid #a7e3c6}
+.toast.err{display:block;background:#fdecea;color:var(--err);border:1px solid #f5c2be}
 dialog{border:0;border-radius:12px;padding:0;width:min(520px,92vw);box-shadow:0 24px 60px rgba(12,35,64,.3);margin:auto}
 dialog::backdrop{background:rgba(12,35,64,.5)}
 dialog header,#lf header{background:var(--blue);padding:18px 24px}
 dialog h2,#lf h2{color:#fff;margin:0}
-#ff,#lb{padding:22px 24px;display:grid;gap:14px}
+#ff,#lb{padding:22px 24px;display:grid;gap:12px}
 label{display:grid;gap:5px;font-size:13px;font-weight:600;color:#33445f}
-label input,label select{padding:10px 12px;border:1px solid var(--rule);border-radius:8px;font-size:15px;font-weight:400;color:var(--ink);background:#fff}
+label input,label select,label textarea{padding:9px 12px;border:1px solid var(--rule);border-radius:8px;font-size:14.5px;font-weight:400;color:var(--ink);background:#fff}
 .foot{display:flex;justify-content:flex-end;gap:10px;padding:0 24px 22px}
 #login{display:none;position:fixed;inset:0;z-index:9;place-items:center;background:var(--bg);padding:18px}
 body.out #login{display:grid}body.out aside,body.out main{display:none}
-#lf{background:#fff;border:1px solid var(--rule);border-radius:12px;width:min(400px,100%);box-shadow:0 20px 50px rgba(12,35,64,.12);overflow:hidden}
-#le{color:#b42318;font-size:13px;min-height:18px}
+#lf{background:#fff;border:1px solid var(--rule);border-radius:12px;width:min(430px,100%);box-shadow:0 20px 50px rgba(12,35,64,.12);overflow:hidden}
+#le{color:var(--err);font-size:13px;min-height:18px}
+.quick-roles{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.quick-roles button{background:var(--soft);border:1px solid var(--rule);color:var(--blue-d);padding:4px 9px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600}
+.quick-roles button:hover{background:#d6e3fb}
+/* Mapa SVG */
+.map-bar{display:grid;grid-template-columns:1.3fr 1fr 1fr auto;gap:10px;align-items:end;margin-bottom:14px}
+.svg-wrap{background:#f8fafc;border:1px solid var(--rule);border-radius:10px;padding:10px}
+.svg-wrap svg{width:100%;height:auto;display:block}
+.salon-box{fill:#e2e8f0;stroke:#475569;stroke-width:2;cursor:pointer;transition:.2s}
+.salon-box:hover{fill:#bfdbfe}
+.salon-box.ocupado{fill:#dbeafe;stroke:#1b4fd8}
+.salon-box.destacado{fill:#34d399;stroke:#065f46;stroke-width:3.5}
+.salon-label{font-size:13px;font-weight:700;fill:#0c2340;pointer-events:none}
+.salon-sub{font-size:11px;fill:#33445f;pointer-events:none}
+.info-box{margin-top:12px;padding:12px 14px;border-radius:8px;background:var(--soft);border:1px solid var(--rule);font-size:14px}
 @media(max-width:900px){
  body{flex-direction:column}
  aside{width:100%;height:auto;position:static;gap:10px;padding:16px}
@@ -89,7 +106,7 @@ body.out #login{display:grid}body.out aside,body.out main{display:none}
  #nav button{white-space:nowrap;border-left:0;border-bottom:3px solid transparent}
  #nav button.on{border-bottom-color:var(--blue)}
  main{padding:24px 18px}
- .strip,.strip.s3{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}
+ .strip,.strip.s3{grid-template-columns:1fr 1fr}.two,.map-bar{grid-template-columns:1fr}
  #head{flex-direction:column;align-items:flex-start}
 }
 </style>
@@ -100,11 +117,21 @@ body.out #login{display:grid}body.out aside,body.out main{display:none}
  <form id="lf">
   <header><h2>Iniciar sesión</h2></header>
   <div id="lb">
-   <label>Usuario<input id="lu" autocomplete="username" required></label>
-   <label>Contraseña<input id="lc" type="password" autocomplete="current-password" required></label>
+   <label>Usuario o correo<input id="lu" autocomplete="username" placeholder="Ej. director" required></label>
+   <label>Contraseña<input id="lc" type="password" autocomplete="current-password" placeholder="primaria123" required></label>
    <p id="le" role="alert"></p>
-   <button class="pri">Entrar</button>
-   <p class="hint">Cuentas de ejemplo: director / dir2026 · docente / doc2026 · 2026-PRI-001 / alumno123</p>
+   <button class="pri">Entrar al sistema</button>
+   <a href="padres.html" class="ghost">¿Eres padre o tutor? Ir al Portal de Padres →</a>
+   <p class="hint">Acceso rápido de prueba (clave: <b>primaria123</b>):</p>
+   <div class="quick-roles">
+     <button type="button" data-u="director">Director</button>
+     <button type="button" data-u="administrativo">Admin</button>
+     <button type="button" data-u="docente">Docente</button>
+     <button type="button" data-u="enfermeria">Enfermería</button>
+     <button type="button" data-u="cafeteria">Cafetería</button>
+     <button type="button" data-u="mantenimiento">Mantenimiento</button>
+     <button type="button" data-u="2026-PRI-001">Alumno</button>
+   </div>
   </div>
  </form>
 </div>
@@ -118,13 +145,14 @@ body.out #login{display:grid}body.out aside,body.out main{display:none}
   <div class="sf">
     <span id="who"></span>
     <button onclick="logout()">Cerrar sesión</button>
+    <a href="padres.html">Portal de Padres</a>
     <a href="../index.html">Volver al menú principal</a>
-    <button id="rst" onclick="reset()">Restaurar datos de ejemplo</button>
-    <small>Los cambios se guardan en este navegador.</small>
+    <small>● Conectado a PostgreSQL</small>
   </div>
 </aside>
 
 <main>
+  <div id="toast" class="toast"></div>
   <div id="head"></div>
   <div id="view"></div>
 </main>
@@ -135,213 +163,505 @@ body.out #login{display:grid}body.out aside,body.out main{display:none}
     <div id="ff"></div>
     <div class="foot">
       <button type="button" class="ghost" onclick="$('#dlg').close()">Cancelar</button>
-      <button class="pri">Guardar</button>
+      <button class="pri">Guardar en BD</button>
     </div>
   </form>
-  <datalist id="dl"></datalist>
 </dialog>
 
 <script>
-const KEY='escuela-primaria-v1',SK='escuela-sesion';
-const $=s=>document.querySelector(s);
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const G=[];for(let g=1;g<=6;g++)['A','B','C'].forEach(l=>G.push(g+'° '+l));
-const ST={'Completado':'ok','En proceso':'wip','Pendiente':'warn'};
-const DIAS=['Lunes','Martes','Miércoles','Jueves','Viernes'];
-const ROLES=['Director','Administrativo','Docente','Enfermería','Cafetería','Mantenimiento','Alumno'];
-/* Permisos: w = ver y editar, r = solo ver. El Director puede todo; el Alumno solo ve "Mi espacio". */
-const PERM={Administrativo:{alumnos:'w',academico:'w',horario:'w',personal:'r'},Docente:{alumnos:'r',academico:'w',horario:'r'},'Enfermería':{alumnos:'r',enfermeria:'w'},'Cafetería':{alumnos:'r',cafeteria:'w'},Mantenimiento:{mantenimiento:'w'}};
-let S=null;
-const lvl=k=>!S?'':S.rol==='Director'?'w':(PERM[S.rol]||{})[k]||'';
-const ok=k=>k==='dash'?['Director','Administrativo'].includes(S.rol):k==='mio'?S.rol==='Alumno':!!lvl(k);
+// Cuando despliegues en Render, cambia esta línea por tu URL https://...onrender.com
+const API_URL = ["localhost", "127.0.0.1"].includes(location.hostname)
+  ? "http://localhost:5000"
+  : "https://primer-entrega-de-proyecto.onrender.com";
+const SK = "escuela-sesion-pg";
 
-const M={
- alumnos:{t:'Alumnos y tutores',s:'Matrículas y responsables legales de cada alumno.',add:'Agregar alumno',f:[
-  {k:'matricula',l:'Matrícula'},{k:'nombre',l:'Nombre del alumno'},{k:'grupo',l:'Grupo',sel:G,badge:1},
-  {k:'tutor',l:'Tutor responsable'},{k:'telefono',l:'Teléfono',type:'tel'}],
-  seed:[
-  {matricula:'2026-PRI-001',nombre:'Sofía Martínez Pérez',grupo:'3° A',tutor:'Carmen Pérez Gómez',telefono:'55-1234-5678'},
-  {matricula:'2026-PRI-002',nombre:'Alejandro Gómez Ruiz',grupo:'4° B',tutor:'Roberto Gómez Alanís',telefono:'55-8765-4321'},
-  {matricula:'2026-PRI-003',nombre:'Valentina Torres López',grupo:'5° A',tutor:'Lucía López Morales',telefono:'55-9876-5432'},
-  {matricula:'2026-PRI-004',nombre:'Mateo Hernández Vega',grupo:'2° C',tutor:'Ana Vega Soto',telefono:'55-2468-1357'}]},
- academico:{t:'Gestión académica',s:'Materias cursadas y calificación final de cada alumno.',add:'Registrar calificación',f:[
-  {k:'matricula',l:'Matrícula'},{k:'alumno',l:'Alumno',dl:1},{k:'materia',l:'Asignatura'},
-  {k:'creditos',l:'Créditos',type:'number'},{k:'calificacion',l:'Calificación final',type:'number',max:10}],
-  seed:[
-  {matricula:'2026-PRI-001',alumno:'Sofía Martínez Pérez',materia:'Matemáticas III',creditos:8,calificacion:9.5},
-  {matricula:'2026-PRI-001',alumno:'Sofía Martínez Pérez',materia:'Español III',creditos:8,calificacion:9.2},
-  {matricula:'2026-PRI-002',alumno:'Alejandro Gómez Ruiz',materia:'Ciencias Naturales IV',creditos:7,calificacion:8.8}]},
- horario:{t:'Horario',s:'Clases por grupo, día y hora.',add:'Agregar clase',f:[
-  {k:'grupo',l:'Grupo',sel:G,badge:1},{k:'dia',l:'Día',sel:DIAS},{k:'hora',l:'Hora',type:'time'},{k:'materia',l:'Asignatura'}],
-  seed:[
-  {grupo:'3° A',dia:'Lunes',hora:'08:00',materia:'Matemáticas III'},
-  {grupo:'3° A',dia:'Lunes',hora:'09:00',materia:'Español III'},
-  {grupo:'3° A',dia:'Martes',hora:'08:00',materia:'Ciencias Naturales III'},
-  {grupo:'3° A',dia:'Miércoles',hora:'08:00',materia:'Matemáticas III'},
-  {grupo:'4° B',dia:'Lunes',hora:'08:00',materia:'Ciencias Naturales IV'},
-  {grupo:'4° B',dia:'Martes',hora:'09:00',materia:'Español IV'}]},
- personal:{t:'Personal',s:'Plantilla, puestos y sueldo mensual de cada empleado.',add:'Agregar empleado',f:[
-  {k:'id',l:'ID de empleado'},
-  {k:'puesto',l:'Puesto',sel:['Docente titular','Personal de enfermería','Personal de cafetería','Mantenimiento','Administrativo','Dirección'],badge:1},
-  {k:'salario',l:'Salario mensual',type:'number',money:1},{k:'area',l:'Área o especialidad'}],
-  seed:[
-  {id:'EMP-100',puesto:'Dirección',salario:22000,area:'Dirección general'},
-  {id:'EMP-101',puesto:'Docente titular',salario:14500,area:'Matemáticas y Ciencias (3° A)'},
-  {id:'EMP-102',puesto:'Personal de enfermería',salario:11200,area:'Primeros auxilios, turno matutino'},
-  {id:'EMP-103',puesto:'Personal de cafetería',salario:9800,area:'Turno matutino, operación de caja'},
-  {id:'EMP-104',puesto:'Mantenimiento',salario:10500,area:'Instalaciones hidráulicas'},
-  {id:'EMP-105',puesto:'Administrativo',salario:12000,area:'Control escolar'}]},
- enfermeria:{t:'Enfermería',s:'Atenciones médicas brindadas a los alumnos.',add:'Registrar atención',f:[
-  {k:'fecha',l:'Fecha y hora',type:'datetime-local'},{k:'alumno',l:'Alumno',dl:1},
-  {k:'diagnostico',l:'Diagnóstico'},{k:'tratamiento',l:'Tratamiento suministrado'}],
-  seed:[
-  {fecha:'2026-10-09T10:15',alumno:'Sofía Martínez Pérez',diagnostico:'Dolor de cabeza leve',tratamiento:'Reposo 15 min e hidratación'},
-  {fecha:'2026-10-08T12:40',alumno:'Mateo Hernández Vega',diagnostico:'Rasguño en rodilla',tratamiento:'Limpieza antiséptica y curación'}]},
- cafeteria:{t:'Cafetería',s:'Ventas realizadas a los alumnos.',add:'Registrar venta',f:[
-  {k:'id',l:'ID de venta'},{k:'fecha',l:'Fecha y hora',type:'datetime-local'},
-  {k:'alumno',l:'Alumno comprador',dl:1},{k:'total',l:'Total pagado',type:'number',money:1}],
-  seed:[
-  {id:'V-901',fecha:'2026-10-09T11:05',alumno:'Alejandro Gómez Ruiz',total:35},
-  {id:'V-902',fecha:'2026-10-09T11:20',alumno:'Valentina Torres López',total:50}]},
- mantenimiento:{t:'Mantenimiento',s:'Reportes de instalaciones y su estado de atención.',add:'Reportar incidencia',f:[
-  {k:'id',l:'ID de reporte'},{k:'ubicacion',l:'Ubicación'},{k:'descripcion',l:'Descripción de la incidencia'},
-  {k:'fecha',l:'Fecha',type:'date'},{k:'estado',l:'Estado',sel:['Pendiente','En proceso','Completado'],badge:1}],
-  seed:[
-  {id:'MANT-01',ubicacion:'Edificio A, salón 302',descripcion:'Reparación de luminaria principal',fecha:'2026-10-07',estado:'Completado'},
-  {id:'MANT-02',ubicacion:'Sanitarios planta baja',descripcion:'Mantenimiento preventivo en llave de lavabo',fecha:'2026-10-09',estado:'En proceso'}]},
- usuarios:{t:'Usuarios',s:'Cuentas de acceso y el rol de cada una.',add:'Crear usuario',f:[
-  {k:'usuario',l:'Usuario'},{k:'clave',l:'Contraseña',type:'password'},{k:'rol',l:'Rol',sel:ROLES,badge:1},{k:'ref',l:'Matrícula o ID de empleado'}],
-  seed:[
-  {usuario:'director',clave:'dir2026',rol:'Director',ref:'EMP-100'},
-  {usuario:'administrativo',clave:'admin2026',rol:'Administrativo',ref:'EMP-105'},
-  {usuario:'docente',clave:'doc2026',rol:'Docente',ref:'EMP-101'},
-  {usuario:'enfermeria',clave:'enf2026',rol:'Enfermería',ref:'EMP-102'},
-  {usuario:'cafeteria',clave:'caf2026',rol:'Cafetería',ref:'EMP-103'},
-  {usuario:'mantenimiento',clave:'mant2026',rol:'Mantenimiento',ref:'EMP-104'},
-  {usuario:'2026-PRI-001',clave:'alumno123',rol:'Alumno',ref:'2026-PRI-001'},
-  {usuario:'2026-PRI-002',clave:'alumno123',rol:'Alumno',ref:'2026-PRI-002'},
-  {usuario:'2026-PRI-003',clave:'alumno123',rol:'Alumno',ref:'2026-PRI-003'},
-  {usuario:'2026-PRI-004',clave:'alumno123',rol:'Alumno',ref:'2026-PRI-004'}]}
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money = n => "$" + Number(n || 0).toLocaleString("es-MX", {minimumFractionDigits: 2});
+
+const ST = {
+  "Completado":"ok", "Atendido":"ok", "Pagado":"ok",
+  "En proceso":"wip", "Leido":"wip", "En observacion":"warn",
+  "Pendiente":"warn", "Parcial":"warn", "Enviado":"warn",
+  "Canalizado":"err"
 };
-const GROUPS=[['',['dash','mio']],['Escuela',['alumnos','academico','horario','personal']],['Servicios',['enfermeria','cafeteria','mantenimiento']],['Acceso',['usuarios']]];
 
-let db=load(),cur='dash',q='',editing=null;
-function load(){
- let d={};try{d=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){}
- for(const k in M)if(!d[k])d[k]=M[k].seed.map((r,i)=>({_id:i+1,...r}));
- return d}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
-const money=n=>'$'+Number(n).toLocaleString('es-MX',{minimumFractionDigits:2});
+/* Matriz de permisos por rol (w = ver y escribir, r = solo lectura). Director tiene acceso total. */
+const PERM = {
+  Administrativo: {alumnos:"w", academico:"w", horario:"w", mapa:"r", recados:"w", pagos:"w", personal:"r"},
+  Docente:        {alumnos:"r", academico:"w", horario:"r", mapa:"r", recados:"w", enfermeria:"r"},
+  Enfermeria:     {alumnos:"r", mapa:"r", enfermeria:"w"},
+  Cafeteria:      {alumnos:"r", cafeteria:"w"},
+  Mantenimiento:  {mapa:"r", mantenimiento:"w"}
+};
 
-/* Sesión */
-try{S=JSON.parse(sessionStorage.getItem(SK))}catch(e){}
-function start(){
- document.body.classList.remove('out');
- $('#who').textContent=S.usuario+' · '+S.rol;
- $('#rst').hidden=S.rol!=='Director';
- cur=ok('dash')?'dash':ok('mio')?'mio':Object.keys(PERM[S.rol])[0];q='';nav();render()}
-function logout(){
- try{sessionStorage.removeItem(SK)}catch(e){}
- S=null;$('#lf').reset();$('#le').textContent='';document.body.classList.add('out')}
-$('#lf').onsubmit=e=>{
- e.preventDefault();
- const u=$('#lu').value.trim().toLowerCase(),c=$('#lc').value;
- const r=db.usuarios.find(x=>String(x.usuario).toLowerCase()===u&&x.clave===c);
- if(!r){$('#le').textContent='Usuario o contraseña incorrectos.';return}
- S={usuario:r.usuario,rol:r.rol,ref:r.ref};
- try{sessionStorage.setItem(SK,JSON.stringify(S))}catch(e){}
- $('#lf').reset();$('#le').textContent='';start()};
+const GROUPS = [
+  ["", ["dash", "mio"]],
+  ["Escuela", ["alumnos", "academico", "horario", "mapa", "recados", "pagos", "personal"]],
+  ["Servicios", ["enfermeria", "cafeteria", "mantenimiento"]],
+  ["Acceso", ["usuarios"]]
+];
 
-function cell(f,v){
- if(f.type==='password')return '••••••';
- if(f.badge)return `<span class="tag ${ST[v]||''}">${esc(v)}</span>`;
- if(f.money)return money(v);
- if(f.type==='datetime-local')return esc(String(v).replace('T',' '));
- return esc(v)}
+const TITLES = {
+  dash: ["Panel de la escuela", "Resumen en tiempo real desde PostgreSQL."],
+  mio: ["Mi espacio", "Tu horario, salón y calificaciones registradas."],
+  alumnos: ["Alumnos y tutores", "Matrículas, CURP, grupos y responsables legales.", "Agregar alumno"],
+  academico: ["Gestión académica", "Calificaciones registradas por alumno y materia.", "Registrar calificación"],
+  horario: ["Horarios", "Clases por grupo, materia, docente y salón.", "Agregar clase"],
+  mapa: ["Mapa interactivo", "Ubicación de grupos y salones en tiempo real."],
+  recados: ["Recados de padres", "Avisos y justificantes enviados desde el Portal de Padres."],
+  pagos: ["Colegiaturas", "Pagos de colegiatura registrados por periodo.", "Registrar pago"],
+  personal: ["Personal", "Plantilla laboral, puestos y sueldos mensuales.", "Agregar empleado"],
+  enfermeria: ["Enfermería", "Bitácora de atenciones médicas brindadas a alumnos.", "Registrar atención"],
+  cafeteria: ["Cafetería", "Ventas realizadas a alumnos en turno escolar.", "Registrar venta"],
+  mantenimiento: ["Mantenimiento", "Reportes de instalaciones y estado de atención.", "Reportar incidencia"],
+  usuarios: ["Usuarios", "Cuentas de acceso y permisos por rol.", "Crear usuario"]
+};
 
-function nav(){
- $('#nav').innerHTML=GROUPS.map(([g,ks])=>{ks=ks.filter(ok);return ks.length?(g?`<p class="grp">${g}</p>`:'')+
-  ks.map(k=>`<button class="${k===cur?'on':''}" onclick="go('${k}')">${k==='dash'?'Resumen':k==='mio'?'Mi espacio':M[k].t}</button>`).join(''):''}).join('')}
-function go(k){cur=k;q='';nav();render();scrollTo(0,0)}
+let S = null, cur = "dash", q = "", cat = {}, cache = {}, estadoSalones = [];
 
-function render(){
- const m=M[cur],w=lvl(cur)==='w';
- $('#head').innerHTML=cur==='dash'
-  ?`<div><h1>Panel de la escuela</h1><p>Ciclo escolar 2026. Lo que hay registrado hoy.</p></div>`
-  :cur==='mio'?`<div><h1>Mi espacio</h1><p>Tu horario y tus calificaciones.</p></div>`
-  :`<div><h1>${m.t}</h1><p>${m.s}${w?'':' Solo lectura.'}</p></div>${w?`<button class="pri" onclick="openForm('${cur}')">+ ${m.add}</button>`:''}`;
- $('#view').innerHTML=cur==='dash'?dash():cur==='mio'?mine():table();
- if(m)fill()}
+const lvl = k => !S ? "" : S.rol === "Director" ? "w" : (PERM[S.rol] || {})[k] || "";
+const ok = k => k === "dash" ? ["Director", "Administrativo"].includes(S.rol) : k === "mio" ? S.rol === "Alumno" : !!lvl(k);
 
-function dash(){
- const a=db.alumnos,c=db.academico;
- const prom=c.length?(c.reduce((s,r)=>s+ +r.calificacion,0)/c.length).toFixed(1):'–';
- const abiertos=db.mantenimiento.filter(r=>r.estado!=='Completado').length;
- const fig=[[a.length,'alumnos registrados'],[db.personal.length,'empleados en plantilla'],[prom,'promedio general'],[abiertos,'reportes de mantenimiento abiertos']];
- const por={};a.forEach(r=>por[r.grupo]=(por[r.grupo]||0)+1);
- const max=Math.max(1,...Object.values(por));
- return `<div class="strip">${fig.map(([n,l])=>`<div><b>${n}</b><span>${l}</span></div>`).join('')}</div>
- <div class="two">
-  <section class="panel"><h2>Alumnos por grupo</h2>${Object.keys(por).sort().map(g=>`<div class="bar"><span>${g}</span><i style="width:${por[g]/max*100}%"></i><em>${por[g]}</em></div>`).join('')||'<p class="empty">Aún no hay alumnos.</p>'}</section>
-  <section class="panel"><h2>Registro rápido</h2><div class="quick">${Object.keys(M).filter(k=>lvl(k)==='w').map(k=>`<button onclick="go('${k}');openForm('${k}')">${M[k].add}</button>`).join('')}</div></section>
- </div>`}
+function toast(msg, type = "ok") {
+  const el = $("#toast");
+  el.textContent = msg;
+  el.className = "toast " + type;
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.className = "toast"; }, 4500);
+}
 
-const tbl=(h,rows)=>rows.length?`<table><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`:'<p class="empty">Sin registros todavía.</p>';
-function mine(){
- const a=db.alumnos.find(r=>r.matricula===S.ref);
- if(!a)return '<p class="empty">Tu cuenta no está vinculada a ningún alumno. Pide al director que revise tu matrícula.</p>';
- const cal=db.academico.filter(r=>r.matricula===a.matricula),
-  hor=db.horario.filter(r=>r.grupo===a.grupo).sort((x,y)=>DIAS.indexOf(x.dia)-DIAS.indexOf(y.dia)||String(x.hora).localeCompare(y.hora)),
-  prom=cal.length?(cal.reduce((s,r)=>s+ +r.calificacion,0)/cal.length).toFixed(1):'–';
- return `<div class="strip s3"><div><b>${esc(a.nombre)}</b><span>${esc(a.matricula)}</span></div><div><b>${esc(a.grupo)}</b><span>grupo</span></div><div><b>${prom}</b><span>promedio</span></div></div>
- <div class="two"><section class="panel"><h2>Horario de ${esc(a.grupo)}</h2>${tbl(['Día','Hora','Asignatura'],hor.map(r=>[r.dia,r.hora,r.materia]))}</section>
- <section class="panel"><h2>Calificaciones</h2>${tbl(['Asignatura','Calificación'],cal.map(r=>[r.materia,r.calificacion]))}</section></div>
- <p class="hint" style="margin-top:14px">Tutor responsable: ${esc(a.tutor)}</p>`}
+async function api(path, opts = {}) {
+  const res = await fetch(API_URL + path, {
+    headers: {"Content-Type": "application/json"},
+    ...opts
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Error en el servidor");
+  return data;
+}
 
-function table(){
- const m=M[cur];
- return `<div class="sheet"><div class="tools"><input type="search" placeholder="Buscar en ${m.t.toLowerCase()}" value="${esc(q)}" oninput="q=this.value.toLowerCase();fill()"><span id="cnt"></span></div>
- <div class="tw"><table><thead><tr>${m.f.map(f=>`<th>${f.l}</th>`).join('')}<th></th></tr></thead><tbody id="tb"></tbody></table></div></div>`}
-function fill(){
- const m=M[cur],w=lvl(cur)==='w',rows=db[cur].filter(r=>!q||m.f.some(f=>f.type!=='password'&&String(r[f.k]).toLowerCase().includes(q)));
- $('#cnt').textContent=rows.length+(rows.length===1?' registro':' registros');
- $('#tb').innerHTML=rows.map(r=>`<tr>${m.f.map(f=>`<td>${cell(f,r[f.k])}</td>`).join('')}<td class="act">${w?`<button onclick="openForm('${cur}',${r._id})">Editar</button><button class="del" onclick="del(${r._id})">Eliminar</button>`:''}</td></tr>`).join('')
-  ||`<tr><td class="empty" colspan="9">${q?'Ningún resultado. Prueba con otra palabra.':'Aún no hay registros.'}</td></tr>`}
+/* Botones de autocompletado de login */
+document.querySelectorAll(".quick-roles button").forEach(b => {
+  b.addEventListener("click", () => {
+    $("#lu").value = b.dataset.u;
+    $("#lc").value = "primaria123";
+  });
+});
 
-function openForm(k,id){
- if(lvl(k)!=='w')return;
- const m=M[k],r=id?db[k].find(x=>x._id===id):{};editing={k,id};
- const n=new Date(),p=x=>String(x).padStart(2,'0'),d=`${n.getFullYear()}-${p(n.getMonth()+1)}-${p(n.getDate())}`;
- $('#ft').textContent=id?'Editar registro':m.add;
- $('#ff').innerHTML=m.f.map(f=>{
-  const v=r[f.k]??(f.type==='date'?d:f.type==='datetime-local'?`${d}T${p(n.getHours())}:${p(n.getMinutes())}`:'');
-  const inp=f.sel
-   ?`<select name="${f.k}">${f.sel.map(o=>`<option${o===v?' selected':''}>${o}</option>`).join('')}</select>`
-   :`<input name="${f.k}" type="${f.type||'text'}" value="${esc(v)}" ${f.type==='number'?`step="any" min="0"${f.max?` max="${f.max}"`:''}`:''} ${f.dl?'list="dl"':''} required>`;
-  return `<label>${f.l}${inp}</label>`}).join('');
- $('#dl').innerHTML=db.alumnos.map(a=>`<option value="${esc(a.nombre)}">`).join('');
- $('#dlg').showModal()}
+/* Login y sesión */
+$("#lf").onsubmit = async e => {
+  e.preventDefault();
+  $("#le").textContent = "";
+  try {
+    const res = await api("/api/login", {
+      method: "POST",
+      body: JSON.stringify({usuario: $("#lu").value.trim(), password: $("#lc").value})
+    });
+    S = res.usuario;
+    sessionStorage.setItem(SK, JSON.stringify(S));
+    $("#lf").reset();
+    await start();
+  } catch (err) {
+    $("#le").textContent = err.message;
+  }
+};
 
-$('#form').onsubmit=e=>{
- e.preventDefault();
- const {k,id}=editing,d=Object.fromEntries(new FormData(e.target));
- if(lvl(k)!=='w')return;
- if(k==='usuarios'){
-  if(db.usuarios.some(x=>x._id!==id&&String(x.usuario).toLowerCase()===d.usuario.toLowerCase()))return alert('Ese usuario ya existe.');
-  if(id&&db.usuarios.find(x=>x._id===id).usuario===S.usuario&&d.rol!==S.rol)return alert('No puedes cambiar tu propio rol.')}
- M[k].f.forEach(f=>{if(f.type==='number')d[f.k]=parseFloat(d[f.k])});
- if(id)Object.assign(db[k].find(x=>x._id===id),d);
- else db[k].push({_id:Math.max(0,...db[k].map(x=>x._id))+1,...d});
- save();$('#dlg').close();render()};
+function logout() {
+  sessionStorage.removeItem(SK);
+  S = null;
+  document.body.classList.add("out");
+}
 
-function del(id){
- if(lvl(cur)!=='w')return;
- if(cur==='usuarios'&&db.usuarios.find(x=>x._id===id).usuario===S.usuario)return alert('No puedes eliminar tu propia cuenta.');
- if(confirm('¿Eliminar este registro? Esta acción no se puede deshacer.')){db[cur]=db[cur].filter(r=>r._id!==id);save();render()}}
-function reset(){
- if(S.rol!=='Director')return;
- if(confirm('Se borrarán tus cambios y volverán los datos de ejemplo. Se cerrará la sesión.')){localStorage.removeItem(KEY);db=load();logout()}}
+async function start() {
+  document.body.classList.remove("out");
+  $("#who").textContent = `${S.nombre} · ${S.rol}`;
+  cat = await api("/api/catalogos");
+  cur = ok("dash") ? "dash" : ok("mio") ? "mio" : Object.keys(PERM[S.rol] || {})[0];
+  q = "";
+  nav();
+  await render();
+}
 
-if(S&&db.usuarios.some(u=>u.usuario===S.usuario&&u.rol===S.rol))start();else S=null;
+function nav() {
+  $("#nav").innerHTML = GROUPS.map(([g, ks]) => {
+    ks = ks.filter(ok);
+    if (!ks.length) return "";
+    return (g ? `<p class="grp">${g}</p>` : "") +
+      ks.map(k => `<button class="${k === cur ? "on" : ""}" onclick="go('${k}')">${TITLES[k][0]}</button>`).join("");
+  }).join("");
+}
+
+async function go(k) {
+  cur = k; q = "";
+  nav();
+  await render();
+  scrollTo(0, 0);
+}
+
+async function render() {
+  const [title, sub, addLabel] = TITLES[cur];
+  const w = lvl(cur) === "w";
+  const showAdd = w && addLabel;
+  $("#head").innerHTML = `
+    <div><h1>${title}</h1><p>${sub}${(!w && cur !== "dash" && cur !== "mio" && cur !== "mapa") ? " (Solo lectura)" : ""}</p></div>
+    ${showAdd ? `<button class="pri" onclick="openForm('${cur}')">+ ${addLabel}</button>` : ""}
+  `;
+  $("#view").innerHTML = `<p class="empty">Cargando desde PostgreSQL...</p>`;
+
+  try {
+    if (cur === "dash") return await renderDash();
+    if (cur === "mio") return await renderMine();
+    if (cur === "mapa") return await renderMapa();
+    await renderModule(cur);
+  } catch (err) {
+    $("#view").innerHTML = `<p class="empty">Error al consultar la base de datos: ${esc(err.message)}</p>`;
+  }
+}
+
+/* ---------------- RESUMEN ---------------- */
+async function renderDash() {
+  const [alumnos, personal, cals, mant] = await Promise.all([
+    api("/api/alumnos"), api("/api/personal"), api("/api/calificaciones"), api("/api/mantenimiento")
+  ]);
+  const prom = cals.length ? (cals.reduce((s, r) => s + Number(r.calificacion), 0) / cals.length).toFixed(1) : "–";
+  const abiertos = mant.filter(r => r.estado !== "Completado").length;
+  const fig = [
+    [alumnos.length, "alumnos registrados"],
+    [personal.length, "empleados en plantilla"],
+    [prom, "promedio general"],
+    [abiertos, "reportes de mantenimiento abiertos"]
+  ];
+  const por = {};
+  alumnos.forEach(a => por[a.grupo] = (por[a.grupo] || 0) + 1);
+  const max = Math.max(1, ...Object.values(por));
+  const quickKeys = Object.keys(TITLES).filter(k => TITLES[k][2] && lvl(k) === "w");
+
+  $("#view").innerHTML = `
+    <div class="strip">${fig.map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join("")}</div>
+    <div class="two">
+      <section class="panel">
+        <h2>Alumnos por grupo</h2>
+        ${Object.keys(por).sort().map(g => `<div class="bar"><span>${esc(g)}</span><i style="width:${por[g] / max * 100}%"></i><em>${por[g]}</em></div>`).join("") || '<p class="empty">Sin alumnos.</p>'}
+      </section>
+      <section class="panel">
+        <h2>Registro rápido</h2>
+        <div class="quick">${quickKeys.map(k => `<button onclick="go('${k}').then(()=>openForm('${k}'))">${TITLES[k][2]}</button>`).join("")}</div>
+      </section>
+    </div>
+  `;
+}
+
+/* ---------------- MI ESPACIO (ALUMNO) ---------------- */
+async function renderMine() {
+  const alumnos = await api("/api/alumnos");
+  const me = alumnos.find(a => a.id_alumno === S.id_alumno);
+  if (!me) {
+    $("#view").innerHTML = `<p class="empty">Tu cuenta no está vinculada a un alumno en la base de datos.</p>`;
+    return;
+  }
+  const [cals, hors] = await Promise.all([
+    api(`/api/calificaciones?id_alumno=${me.id_alumno}`),
+    api(`/api/horarios?id_grupo=${me.id_grupo}`)
+  ]);
+  const prom = cals.length ? (cals.reduce((s, r) => s + Number(r.calificacion), 0) / cals.length).toFixed(1) : "–";
+  const mkTbl = (h, rows) => rows.length
+    ? `<table><thead><tr>${h.map(x => `<th>${x}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>`
+    : `<p class="empty">Sin registros todavía.</p>`;
+
+  $("#view").innerHTML = `
+    <div class="strip s3">
+      <div><b>${esc(me.nombre_completo)}</b><span>${esc(me.curp)}</span></div>
+      <div><b>${esc(me.grupo)}</b><span>grupo asignado</span></div>
+      <div><b>${prom}</b><span>promedio general</span></div>
+    </div>
+    <div class="two">
+      <section class="panel"><h2>Horario de ${esc(me.grupo)}</h2>${mkTbl(["Día", "Hora", "Materia", "Salón"], hors.map(r => [r.dia_semana, `${r.hora_inicio}-${r.hora_fin}`, r.materia, r.clave_salon]))}</section>
+      <section class="panel"><h2>Calificaciones</h2>${mkTbl(["Materia", "Créditos", "Calificación"], cals.map(r => [r.materia, r.creditos, r.calificacion]))}</section>
+    </div>
+    <p class="hint" style="margin-top:14px">Tutor responsable: ${esc(me.tutor)} · Tel: ${esc(me.telefono)}</p>
+  `;
+}
+
+/* ---------------- MAPA INTERACTIVO SVG ---------------- */
+async function renderMapa() {
+  $("#view").innerHTML = `
+    <div class="panel">
+      <div class="map-bar">
+        <label>Buscar alumno (opcional)
+          <select id="m-al"><option value="">-- Ver todos los salones --</option>${cat.alumnos.map(a => `<option value="${a.id_alumno}">${esc(a.alumno)} (${esc(a.grupo)})</option>`).join("")}</select>
+        </label>
+        <label>Día
+          <select id="m-dia"><option value="Lunes">Lunes</option></select>
+        </label>
+        <label>Bloque de horario
+          <select id="m-hora">
+            <option value="08:00">08:00 - 09:00</option>
+            <option value="09:00">09:00 - 10:00</option>
+            <option value="10:30">10:30 - 11:30</option>
+          </select>
+        </label>
+        <button class="pri" onclick="cargarMapa()">Consultar</button>
+      </div>
+      <div class="svg-wrap">
+        <svg viewBox="0 0 820 420" aria-label="Mapa escolar">
+          <text x="20" y="25" font-size="14" font-weight="700" fill="#5a6b85">EDIFICIO A — PLANTA BAJA</text>
+          <g data-svg="salon-a101"><rect id="salon-a101" class="salon-box" x="20" y="38" width="170" height="95" rx="8"/><text x="35" y="65" class="salon-label">A-101</text><text id="txt-salon-a101" x="35" y="88" class="salon-sub">Disponible</text></g>
+          <g data-svg="salon-a102"><rect id="salon-a102" class="salon-box" x="210" y="38" width="170" height="95" rx="8"/><text x="225" y="65" class="salon-label">A-102</text><text id="txt-salon-a102" x="225" y="88" class="salon-sub">Disponible</text></g>
+          <g data-svg="salon-a103"><rect id="salon-a103" class="salon-box" x="400" y="38" width="170" height="95" rx="8"/><text x="415" y="65" class="salon-label">A-103</text><text id="txt-salon-a103" x="415" y="88" class="salon-sub">Disponible</text></g>
+          <text x="20" y="170" font-size="14" font-weight="700" fill="#5a6b85">EDIFICIO A — PLANTA ALTA</text>
+          <g data-svg="salon-a201"><rect id="salon-a201" class="salon-box" x="20" y="183" width="170" height="95" rx="8"/><text x="35" y="210" class="salon-label">A-201</text><text id="txt-salon-a201" x="35" y="233" class="salon-sub">Disponible</text></g>
+          <g data-svg="salon-a202"><rect id="salon-a202" class="salon-box" x="210" y="183" width="170" height="95" rx="8"/><text x="225" y="210" class="salon-label">A-202</text><text id="txt-salon-a202" x="225" y="233" class="salon-sub">Disponible</text></g>
+          <g data-svg="salon-a203"><rect id="salon-a203" class="salon-box" x="400" y="183" width="170" height="95" rx="8"/><text x="415" y="210" class="salon-label">A-203</text><text id="txt-salon-a203" x="415" y="233" class="salon-sub">Disponible</text></g>
+          <text x="605" y="25" font-size="14" font-weight="700" fill="#5a6b85">EDIFICIO B</text>
+          <g data-svg="salon-lab01"><rect id="salon-lab01" class="salon-box" x="605" y="38" width="195" height="240" rx="10"/><text x="625" y="70" class="salon-label">LAB-01 (Cómputo)</text><text id="txt-salon-lab01" x="625" y="96" class="salon-sub">Disponible</text></g>
+          <text x="20" y="312" font-size="14" font-weight="700" fill="#5a6b85">PATIO CENTRAL</text>
+          <g data-svg="zona-cancha"><rect id="zona-cancha" class="salon-box" x="20" y="325" width="780" height="75" rx="10"/><text x="35" y="355" class="salon-label">CANCHA DEPORTIVA</text><text id="txt-zona-cancha" x="35" y="378" class="salon-sub">Disponible</text></g>
+        </svg>
+      </div>
+      <div id="m-det" class="info-box">Haz clic en cualquier salón para ver detalles.</div>
+    </div>
+  `;
+  document.querySelectorAll("g[data-svg]").forEach(g => {
+    g.onclick = () => {
+      const s = estadoSalones.find(x => x.codigo_svg === g.dataset.svg);
+      if (!s) return;
+      $("#m-det").innerHTML = s.grupo
+        ? `Salón <b>${esc(s.clave_salon)}</b> (${esc(s.edificio)}, ${esc(s.planta)}) · Grupo <b>${esc(s.grupo)}</b> · ${esc(s.materia)} · Docente: <b>${esc(s.docente)}</b> (${s.hora_inicio}–${s.hora_fin})`
+        : `Salón <b>${esc(s.clave_salon)}</b> (${esc(s.edificio)}, ${esc(s.planta)}) está <b>disponible</b> en este horario.`;
+    };
+  });
+  $("#m-hora").onchange = cargarMapa;
+  $("#m-al").onchange = cargarMapa;
+  await cargarMapa();
+}
+
+async function cargarMapa() {
+  const dia = $("#m-dia").value, hora = $("#m-hora").value, idAl = $("#m-al").value;
+  estadoSalones = await api(`/api/mapa?dia=${dia}&hora=${hora}`);
+  estadoSalones.forEach(s => {
+    const r = document.getElementById(s.codigo_svg), t = document.getElementById("txt-" + s.codigo_svg);
+    if (!r || !t) return;
+    r.classList.remove("ocupado", "destacado");
+    if (s.grupo) { r.classList.add("ocupado"); t.textContent = `${s.grupo} · ${s.materia}`; }
+    else t.textContent = "Disponible";
+  });
+  if (idAl) {
+    const res = await api(`/api/mapa?dia=${dia}&hora=${hora}&id_alumno=${idAl}`);
+    if (res.length) {
+      const info = res[0];
+      document.getElementById(info.codigo_svg)?.classList.add("destacado");
+      $("#m-det").innerHTML = `<b>${esc(info.alumno)} (${esc(info.grupo)})</b> está en <b>${esc(info.clave_salon)}</b> (${esc(info.edificio)}, ${esc(info.planta)}) · Clase: <b>${esc(info.materia)}</b> · Docente: <b>${esc(info.docente)}</b>`;
+    } else $("#m-det").textContent = "El alumno no tiene clase en ese bloque.";
+  } else {
+    $("#m-det").textContent = `Mostrando ocupación de salones el ${dia} a las ${hora}.`;
+  }
+}
+
+/* ---------------- MÓDULOS CON TABLA EN POSTGRESQL ---------------- */
+const CONFIG = {
+  alumnos: {
+    ep: "/api/alumnos", id: "id_alumno",
+    cols: [["curp","CURP"],["nombre_completo","Alumno"],["grupo","Grupo","tag"],["tutor","Tutor"],["telefono","Teléfono"]]
+  },
+  academico: {
+    ep: "/api/calificaciones", id: "id_calificacion",
+    cols: [["curp","CURP"],["alumno","Alumno"],["materia","Asignatura"],["creditos","Créditos"],["calificacion","Calificación","tag"]]
+  },
+  horario: {
+    ep: "/api/horarios", id: "id_horario",
+    cols: [["grupo","Grupo","tag"],["dia_semana","Día"],["hora_inicio","Inicio"],["hora_fin","Fin"],["materia","Asignatura"],["clave_salon","Salón"],["docente","Docente"]]
+  },
+  recados: {
+    ep: "/api/recados", id: "id_recado", noDel: true,
+    cols: [["id_recado","ID"],["alumno","Alumno"],["tutor","Tutor"],["docente","Docente"],["tipo","Tipo","tag"],["asunto","Asunto"],["estatus","Estatus","tag"]],
+    extra: r => `<button onclick="patchStatus('/api/recados/${r.id_recado}',{estatus:'Leido'})">Leído</button><button onclick="patchStatus('/api/recados/${r.id_recado}',{estatus:'Atendido'})">Atendido</button>`
+  },
+  pagos: {
+    ep: "/api/pagos", id: "id_pago", noDel: true,
+    cols: [["referencia","Referencia"],["alumno","Alumno"],["periodo","Periodo"],["monto_pagado","Monto","money"],["metodo_pago","Método"],["estatus","Estatus","tag"]]
+  },
+  personal: {
+    ep: "/api/personal", id: "id_empleado",
+    cols: [["clave_empleado","Clave"],["nombre","Nombre"],["puesto","Puesto","tag"],["salario","Salario","money"],["area","Área"]]
+  },
+  enfermeria: {
+    ep: "/api/enfermeria", id: "id_atencion",
+    cols: [["fecha_hora","Fecha"],["alumno","Alumno"],["grupo","Grupo","tag"],["motivo","Motivo"],["observaciones","Observaciones"],["estatus","Estatus","tag"]],
+    extra: r => `<button onclick="patchStatus('/api/enfermeria/${r.id_atencion}',{estatus:'Atendido'})">Atendido</button>`
+  },
+  cafeteria: {
+    ep: "/api/cafeteria", id: "id_venta",
+    cols: [["folio","Folio"],["fecha_hora","Fecha"],["alumno","Alumno"],["concepto","Concepto"],["total","Total","money"]]
+  },
+  mantenimiento: {
+    ep: "/api/mantenimiento", id: "id_reporte",
+    cols: [["folio","Folio"],["ubicacion","Ubicación"],["descripcion","Descripción"],["fecha_reporte","Fecha"],["estado","Estado","tag"]],
+    extra: r => `<button onclick="patchStatus('/api/mantenimiento/${r.id_reporte}',{estado:'En proceso'})">Proceso</button><button onclick="patchStatus('/api/mantenimiento/${r.id_reporte}',{estado:'Completado'})">Completado</button>`
+  },
+  usuarios: {
+    ep: "/api/usuarios", id: "id_usuario",
+    cols: [["usuario","Usuario"],["correo","Correo"],["rol","Rol","tag"]]
+  }
+};
+
+async function renderModule(k) {
+  const cfg = CONFIG[k];
+  cache[k] = await api(cfg.ep);
+  $("#view").innerHTML = `
+    <div class="sheet">
+      <div class="tools">
+        <input type="search" placeholder="Buscar en ${TITLES[k][0].toLowerCase()}..." value="${esc(q)}" oninput="q=this.value.toLowerCase();fillTable('${k}')">
+        <span id="cnt"></span>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr>${cfg.cols.map(c => `<th>${c[1]}</th>`).join("")}<th></th></tr></thead>
+          <tbody id="tb"></tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  fillTable(k);
+}
+
+function fillTable(k) {
+  const cfg = CONFIG[k], w = lvl(k) === "w";
+  const rows = (cache[k] || []).filter(r => !q || cfg.cols.some(c => String(r[c[0]] ?? "").toLowerCase().includes(q)));
+  $("#cnt").textContent = rows.length + (rows.length === 1 ? " registro" : " registros");
+  $("#tb").innerHTML = rows.map(r => `
+    <tr>
+      ${cfg.cols.map(([field, , fmt]) => {
+        const val = r[field];
+        if (fmt === "tag") return `<td><span class="tag ${ST[val] || ""}">${esc(val)}</span></td>`;
+        if (fmt === "money") return `<td>${money(val)}</td>`;
+        return `<td>${esc(val)}</td>`;
+      }).join("")}
+      <td class="act">
+        ${w && cfg.extra ? cfg.extra(r) : ""}
+        ${w && !cfg.noDel ? `<button class="del" onclick="delRow('${k}',${r[cfg.id]})">Eliminar</button>` : ""}
+      </td>
+    </tr>
+  `).join("") || `<tr><td class="empty" colspan="9">Sin registros que coincidan.</td></tr>`;
+}
+
+async function patchStatus(ep, body) {
+  try {
+    await api(ep, {method: "PATCH", body: JSON.stringify(body)});
+    toast("Registro actualizado en PostgreSQL.");
+    await renderModule(cur);
+  } catch (err) { toast(err.message, "err"); }
+}
+
+async function delRow(k, id) {
+  if (!confirm("¿Eliminar este registro de PostgreSQL?")) return;
+  try {
+    await api(`${CONFIG[k].ep}/${id}`, {method: "DELETE"});
+    toast("Registro eliminado de PostgreSQL.");
+    await renderModule(k);
+  } catch (err) { toast(err.message, "err"); }
+}
+
+/* ---------------- FORMULARIOS DE ALTA ---------------- */
+const opt = (arr, vKey, lFn) => arr.map(x => `<option value="${x[vKey]}">${esc(lFn(x))}</option>`).join("");
+
+function openForm(k) {
+  const rand = Math.floor(1000 + Math.random() * 9000);
+  const forms = {
+    alumnos: `
+      <label>CURP (18 caracteres)<input name="curp" maxlength="18" required></label>
+      <label>Nombre<input name="nombre" required></label>
+      <label>Apellido paterno<input name="apellido_paterno" required></label>
+      <label>Apellido materno<input name="apellido_materno"></label>
+      <label>Fecha de nacimiento<input name="fecha_nacimiento" type="date" value="2018-05-10" required></label>
+      <label>Grupo<select name="id_grupo">${opt(cat.grupos, "id_grupo", g => g.grupo)}</select></label>
+      <label>Tutor<select name="id_tutor">${opt(cat.tutores, "id_tutor", t => `${t.tutor} (${t.parentesco})`)}</select></label>
+    `,
+    academico: `
+      <label>Alumno<select name="id_alumno">${opt(cat.alumnos, "id_alumno", a => `${a.alumno} (${a.grupo})`)}</select></label>
+      <label>Asignatura<select name="id_materia">${opt(cat.materias, "id_materia", m => m.nombre)}</select></label>
+      <label>Créditos<input name="creditos" type="number" value="8" min="1" required></label>
+      <label>Calificación (0 a 10)<input name="calificacion" type="number" step="0.1" min="0" max="10" required></label>
+    `,
+    horario: `
+      <label>Grupo<select name="id_grupo">${opt(cat.grupos, "id_grupo", g => g.grupo)}</select></label>
+      <label>Asignatura<select name="id_materia">${opt(cat.materias, "id_materia", m => m.nombre)}</select></label>
+      <label>Docente<select name="id_docente">${opt(cat.docentes, "id_docente", d => d.docente)}</select></label>
+      <label>Salón<select name="id_salon">${opt(cat.salones, "id_salon", s => `${s.clave_salon} (${s.edificio})`)}</select></label>
+      <label>Día<select name="dia_semana"><option>Lunes</option><option>Martes</option><option>Miércoles</option><option>Jueves</option><option>Viernes</option></select></label>
+      <label>Hora inicio<input name="hora_inicio" type="time" value="11:30" required></label>
+      <label>Hora fin<input name="hora_fin" type="time" value="12:30" required></label>
+    `,
+    pagos: `
+      <label>Alumno<select name="id_alumno">${opt(cat.alumnos, "id_alumno", a => `${a.alumno} (${a.grupo})`)}</select></label>
+      <label>Periodo<select name="id_periodo">${opt(cat.periodos, "id_periodo", p => `${p.nombre_periodo} ($${p.monto_base})`)}</select></label>
+      <label>Monto pagado<input name="monto_pagado" type="number" step="0.01" value="2500" min="1" required></label>
+      <label>Método<select name="metodo_pago"><option>Tarjeta</option><option>Transferencia</option><option>Efectivo</option></select></label>
+      <label>Estatus<select name="estatus"><option>Pagado</option><option>Parcial</option></select></label>
+      <label>Referencia<input name="referencia" value="REF-2026-${rand}" required></label>
+    `,
+    personal: `
+      <label>Clave de empleado<input name="clave_empleado" value="EMP-${rand}" required></label>
+      <label>Nombre completo<input name="nombre" required></label>
+      <label>Puesto<select name="puesto"><option>Docente titular</option><option>Administrativo</option><option>Personal de enfermería</option><option>Personal de cafetería</option><option>Mantenimiento</option><option>Dirección</option></select></label>
+      <label>Salario mensual<input name="salario" type="number" step="0.01" min="1" required></label>
+      <label>Área o especialidad<input name="area" required></label>
+    `,
+    enfermeria: `
+      <label>Alumno<select name="id_alumno">${opt(cat.alumnos, "id_alumno", a => `${a.alumno} (${a.grupo})`)}</select></label>
+      <label>Motivo<input name="motivo" required></label>
+      <label>Observaciones<textarea name="observaciones" required></textarea></label>
+      <label>Estatus<select name="estatus"><option value="Atendido">Atendido</option><option value="En observacion">En observación</option><option value="Canalizado">Canalizado</option></select></label>
+    `,
+    cafeteria: `
+      <label>Folio<input name="folio" value="V-${rand}" required></label>
+      <label>Alumno<select name="id_alumno">${opt(cat.alumnos, "id_alumno", a => `${a.alumno} (${a.grupo})`)}</select></label>
+      <label>Concepto<input name="concepto" value="Consumo escolar" required></label>
+      <label>Total (MXN)<input name="total" type="number" step="0.01" min="1" required></label>
+    `,
+    mantenimiento: `
+      <label>Folio<input name="folio" value="MANT-${rand}" required></label>
+      <label>Ubicación<input name="ubicacion" placeholder="Ej. Edificio A, salón A-101" required></label>
+      <label>Descripción<textarea name="descripcion" required></textarea></label>
+      <label>Estado<select name="estado"><option>Pendiente</option><option>En proceso</option><option>Completado</option></select></label>
+    `,
+    usuarios: `
+      <label>Usuario<input name="usuario" required></label>
+      <label>Correo<input name="correo" type="email" required></label>
+      <label>Contraseña<input name="password" type="password" value="primaria123" required></label>
+      <label>Rol<select name="rol"><option>Director</option><option>Administrativo</option><option>Docente</option><option>Enfermeria</option><option>Cafeteria</option><option>Mantenimiento</option><option>Alumno</option></select></label>
+    `
+  };
+  $("#ft").textContent = TITLES[k][2];
+  $("#ff").innerHTML = forms[k];
+  $("#dlg").dataset.k = k;
+  $("#dlg").showModal();
+}
+
+$("#form").onsubmit = async e => {
+  e.preventDefault();
+  const k = $("#dlg").dataset.k;
+  const body = Object.fromEntries(new FormData(e.target));
+  if (k === "enfermeria") body.id_usuario_atiende = S.id_usuario;
+  if (k === "cafeteria" || k === "mantenimiento") body.id_usuario_registra = S.id_usuario;
+  try {
+    await api(CONFIG[k].ep, {method: "POST", body: JSON.stringify(body)});
+    $("#dlg").close();
+    toast("Registro guardado en PostgreSQL.");
+    cat = await api("/api/catalogos");
+    await renderModule(k);
+  } catch (err) {
+    alert("Error de base de datos: " + err.message);
+  }
+};
+
+/* Restaurar sesión activa */
+(async () => {
+  try { S = JSON.parse(sessionStorage.getItem(SK)); } catch (e) {}
+  if (S) {
+    try { await start(); } catch (e) { logout(); }
+  }
+})();
 </script>
-</body></html>
+</body>
+</html>

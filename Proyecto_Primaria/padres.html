@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal de Padres — Proyecto Primaria</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --primary: #1d4ed8;
+      --primary-dark: #1e40af;
+      --accent: #10b981;
+      --danger: #dc2626;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--text); }
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #fff; padding: 1.25rem 2rem;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    }
+    header h1 { margin: 0; font-size: 1.35rem; }
+    header a { color: #dbeafe; text-decoration: none; font-size: 0.95rem; }
+    header a:hover { text-decoration: underline; }
+    .container { max-width: 1150px; margin: 1.5rem auto; padding: 0 1rem 3rem; }
+    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+    .tab-btn {
+      padding: 0.7rem 1.2rem; border: 1px solid var(--border); background: var(--card);
+      border-radius: 10px; cursor: pointer; font-weight: 600; color: var(--muted);
+    }
+    .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.25rem; }
+    @media (max-width: 860px) { .grid-2 { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.25rem; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+    .card h2 { margin-top: 0; font-size: 1.15rem; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; margin: 0.75rem 0 0.25rem; }
+    input, select, textarea {
+      width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #cbd5e1;
+      border-radius: 8px; font-size: 0.95rem; background: #fff;
+    }
+    textarea { min-height: 85px; resize: vertical; }
+    button.primary {
+      margin-top: 1rem; width: 100%; padding: 0.75rem; border: none; border-radius: 8px;
+      background: var(--primary); color: #fff; font-weight: 600; font-size: 0.95rem; cursor: pointer;
+    }
+    button.primary:hover { background: var(--primary-dark); }
+    .alert {
+      margin-top: 0.85rem; padding: 0.75rem; border-radius: 8px; font-size: 0.9rem; display: none;
+    }
+    .alert.ok { display: block; background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+    .alert.err { display: block; background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+    th, td { padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border); text-align: left; }
+    th { color: var(--muted); font-weight: 600; }
+    .badge {
+      display: inline-block; padding: 0.2rem 0.55rem; border-radius: 999px;
+      font-size: 0.75rem; font-weight: 600; background: #e0e7ff; color: #3730a3;
+    }
+    /* Estilos del mapa SVG */
+    .map-controls { display: grid; grid-template-columns: 1.3fr 1fr 1fr auto; gap: 0.75rem; align-items: end; margin-bottom: 1rem; }
+    @media (max-width: 780px) { .map-controls { grid-template-columns: 1fr; } }
+    .svg-wrap { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 0.75rem; }
+    svg { width: 100%; height: auto; display: block; }
+    .salon-box { fill: #e2e8f0; stroke: #475569; stroke-width: 2; cursor: pointer; transition: 0.2s; }
+    .salon-box:hover { fill: #bfdbfe; }
+    .salon-box.ocupado { fill: #dbeafe; stroke: #2563eb; }
+    .salon-box.destacado { fill: #34d399; stroke: #065f46; stroke-width: 3.5; }
+    .salon-label { font-size: 13px; font-weight: 700; fill: #0f172a; pointer-events: none; }
+    .salon-sub { font-size: 11px; fill: #334155; pointer-events: none; }
+    .info-box {
+      margin-top: 1rem; padding: 1rem; border-radius: 10px;
+      background: #eff6ff; border: 1px solid #bfdbfe;
+    }
+    .info-box strong { color: #1e3a8a; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Portal de Padres y Control Escolar</h1>
+    <a href="index.html">← Volver al inicio</a>
+  </header>
+
+  <div class="container">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="mapa">Mapa Interactivo</button>
+      <button class="tab-btn" data-tab="recados">Recados y Avisos</button>
+      <button class="tab-btn" data-tab="pagos">Cobro de Colegiaturas</button>
+    </div>
+
+    <!-- PANEL 1: MAPA INTERACTIVO -->
+    <section id="panel-mapa" class="panel active">
+      <div class="card">
+        <h2>Ubicación en tiempo real por salón y horario</h2>
+        <div class="map-controls">
+          <div>
+            <label for="mapa-alumno">Buscar a mi hijo (opcional)</label>
+            <select id="mapa-alumno"><option value="">-- Ver todos los salones --</option></select>
+          </div>
+          <div>
+            <label for="mapa-dia">Día</label>
+            <select id="mapa-dia">
+              <option value="Lunes">Lunes</option>
+            </select>
+          </div>
+          <div>
+            <label for="mapa-hora">Bloque de clase</label>
+            <select id="mapa-hora">
+              <option value="08:00">08:00 - 09:00</option>
+              <option value="09:00">09:00 - 10:00</option>
+              <option value="10:30">10:30 - 11:30</option>
+            </select>
+          </div>
+          <button class="primary" style="margin-top:0; padding:0.65rem 1.2rem;" id="btn-ubicar">Consultar</button>
+        </div>
+
+        <div class="svg-wrap">
+          <svg viewBox="0 0 820 420" aria-label="Mapa de la primaria">
+            <!-- Edificio A - Planta Baja -->
+            <text x="20" y="25" font-size="14" font-weight="700" fill="#475569">EDIFICIO A — PLANTA BAJA</text>
+            <g data-svg="salon-a101">
+              <rect id="salon-a101" class="salon-box" x="20" y="38" width="170" height="95" rx="8" />
+              <text x="35" y="65" class="salon-label">A-101</text>
+              <text id="txt-salon-a101" x="35" y="88" class="salon-sub">Disponible</text>
+            </g>
+            <g data-svg="salon-a102">
+              <rect id="salon-a102" class="salon-box" x="210" y="38" width="170" height="95" rx="8" />
+              <text x="225" y="65" class="salon-label">A-102</text>
+              <text id="txt-salon-a102" x="225" y="88" class="salon-sub">Disponible</text>
+            </g>
+            <g data-svg="salon-a103">
+              <rect id="salon-a103" class="salon-box" x="400" y="38" width="170" height="95" rx="8" />
+              <text x="415" y="65" class="salon-label">A-103</text>
+              <text id="txt-salon-a103" x="415" y="88" class="salon-sub">Disponible</text>
+            </g>
+
+            <!-- Edificio A - Planta Alta -->
+            <text x="20" y="170" font-size="14" font-weight="700" fill="#475569">EDIFICIO A — PLANTA ALTA</text>
+            <g data-svg="salon-a201">
+              <rect id="salon-a201" class="salon-box" x="20" y="183" width="170" height="95" rx="8" />
+              <text x="35" y="210" class="salon-label">A-201</text>
+              <text id="txt-salon-a201" x="35" y="233" class="salon-sub">Disponible</text>
+            </g>
+            <g data-svg="salon-a202">
+              <rect id="salon-a202" class="salon-box" x="210" y="183" width="170" height="95" rx="8" />
+              <text x="225" y="210" class="salon-label">A-202</text>
+              <text id="txt-salon-a202" x="225" y="233" class="salon-sub">Disponible</text>
+            </g>
+            <g data-svg="salon-a203">
+              <rect id="salon-a203" class="salon-box" x="400" y="183" width="170" height="95" rx="8" />
+              <text x="415" y="210" class="salon-label">A-203</text>
+              <text id="txt-salon-a203" x="415" y="233" class="salon-sub">Disponible</text>
+            </g>
+
+            <!-- Edificio B - Laboratorio -->
+            <text x="605" y="25" font-size="14" font-weight="700" fill="#475569">EDIFICIO B</text>
+            <g data-svg="salon-lab01">
+              <rect id="salon-lab01" class="salon-box" x="605" y="38" width="195" height="240" rx="10" />
+              <text x="625" y="70" class="salon-label">LAB-01 (Cómputo)</text>
+              <text id="txt-salon-lab01" x="625" y="96" class="salon-sub">Disponible</text>
+            </g>
+
+            <!-- Patio Central / Cancha -->
+            <text x="20" y="312" font-size="14" font-weight="700" fill="#475569">PATIO CENTRAL</text>
+            <g data-svg="zona-cancha">
+              <rect id="zona-cancha" class="salon-box" x="20" y="325" width="780" height="75" rx="10" />
+              <text x="35" y="355" class="salon-label">CANCHA DEPORTIVA</text>
+              <text id="txt-zona-cancha" x="35" y="378" class="salon-sub">Disponible</text>
+            </g>
+          </svg>
+        </div>
+
+        <div id="mapa-detalle" class="info-box">
+          Selecciona un alumno o haz clic en cualquier salón del mapa para ver la clase y el docente asignado.
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 2: RECADOS -->
+    <section id="panel-recados" class="panel">
+      <div class="grid-2">
+        <div class="card">
+          <h2>Enviar recado o justificante</h2>
+          <form id="form-recado">
+            <label for="rec-tutor">Padre / Tutor</label>
+            <select id="rec-tutor" required></select>
+
+            <label for="rec-alumno">Alumno</label>
+            <select id="rec-alumno" required></select>
+
+            <label for="rec-docente">Docente destinatario</label>
+            <select id="rec-docente" required></select>
+
+            <label for="rec-tipo">Tipo</label>
+            <select id="rec-tipo" required>
+              <option value="Recado">Recado</option>
+              <option value="Justificante">Justificante</option>
+              <option value="Aviso">Aviso</option>
+              <option value="Cita">Cita</option>
+            </select>
+
+            <label for="rec-asunto">Asunto</label>
+            <input type="text" id="rec-asunto" placeholder="Ej. Salida temprana por cita médica" required />
+
+            <label for="rec-mensaje">Mensaje</label>
+            <textarea id="rec-mensaje" placeholder="Escribe los detalles para el maestro..." required></textarea>
+
+            <button type="submit" class="primary">Guardar recado en BD</button>
+            <div id="alert-recado" class="alert"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>Últimos recados registrados</h2>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr><th>ID</th><th>Alumno</th><th>Docente</th><th>Tipo</th><th>Asunto</th><th>Estatus</th></tr>
+              </thead>
+              <tbody id="tabla-recados"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 3: COLEGIATURAS -->
+    <section id="panel-pagos" class="panel">
+      <div class="grid-2">
+        <div class="card">
+          <h2>Registrar pago de colegiatura</h2>
+          <form id="form-pago">
+            <label for="pag-alumno">Alumno</label>
+            <select id="pag-alumno" required></select>
+
+            <label for="pag-periodo">Periodo de colegiatura</label>
+            <select id="pag-periodo" required></select>
+
+            <label for="pag-monto">Monto pagado (MXN)</label>
+            <input type="number" id="pag-monto" step="0.01" min="1" value="2500.00" required />
+
+            <label for="pag-metodo">Método de pago</label>
+            <select id="pag-metodo" required>
+              <option value="Tarjeta">Tarjeta</option>
+              <option value="Transferencia">Transferencia</option>
+              <option value="Efectivo">Efectivo</option>
+            </select>
+
+            <label for="pag-estatus">Estatus</label>
+            <select id="pag-estatus" required>
+              <option value="Pagado">Pagado</option>
+              <option value="Parcial">Parcial</option>
+            </select>
+
+            <label for="pag-referencia">Referencia única</label>
+            <input type="text" id="pag-referencia" required />
+
+            <button type="submit" class="primary">Registrar pago en BD</button>
+            <div id="alert-pago" class="alert"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>Historial de pagos recientes</h2>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr><th>ID</th><th>Referencia</th><th>Alumno</th><th>Periodo</th><th>Monto</th><th>Método</th></tr>
+              </thead>
+              <tbody id="tabla-pagos"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Cuando despliegues el backend en Render, cambia esta línea por tu URL https://...onrender.com
+    const API_URL = ["localhost", "127.0.0.1"].includes(location.hostname)
+  ? "http://localhost:5000"
+  : "https://primer-entrega-de-proyecto.onrender.com";
+
+    let estadoSalones = [];
+
+    // Cambio de pestañas
+    document.querySelectorAll(".tab-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn, .panel").forEach((el) => el.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("panel-" + btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    function generarReferencia() {
+      const rand = Math.floor(1000 + Math.random() * 9000);
+      document.getElementById("pag-referencia").value = `REF-2026-${rand}`;
+    }
+
+    async function cargarCatalogos() {
+      const res = await fetch(`${API_URL}/api/catalogos`);
+      const data = await res.json();
+
+      const mapaAlumno = document.getElementById("mapa-alumno");
+      const recAlumno = document.getElementById("rec-alumno");
+      const pagAlumno = document.getElementById("pag-alumno");
+
+      data.alumnos.forEach((a) => {
+        const texto = `${a.alumno} (${a.grupo})`;
+        mapaAlumno.add(new Option(texto, a.id_alumno));
+        recAlumno.add(new Option(texto, a.id_alumno));
+        pagAlumno.add(new Option(texto, a.id_alumno));
+      });
+
+      const recTutor = document.getElementById("rec-tutor");
+      data.tutores.forEach((t) => recTutor.add(new Option(`${t.tutor} (${t.parentesco})`, t.id_tutor)));
+
+      const recDocente = document.getElementById("rec-docente");
+      data.docentes.forEach((d) => recDocente.add(new Option(`${d.docente} — ${d.especialidad}`, d.id_docente)));
+
+      const pagPeriodo = document.getElementById("pag-periodo");
+      data.periodos.forEach((p) => {
+        pagPeriodo.add(new Option(`${p.nombre_periodo} ($${p.monto_base})`, p.id_periodo));
+      });
+    }
+
+    async function actualizarMapa() {
+      const dia = document.getElementById("mapa-dia").value;
+      const hora = document.getElementById("mapa-hora").value;
+      const idAlumno = document.getElementById("mapa-alumno").value;
+
+      // 1. Cargar estado de todos los salones en ese horario
+      const resAll = await fetch(`${API_URL}/api/mapa?dia=${dia}&hora=${hora}`);
+      estadoSalones = await resAll.json();
+
+      estadoSalones.forEach((s) => {
+        const rect = document.getElementById(s.codigo_svg);
+        const txt = document.getElementById("txt-" + s.codigo_svg);
+        if (!rect || !txt) return;
+        rect.classList.remove("ocupado", "destacado");
+        if (s.grupo) {
+          rect.classList.add("ocupado");
+          txt.textContent = `${s.grupo} · ${s.materia}`;
+        } else {
+          txt.textContent = "Disponible";
+        }
+      });
+
+      const detalle = document.getElementById("mapa-detalle");
+
+      // 2. Si eligió un alumno, resaltar su salón
+      if (idAlumno) {
+        const resAl = await fetch(`${API_URL}/api/mapa?dia=${dia}&hora=${hora}&id_alumno=${idAlumno}`);
+        const filas = await resAl.json();
+        if (filas.length > 0) {
+          const info = filas[0];
+          const rect = document.getElementById(info.codigo_svg);
+          if (rect) rect.classList.add("destacado");
+          detalle.innerHTML = `
+            <strong>${info.alumno} (${info.grupo})</strong> está en <strong>${info.clave_salon}</strong>
+            (${info.edificio}, ${info.planta})<br>
+            Clase: <strong>${info.materia}</strong> · Docente: <strong>${info.docente}</strong> · Horario: ${info.hora_inicio} - ${info.hora_fin}
+          `;
+        } else {
+          detalle.textContent = "El alumno no tiene clase registrada en ese bloque horario.";
+        }
+      } else {
+        detalle.textContent = `Mostrando ocupación de salones el ${dia} a las ${hora}. Haz clic en cualquier salón para ver detalles.`;
+      }
+    }
+
+    // Clic directo sobre los salones del SVG
+    document.querySelectorAll("g[data-svg]").forEach((g) => {
+      g.addEventListener("click", () => {
+        const codigo = g.dataset.svg;
+        const s = estadoSalones.find((x) => x.codigo_svg === codigo);
+        const detalle = document.getElementById("mapa-detalle");
+        if (!s) return;
+        if (s.grupo) {
+          detalle.innerHTML = `
+            Salón <strong>${s.clave_salon}</strong> (${s.edificio}, ${s.planta})<br>
+            Grupo: <strong>${s.grupo}</strong> · Clase: <strong>${s.materia}</strong> · Docente: <strong>${s.docente}</strong> (${s.hora_inicio} - ${s.hora_fin})
+          `;
+        } else {
+          detalle.innerHTML = `Salón <strong>${s.clave_salon}</strong> (${s.edificio}, ${s.planta}) está <strong>disponible</strong> en este bloque.`;
+        }
+      });
+    });
+
+    async function cargarRecados() {
+      const res = await fetch(`${API_URL}/api/recados`);
+      const lista = await res.json();
+      const tbody = document.getElementById("tabla-recados");
+      tbody.innerHTML = lista.map((r) => `
+        <tr>
+          <td><strong>#${r.id_recado}</strong></td>
+          <td>${r.alumno}</td>
+          <td>${r.docente}</td>
+          <td><span class="badge">${r.tipo}</span></td>
+          <td>${r.asunto}</td>
+          <td>${r.estatus}</td>
+        </tr>
+      `).join("");
+    }
+
+    async function cargarPagos() {
+      const res = await fetch(`${API_URL}/api/pagos`);
+      const lista = await res.json();
+      const tbody = document.getElementById("tabla-pagos");
+      tbody.innerHTML = lista.map((p) => `
+        <tr>
+          <td><strong>#${p.id_pago}</strong></td>
+          <td>${p.referencia}</td>
+          <td>${p.alumno}</td>
+          <td>${p.periodo}</td>
+          <td>$${Number(p.monto_pagado).toFixed(2)}</td>
+          <td>${p.metodo_pago}</td>
+        </tr>
+      `).join("");
+    }
+
+    document.getElementById("form-recado").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const box = document.getElementById("alert-recado");
+      const payload = {
+        id_tutor: Number(document.getElementById("rec-tutor").value),
+        id_alumno: Number(document.getElementById("rec-alumno").value),
+        id_docente: Number(document.getElementById("rec-docente").value),
+        tipo: document.getElementById("rec-tipo").value,
+        asunto: document.getElementById("rec-asunto").value.trim(),
+        mensaje: document.getElementById("rec-mensaje").value.trim(),
+      };
+      const res = await fetch(`${API_URL}/api/recados`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        box.className = "alert ok";
+        box.textContent = `Recado guardado en PostgreSQL con id_recado = ${data.recado.id_recado}`;
+        e.target.reset();
+        cargarRecados();
+      } else {
+        box.className = "alert err";
+        box.textContent = `Error: ${data.error}`;
+      }
+    });
+
+    document.getElementById("form-pago").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const box = document.getElementById("alert-pago");
+      const payload = {
+        id_alumno: Number(document.getElementById("pag-alumno").value),
+        id_periodo: Number(document.getElementById("pag-periodo").value),
+        monto_pagado: Number(document.getElementById("pag-monto").value),
+        metodo_pago: document.getElementById("pag-metodo").value,
+        estatus: document.getElementById("pag-estatus").value,
+        referencia: document.getElementById("pag-referencia").value.trim(),
+      };
+      const res = await fetch(`${API_URL}/api/pagos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        box.className = "alert ok";
+        box.textContent = `Pago guardado en PostgreSQL con id_pago = ${data.pago.id_pago} (Ref: ${data.pago.referencia})`;
+        generarReferencia();
+        cargarPagos();
+      } else {
+        box.className = "alert err";
+        box.textContent = `Restricción de BD: ${data.error}`;
+      }
+    });
+
+    document.getElementById("btn-ubicar").addEventListener("click", actualizarMapa);
+    document.getElementById("mapa-hora").addEventListener("change", actualizarMapa);
+    document.getElementById("mapa-alumno").addEventListener("change", actualizarMapa);
+
+    // Arranque inicial
+    (async () => {
+      generarReferencia();
+      await cargarCatalogos();
+      await actualizarMapa();
+      await cargarRecados();
+      await cargarPagos();
+    })();
+  </script>
+</body>
+</html>
