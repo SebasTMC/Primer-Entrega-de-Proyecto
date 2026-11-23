@@ -6,495 +6,732 @@
   <title>Portal de Padres — Proyecto Primaria</title>
   <style>
     :root {
-      --bg: #f4f7fb;
+      --bg: #f4f6fb;
       --card: #ffffff;
-      --primary: #1d4ed8;
-      --primary-dark: #1e40af;
-      --accent: #10b981;
-      --danger: #dc2626;
+      --primary: #1e3a8a;
+      --primary-light: #3b82f6;
+      --accent: #0f766e;
       --text: #1e293b;
       --muted: #64748b;
       --border: #e2e8f0;
+      --ok: #15803d;
+      --warn: #b45309;
+      --danger: #b91c1c;
     }
-    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
-    body { margin: 0; background: var(--bg); color: var(--text); }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* LOGIN */
+    #login-screen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;
+      background: linear-gradient(135deg, #1e3a8a 0%, #0f766e 100%);
+    }
+    .login-card {
+      background: var(--card); width: 100%; max-width: 420px; border-radius: 16px;
+      padding: 32px; box-shadow: 0 20px 45px rgba(0,0,0,0.22);
+    }
+    .login-card h1 { font-size: 1.5rem; color: var(--primary); margin-bottom: 6px; }
+    .login-card p.sub { font-size: 0.9rem; color: var(--muted); margin-bottom: 22px; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      outline: none; border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 10px 16px; border: none; border-radius: 8px; cursor: pointer;
+      font-weight: 600; font-size: 0.92rem; transition: 0.15s;
+    }
+    .btn-primary { background: var(--primary); color: #fff; width: 100%; }
+    .btn-primary:hover { background: #172d6e; }
+    .btn-sm { padding: 7px 12px; font-size: 0.83rem; width: auto; }
+    .btn-ok { background: var(--ok); color: #fff; }
+    .btn-ok:hover { background: #166534; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-outline:hover { background: #f1f5f9; }
+    .error-msg { color: var(--danger); font-size: 0.86rem; margin-top: 10px; min-height: 20px; }
+    .back-link { display: block; text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--primary); text-decoration: none; }
+
+    /* APP */
+    #app-screen { display: none; }
     header {
-      background: linear-gradient(135deg, #1e3a8a, #2563eb);
-      color: #fff; padding: 1.25rem 2rem;
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+      background: var(--primary); color: #fff; padding: 14px 24px;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
     }
-    header h1 { margin: 0; font-size: 1.35rem; }
-    header a { color: #dbeafe; text-decoration: none; font-size: 0.95rem; }
-    header a:hover { text-decoration: underline; }
-    .container { max-width: 1150px; margin: 1.5rem auto; padding: 0 1rem 3rem; }
-    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+    header h2 { font-size: 1.15rem; }
+    .header-meta { font-size: 0.85rem; opacity: 0.9; }
+    .container { max-width: 1180px; margin: 24px auto; padding: 0 16px 40px; }
+
+    .summary-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px; margin-bottom: 22px;
+    }
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 18px; box-shadow: 0 2px 8px rgba(15,23,42,0.04);
+    }
+    .card h3 { font-size: 1rem; color: var(--primary); margin-bottom: 10px; }
+    .kpi-label { font-size: 0.78rem; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+    .kpi-value { font-size: 1.08rem; font-weight: 700; margin-top: 4px; }
+    .tutor-chip {
+      display: inline-block; background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe;
+      padding: 4px 10px; border-radius: 999px; font-size: 0.8rem; margin: 4px 4px 0 0;
+    }
+
+    /* TABS */
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
     .tab-btn {
-      padding: 0.7rem 1.2rem; border: 1px solid var(--border); background: var(--card);
-      border-radius: 10px; cursor: pointer; font-weight: 600; color: var(--muted);
+      padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border);
+      background: #fff; cursor: pointer; font-weight: 600; color: var(--muted);
     }
     .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-    .panel { display: none; }
-    .panel.active { display: block; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.25rem; }
-    @media (max-width: 860px) { .grid-2 { grid-template-columns: 1fr; } }
-    .card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 14px; padding: 1.25rem; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* RECADOS */
+    .recado-item {
+      border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 14px;
+      background: #fff;
     }
-    .card h2 { margin-top: 0; font-size: 1.15rem; }
-    label { display: block; font-size: 0.85rem; font-weight: 600; margin: 0.75rem 0 0.25rem; }
-    input, select, textarea {
-      width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #cbd5e1;
-      border-radius: 8px; font-size: 0.95rem; background: #fff;
-    }
-    textarea { min-height: 85px; resize: vertical; }
-    button.primary {
-      margin-top: 1rem; width: 100%; padding: 0.75rem; border: none; border-radius: 8px;
-      background: var(--primary); color: #fff; font-weight: 600; font-size: 0.95rem; cursor: pointer;
-    }
-    button.primary:hover { background: var(--primary-dark); }
-    .alert {
-      margin-top: 0.85rem; padding: 0.75rem; border-radius: 8px; font-size: 0.9rem; display: none;
-    }
-    .alert.ok { display: block; background: #dcfce7; color: #166534; border: 1px solid #86efac; }
-    .alert.err { display: block; background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
-    th, td { padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border); text-align: left; }
-    th { color: var(--muted); font-weight: 600; }
+    .recado-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
     .badge {
-      display: inline-block; padding: 0.2rem 0.55rem; border-radius: 999px;
-      font-size: 0.75rem; font-weight: 600; background: #e0e7ff; color: #3730a3;
+      display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 0.75rem; font-weight: 700;
     }
-    /* Estilos del mapa SVG */
-    .map-controls { display: grid; grid-template-columns: 1.3fr 1fr 1fr auto; gap: 0.75rem; align-items: end; margin-bottom: 1rem; }
-    @media (max-width: 780px) { .map-controls { grid-template-columns: 1fr; } }
-    .svg-wrap { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 0.75rem; }
-    svg { width: 100%; height: auto; display: block; }
-    .salon-box { fill: #e2e8f0; stroke: #475569; stroke-width: 2; cursor: pointer; transition: 0.2s; }
-    .salon-box:hover { fill: #bfdbfe; }
-    .salon-box.ocupado { fill: #dbeafe; stroke: #2563eb; }
-    .salon-box.destacado { fill: #34d399; stroke: #065f46; stroke-width: 3.5; }
-    .salon-label { font-size: 13px; font-weight: 700; fill: #0f172a; pointer-events: none; }
-    .salon-sub { font-size: 11px; fill: #334155; pointer-events: none; }
-    .info-box {
-      margin-top: 1rem; padding: 1rem; border-radius: 10px;
-      background: #eff6ff; border: 1px solid #bfdbfe;
+    .badge-info { background: #e0f2fe; color: #0369a1; }
+    .badge-warn { background: #fef3c7; color: #92400e; }
+    .badge-ok { background: #dcfce7; color: #166534; }
+    .recado-resp-box {
+      margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border);
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
     }
-    .info-box strong { color: #1e3a8a; }
+
+    /* TABLA HORARIOS */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th, td { border: 1px solid var(--border); padding: 9px 10px; text-align: left; }
+    th { background: #f8fafc; color: var(--primary); font-weight: 700; }
+    .slot-cell { background: #ffffff; vertical-align: top; min-width: 135px; }
+    .slot-mat { font-weight: 700; color: var(--text); display: block; }
+    .slot-meta { font-size: 0.76rem; color: var(--muted); display: block; margin-top: 2px; }
+    .slot-especial { background: #fefce8; }
+
+    /* MAPA SVG */
+    .map-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; margin-bottom: 14px; }
+    .map-controls .field { margin-bottom: 0; min-width: 150px; }
+    .map-status {
+      padding: 12px 14px; border-radius: 10px; background: #eff6ff; border: 1px solid #bfdbfe;
+      margin-bottom: 14px; font-size: 0.9rem;
+    }
+    .svg-box {
+      background: #ffffff; border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px; overflow: auto; text-align: center;
+    }
+    svg#croquis { max-width: 100%; height: auto; }
+    .espacio-svg { cursor: pointer; transition: 0.2s; }
+    .espacio-svg:hover { opacity: 0.82; }
+    .espacio-activo {
+      stroke: #f59e0b !important; stroke-width: 4.5 !important;
+      filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.95));
+    }
+    .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; font-size: 0.8rem; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .swatch { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1px solid #334155; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Portal de Padres y Control Escolar</h1>
-    <a href="index.html">← Volver al inicio</a>
-  </header>
 
-  <div class="container">
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="mapa">Mapa Interactivo</button>
-      <button class="tab-btn" data-tab="recados">Recados y Avisos</button>
-      <button class="tab-btn" data-tab="pagos">Cobro de Colegiaturas</button>
+  <!-- PANTALLA DE LOGIN LIMPIA (SIN CREDENCIALES VISIBLES) -->
+  <section id="login-screen">
+    <div class="login-card">
+      <h1>Portal de Padres y Tutores</h1>
+      <p class="sub">Ingresa con la CURP del alumno y tu contraseña familiar para consultar recados, horario y ubicación en el croquis.</p>
+      <form id="login-form">
+        <div class="field">
+          <label for="curp">CURP del alumno</label>
+          <input type="text" id="curp" placeholder="Ej. LOGR190512HDFRRL01" autocomplete="username" required />
+        </div>
+        <div class="field">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" placeholder="Ingresa tu contraseña" autocomplete="current-password" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+        <div id="login-error" class="error-msg"></div>
+      </form>
+      <a href="index.html" class="back-link">← Ir al portal institucional (Personal y Docentes)</a>
     </div>
+  </section>
 
-    <!-- PANEL 1: MAPA INTERACTIVO -->
-    <section id="panel-mapa" class="panel active">
-      <div class="card">
-        <h2>Ubicación en tiempo real por salón y horario</h2>
-        <div class="map-controls">
-          <div>
-            <label for="mapa-alumno">Buscar a mi hijo (opcional)</label>
-            <select id="mapa-alumno"><option value="">-- Ver todos los salones --</option></select>
-          </div>
-          <div>
-            <label for="mapa-dia">Día</label>
-            <select id="mapa-dia">
-              <option value="Lunes">Lunes</option>
-            </select>
-          </div>
-          <div>
-            <label for="mapa-hora">Bloque de clase</label>
-            <select id="mapa-hora">
-              <option value="08:00">08:00 - 09:00</option>
-              <option value="09:00">09:00 - 10:00</option>
-              <option value="10:30">10:30 - 11:30</option>
-            </select>
-          </div>
-          <button class="primary" style="margin-top:0; padding:0.65rem 1.2rem;" id="btn-ubicar">Consultar</button>
+  <!-- APLICACIÓN AUTENTICADA -->
+  <section id="app-screen">
+    <header>
+      <div>
+        <h2>Portal Familiar — Escuela Primaria</h2>
+        <div class="header-meta" id="header-alumno"></div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <a href="index.html" class="btn btn-sm btn-outline" style="color:#fff; border-color:rgba(255,255,255,0.4); text-decoration:none;">Portal Institucional</a>
+        <button id="btn-logout" class="btn btn-sm" style="background:#ef4444; color:#fff;">Cerrar sesión</button>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- RESUMEN DEL ALUMNO Y TUTORES EXCLUSIVOS -->
+      <div class="summary-grid">
+        <div class="card">
+          <div class="kpi-label">Alumno</div>
+          <div class="kpi-value" id="info-nombre">—</div>
+          <div style="font-size:0.82rem; color:var(--muted); margin-top:4px;" id="info-curp">—</div>
         </div>
-
-        <div class="svg-wrap">
-          <svg viewBox="0 0 820 420" aria-label="Mapa de la primaria">
-            <!-- Edificio A - Planta Baja -->
-            <text x="20" y="25" font-size="14" font-weight="700" fill="#475569">EDIFICIO A — PLANTA BAJA</text>
-            <g data-svg="salon-a101">
-              <rect id="salon-a101" class="salon-box" x="20" y="38" width="170" height="95" rx="8" />
-              <text x="35" y="65" class="salon-label">A-101</text>
-              <text id="txt-salon-a101" x="35" y="88" class="salon-sub">Disponible</text>
-            </g>
-            <g data-svg="salon-a102">
-              <rect id="salon-a102" class="salon-box" x="210" y="38" width="170" height="95" rx="8" />
-              <text x="225" y="65" class="salon-label">A-102</text>
-              <text id="txt-salon-a102" x="225" y="88" class="salon-sub">Disponible</text>
-            </g>
-            <g data-svg="salon-a103">
-              <rect id="salon-a103" class="salon-box" x="400" y="38" width="170" height="95" rx="8" />
-              <text x="415" y="65" class="salon-label">A-103</text>
-              <text id="txt-salon-a103" x="415" y="88" class="salon-sub">Disponible</text>
-            </g>
-
-            <!-- Edificio A - Planta Alta -->
-            <text x="20" y="170" font-size="14" font-weight="700" fill="#475569">EDIFICIO A — PLANTA ALTA</text>
-            <g data-svg="salon-a201">
-              <rect id="salon-a201" class="salon-box" x="20" y="183" width="170" height="95" rx="8" />
-              <text x="35" y="210" class="salon-label">A-201</text>
-              <text id="txt-salon-a201" x="35" y="233" class="salon-sub">Disponible</text>
-            </g>
-            <g data-svg="salon-a202">
-              <rect id="salon-a202" class="salon-box" x="210" y="183" width="170" height="95" rx="8" />
-              <text x="225" y="210" class="salon-label">A-202</text>
-              <text id="txt-salon-a202" x="225" y="233" class="salon-sub">Disponible</text>
-            </g>
-            <g data-svg="salon-a203">
-              <rect id="salon-a203" class="salon-box" x="400" y="183" width="170" height="95" rx="8" />
-              <text x="415" y="210" class="salon-label">A-203</text>
-              <text id="txt-salon-a203" x="415" y="233" class="salon-sub">Disponible</text>
-            </g>
-
-            <!-- Edificio B - Laboratorio -->
-            <text x="605" y="25" font-size="14" font-weight="700" fill="#475569">EDIFICIO B</text>
-            <g data-svg="salon-lab01">
-              <rect id="salon-lab01" class="salon-box" x="605" y="38" width="195" height="240" rx="10" />
-              <text x="625" y="70" class="salon-label">LAB-01 (Cómputo)</text>
-              <text id="txt-salon-lab01" x="625" y="96" class="salon-sub">Disponible</text>
-            </g>
-
-            <!-- Patio Central / Cancha -->
-            <text x="20" y="312" font-size="14" font-weight="700" fill="#475569">PATIO CENTRAL</text>
-            <g data-svg="zona-cancha">
-              <rect id="zona-cancha" class="salon-box" x="20" y="325" width="780" height="75" rx="10" />
-              <text x="35" y="355" class="salon-label">CANCHA DEPORTIVA</text>
-              <text id="txt-zona-cancha" x="35" y="378" class="salon-sub">Disponible</text>
-            </g>
-          </svg>
+        <div class="card">
+          <div class="kpi-label">Grupo y Salón Fijo</div>
+          <div class="kpi-value" id="info-grupo-salon">—</div>
+          <div style="font-size:0.82rem; color:var(--muted); margin-top:4px;" id="info-edificio">—</div>
         </div>
-
-        <div id="mapa-detalle" class="info-box">
-          Selecciona un alumno o haz clic en cualquier salón del mapa para ver la clase y el docente asignado.
+        <div class="card">
+          <div class="kpi-label">Docente Titular</div>
+          <div class="kpi-value" id="info-docente">—</div>
+          <div style="font-size:0.82rem; color:var(--muted); margin-top:4px;">Materias troncales en salón fijo</div>
+        </div>
+        <div class="card">
+          <div class="kpi-label">Tutores Exclusivos (Máx. 2)</div>
+          <div id="info-tutores" style="margin-top:4px;">—</div>
         </div>
       </div>
-    </section>
 
-    <!-- PANEL 2: RECADOS -->
-    <section id="panel-recados" class="panel">
-      <div class="grid-2">
+      <!-- NAVEGACIÓN POR PESTAÑAS -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="tab-recados">Recados del Docente</button>
+        <button class="tab-btn" data-tab="tab-horario">Horario Semanal (L–V)</button>
+        <button class="tab-btn" data-tab="tab-mapa">Croquis Interactivo</button>
+        <button class="tab-btn" data-tab="tab-pagos">Colegiaturas</button>
+      </div>
+
+      <!-- TAB 1: RECADOS -->
+      <div id="tab-recados" class="tab-panel active">
         <div class="card">
-          <h2>Enviar recado o justificante</h2>
-          <form id="form-recado">
-            <label for="rec-tutor">Padre / Tutor</label>
-            <select id="rec-tutor" required></select>
-
-            <label for="rec-alumno">Alumno</label>
-            <select id="rec-alumno" required></select>
-
-            <label for="rec-docente">Docente destinatario</label>
-            <select id="rec-docente" required></select>
-
-            <label for="rec-tipo">Tipo</label>
-            <select id="rec-tipo" required>
-              <option value="Recado">Recado</option>
-              <option value="Justificante">Justificante</option>
-              <option value="Aviso">Aviso</option>
-              <option value="Cita">Cita</option>
-            </select>
-
-            <label for="rec-asunto">Asunto</label>
-            <input type="text" id="rec-asunto" placeholder="Ej. Salida temprana por cita médica" required />
-
-            <label for="rec-mensaje">Mensaje</label>
-            <textarea id="rec-mensaje" placeholder="Escribe los detalles para el maestro..." required></textarea>
-
-            <button type="submit" class="primary">Guardar recado en BD</button>
-            <div id="alert-recado" class="alert"></div>
-          </form>
+          <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; margin-bottom:14px;">
+            <div>
+              <h3 style="margin-bottom:2px;">Recados recibidos</h3>
+              <p style="font-size:0.84rem; color:var(--muted);">Solo ves los recados enviados por el docente para tu hijo o su grupo. Responde según lo solicitado.</p>
+            </div>
+            <div class="field" style="margin-bottom:0; min-width:220px;">
+              <label for="select-tutor-resp" style="font-size:0.78rem;">Responder como tutor:</label>
+              <select id="select-tutor-resp"></select>
+            </div>
+          </div>
+          <div id="lista-recados">Cargando recados...</div>
         </div>
+      </div>
 
+      <!-- TAB 2: HORARIO SEMANAL -->
+      <div id="tab-horario" class="tab-panel">
         <div class="card">
-          <h2>Últimos recados registrados</h2>
-          <div style="overflow-x:auto;">
+          <h3>Horario Completo de la Semana (Lunes a Viernes)</h3>
+          <div class="table-wrap">
             <table>
               <thead>
-                <tr><th>ID</th><th>Alumno</th><th>Docente</th><th>Tipo</th><th>Asunto</th><th>Estatus</th></tr>
+                <tr>
+                  <th>Hora</th>
+                  <th>Lunes</th>
+                  <th>Martes</th>
+                  <th>Miércoles</th>
+                  <th>Jueves</th>
+                  <th>Viernes</th>
+                </tr>
               </thead>
-              <tbody id="tabla-recados"></tbody>
+              <tbody id="tabla-horario-body"></tbody>
             </table>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- PANEL 3: COLEGIATURAS -->
-    <section id="panel-pagos" class="panel">
-      <div class="grid-2">
+      <!-- TAB 3: CROQUIS INTERACTIVO SVG -->
+      <div id="tab-mapa" class="tab-panel">
         <div class="card">
-          <h2>Registrar pago de colegiatura</h2>
-          <form id="form-pago">
-            <label for="pag-alumno">Alumno</label>
-            <select id="pag-alumno" required></select>
+          <h3>Croquis Escolar Interactivo</h3>
+          <div class="map-controls">
+            <div class="field">
+              <label for="mapa-dia">Día</label>
+              <select id="mapa-dia">
+                <option value="Lunes">Lunes</option>
+                <option value="Martes">Martes</option>
+                <option value="Miercoles">Miércoles</option>
+                <option value="Jueves">Jueves</option>
+                <option value="Viernes">Viernes</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="mapa-hora">Bloque horario</label>
+              <select id="mapa-hora">
+                <option value="08:00">08:00 - 09:00</option>
+                <option value="09:00">09:00 - 10:00</option>
+                <option value="10:30">10:30 - 11:30</option>
+                <option value="11:30">11:30 - 12:30</option>
+                <option value="12:30">12:30 - 13:30</option>
+              </select>
+            </div>
+            <button id="btn-ubicar-alumno" class="btn btn-primary btn-sm">Ubicar a mi hijo</button>
+            <button id="btn-ver-fijo" class="btn btn-outline btn-sm">Resaltar salón fijo</button>
+          </div>
 
-            <label for="pag-periodo">Periodo de colegiatura</label>
-            <select id="pag-periodo" required></select>
+          <div id="mapa-status" class="map-status">Selecciona un día y bloque horario para ubicar al alumno en el croquis.</div>
 
-            <label for="pag-monto">Monto pagado (MXN)</label>
-            <input type="number" id="pag-monto" step="0.01" min="1" value="2500.00" required />
+          <div class="svg-box">
+            <!-- CROQUIS FIEL AL BOCETO (3 ALAS DIAGONALES + SERVICIOS + ÁREAS VERDES) -->
+            <svg id="croquis" viewBox="0 0 920 620" xmlns="http://www.w3.org/2000/svg">
+              <rect width="920" height="620" fill="#f8fafc" rx="12" />
 
-            <label for="pag-metodo">Método de pago</label>
-            <select id="pag-metodo" required>
-              <option value="Tarjeta">Tarjeta</option>
-              <option value="Transferencia">Transferencia</option>
-              <option value="Efectivo">Efectivo</option>
-            </select>
+              <!-- ÁREA VERDE NORTE (GRANDE, DETRÁS DE BIBLIOTECA) -->
+              <g transform="translate(500, 150) rotate(38)">
+                <rect id="zona-verde-norte" class="espacio-svg" x="0" y="-155" width="235" height="150" rx="6"
+                      fill="#bbf7d0" stroke="#16a34a" stroke-width="3" data-nombre="Área Verde Norte" />
+                <text x="117" y="-76" text-anchor="middle" font-size="13" font-weight="700" fill="#166534">ÁREA VERDE NORTE</text>
+              </g>
 
-            <label for="pag-estatus">Estatus</label>
-            <select id="pag-estatus" required>
-              <option value="Pagado">Pagado</option>
-              <option value="Parcial">Parcial</option>
-            </select>
+              <!-- BIBLIOTECA (ROSA, DETRÁS DEL ALA SUPERIOR-DERECHA) -->
+              <g transform="translate(495, 165) rotate(38)">
+                <rect id="zona-biblioteca" class="espacio-svg" x="0" y="-28" width="250" height="28" rx="3"
+                      fill="#fbcfe8" stroke="#db2777" stroke-width="2.5" data-nombre="Biblioteca (BIB-01)" />
+                <text x="125" y="-10" text-anchor="middle" font-size="11" font-weight="700" fill="#9d174d">BIBLIOTECA (BIB-01)</text>
+              </g>
 
-            <label for="pag-referencia">Referencia única</label>
-            <input type="text" id="pag-referencia" required />
+              <!-- ALA IZQUIERDA (EDIFICIO A: CÓMPUTO ROJO + 6 SALONES NEGRO + BAÑOS AZUL) -->
+              <g transform="translate(115, 425) rotate(-42)">
+                <!-- Cómputo (Rojo, punta inferior) -->
+                <rect id="zona-computo" class="espacio-svg" x="0" y="0" width="60" height="58" rx="3"
+                      fill="#fecaca" stroke="#dc2626" stroke-width="2.5" data-nombre="Salón de Cómputo (COMP-01)" />
+                <text x="30" y="33" text-anchor="middle" font-size="10" font-weight="700" fill="#991b1b">CÓMP.</text>
 
-            <button type="submit" class="primary">Registrar pago en BD</button>
-            <div id="alert-pago" class="alert"></div>
-          </form>
+                <!-- 6 Salones Edificio A (1°A - 2°C) -->
+                <rect id="salon-a101" class="espacio-svg" x="62"  y="0" width="46" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón A-101 (1°A)" />
+                <text x="85"  y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">A-101</text>
+                <text x="85"  y="42" text-anchor="middle" font-size="9" fill="#cbd5e1">1°A</text>
+
+                <rect id="salon-a102" class="espacio-svg" x="108" y="0" width="46" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón A-102 (1°B)" />
+                <text x="131" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">A-102</text>
+                <text x="131" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1">1°B</text>
+
+                <rect id="salon-a103" class="espacio-svg" x="154" y="0" width="46" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón A-103 (1°C)" />
+                <text x="177" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">A-103</text>
+                <text x="177" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1">1°C</text>
+
+                <rect id="salon-a104" class="espacio-svg" x="200" y="0" width="46" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón A-104 (2°A)" />
+                <text x="223" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">A-104</text>
+                <text x="223" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1">2°A</text>
+
+                <rect id="salon-a105" class="espacio-svg" x="246" y="0" width="46" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón A-105 (2°B)" />
+                <text x="269" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">A-105</text>
+                <text x="269" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1">2°B</text>
+
+                <rect id="salon-a106" class="espacio-svg" x="292" y="0" width="46" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón A-106 (2°C)" />
+                <text x="315" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">A-106</text>
+                <text x="315" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1">2°C</text>
+
+                <!-- Baños Poniente (Azul, esquina superior) -->
+                <rect id="zona-banos-poniente" class="espacio-svg" x="340" y="0" width="54" height="58" rx="3"
+                      fill="#bfdbfe" stroke="#2563eb" stroke-width="2.5" data-nombre="Baños Poniente (BAN-01)" />
+                <text x="367" y="33" text-anchor="middle" font-size="10" font-weight="700" fill="#1e40af">BAÑOS</text>
+              </g>
+
+              <!-- ALA SUPERIOR-DERECHA (EDIFICIO B: BAÑOS AZUL + 6 SALONES NEGRO) -->
+              <g transform="translate(450, 140) rotate(38)">
+                <!-- Baños Oriente (Azul) -->
+                <rect id="zona-banos-oriente" class="espacio-svg" x="0" y="0" width="54" height="58" rx="3"
+                      fill="#bfdbfe" stroke="#2563eb" stroke-width="2.5" data-nombre="Baños Oriente (BAN-02)" />
+                <text x="27" y="33" text-anchor="middle" font-size="10" font-weight="700" fill="#1e40af">BAÑOS</text>
+
+                <!-- 6 Salones Edificio B (3°A - 4°C) -->
+                <rect id="salon-b201" class="espacio-svg" x="56"  y="0" width="44" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón B-201 (3°A)" />
+                <text x="78"  y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">B-201</text>
+                <text x="78"  y="42" text-anchor="middle" font-size="9" fill="#cbd5e1">3°A</text>
+
+                <rect id="salon-b202" class="espacio-svg" x="100" y="0" width="44" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón B-202 (3°B)" />
+                <text x="122" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">B-202</text>
+                <text x="122" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1">3°B</text>
+
+                <rect id="salon-b203" class="espacio-svg" x="144" y="0" width="44" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón B-203 (3°C)" />
+                <text x="166" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">B-203</text>
+                <text x="166" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1">3°C</text>
+
+                <rect id="salon-b204" class="espacio-svg" x="188" y="0" width="44" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón B-204 (4°A)" />
+                <text x="210" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">B-204</text>
+                <text x="210" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1">4°A</text>
+
+                <rect id="salon-b205" class="espacio-svg" x="232" y="0" width="44" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón B-205 (4°B)" />
+                <text x="254" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">B-205</text>
+                <text x="254" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1">4°B</text>
+
+                <rect id="salon-b206" class="espacio-svg" x="276" y="0" width="44" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón B-206 (4°C)" />
+                <text x="298" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">B-206</text>
+                <text x="298" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1">4°C</text>
+              </g>
+
+              <!-- DOS ÁREAS VERDES CENTRALES -->
+              <polygon id="zona-verde-centro1" class="espacio-svg" points="270,390 365,315 445,425 340,475"
+                       fill="#dcfce7" stroke="#16a34a" stroke-width="2.5" data-nombre="Área Verde Central Poniente" />
+              <text x="355" y="405" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">JARDÍN 1</text>
+
+              <polygon id="zona-verde-centro2" class="espacio-svg" points="390,305 460,260 570,375 470,415"
+                       fill="#dcfce7" stroke="#16a34a" stroke-width="2.5" data-nombre="Área Verde Central Oriente" />
+              <text x="475" y="348" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">JARDÍN 2</text>
+
+              <!-- ALA INFERIOR (EDIFICIO C: DIRECCIÓN MORADO + 6 SALONES NEGRO) -->
+              <g transform="translate(325, 515) rotate(-22)">
+                <!-- Dirección (Morado, punta izquierda) -->
+                <rect id="zona-direccion" class="espacio-svg" x="0" y="0" width="64" height="56" rx="3"
+                      fill="#e9d5ff" stroke="#7e22ce" stroke-width="2.5" data-nombre="Dirección Escolar (DIR-01)" />
+                <text x="32" y="32" text-anchor="middle" font-size="10" font-weight="700" fill="#6b21a8">DIR.</text>
+
+                <!-- 6 Salones Edificio C (5°A - 6°C) -->
+                <rect id="salon-c301" class="espacio-svg" x="66"  y="0" width="44" height="56" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón C-301 (5°A)" />
+                <text x="88"  y="25" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">C-301</text>
+                <text x="88"  y="41" text-anchor="middle" font-size="9" fill="#cbd5e1">5°A</text>
+
+                <rect id="salon-c302" class="espacio-svg" x="110" y="0" width="44" height="56" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón C-302 (5°B)" />
+                <text x="132" y="25" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">C-302</text>
+                <text x="132" y="41" text-anchor="middle" font-size="9" fill="#cbd5e1">5°B</text>
+
+                <rect id="salon-c303" class="espacio-svg" x="154" y="0" width="44" height="56" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón C-303 (5°C)" />
+                <text x="176" y="25" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">C-303</text>
+                <text x="176" y="41" text-anchor="middle" font-size="9" fill="#cbd5e1">5°C</text>
+
+                <rect id="salon-c304" class="espacio-svg" x="198" y="0" width="44" height="56" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón C-304 (6°A)" />
+                <text x="220" y="25" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">C-304</text>
+                <text x="220" y="41" text-anchor="middle" font-size="9" fill="#cbd5e1">6°A</text>
+
+                <rect id="salon-c305" class="espacio-svg" x="242" y="0" width="44" height="56" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón C-305 (6°B)" />
+                <text x="264" y="25" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">C-305</text>
+                <text x="264" y="41" text-anchor="middle" font-size="9" fill="#cbd5e1">6°B</text>
+
+                <rect id="salon-c306" class="espacio-svg" x="286" y="0" width="44" height="56" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón C-306 (6°C)" />
+                <text x="308" y="25" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">C-306</text>
+                <text x="308" y="41" text-anchor="middle" font-size="9" fill="#cbd5e1">6°C</text>
+              </g>
+
+              <!-- CAFETERÍA (GRIS) Y ENFERMERÍA (CAFÉ) -->
+              <g transform="translate(650, 395) rotate(-32)">
+                <rect id="zona-cafeteria" class="espacio-svg" x="0" y="0" width="54" height="54" rx="4"
+                      fill="#e2e8f0" stroke="#64748b" stroke-width="2.5" data-nombre="Cafetería Escolar (CAF-01)" />
+                <text x="27" y="31" text-anchor="middle" font-size="10" font-weight="700" fill="#334155">CAFÉ</text>
+
+                <rect id="zona-enfermeria" class="espacio-svg" x="64" y="-6" width="54" height="58" rx="4"
+                      fill="#fde68a" stroke="#92400e" stroke-width="2.5" data-nombre="Enfermería Escolar (ENF-01)" />
+                <text x="91" y="27" text-anchor="middle" font-size="10" font-weight="700" fill="#78350f">ENF.</text>
+              </g>
+
+              <!-- CANCHAS DE BÁSQUET Y MALLA SOMBRA (AMARILLO) -->
+              <g transform="translate(720, 320) rotate(-52)">
+                <rect id="zona-cancha" class="espacio-svg" x="0" y="0" width="185" height="72" rx="6"
+                      fill="#fef08a" stroke="#eab308" stroke-width="3" data-nombre="Canchas de Básquet y Malla Sombra (CANCHA-01)" />
+                <text x="92" y="32" text-anchor="middle" font-size="11" font-weight="700" fill="#854d0e">CANCHAS BÁSQUET</text>
+                <text x="92" y="48" text-anchor="middle" font-size="10" fill="#a16207">Malla Sombra</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="legend">
+            <span><i class="swatch" style="background:#1e293b;"></i>Salones (1°A–6°C)</span>
+            <span><i class="swatch" style="background:#fecaca; border-color:#dc2626;"></i>Cómputo</span>
+            <span><i class="swatch" style="background:#bfdbfe; border-color:#2563eb;"></i>Baños</span>
+            <span><i class="swatch" style="background:#fbcfe8; border-color:#db2777;"></i>Biblioteca</span>
+            <span><i class="swatch" style="background:#e9d5ff; border-color:#7e22ce;"></i>Dirección</span>
+            <span><i class="swatch" style="background:#e2e8f0; border-color:#64748b;"></i>Cafetería</span>
+            <span><i class="swatch" style="background:#fde68a; border-color:#92400e;"></i>Enfermería</span>
+            <span><i class="swatch" style="background:#fef08a; border-color:#eab308;"></i>Canchas / Malla sombra</span>
+            <span><i class="swatch" style="background:#bbf7d0; border-color:#16a34a;"></i>Áreas verdes</span>
+          </div>
         </div>
+      </div>
 
+      <!-- TAB 4: COLEGIATURAS -->
+      <div id="tab-pagos" class="tab-panel">
         <div class="card">
-          <h2>Historial de pagos recientes</h2>
-          <div style="overflow-x:auto;">
+          <h3>Historial de Colegiaturas del Alumno</h3>
+          <div class="table-wrap">
             <table>
               <thead>
-                <tr><th>ID</th><th>Referencia</th><th>Alumno</th><th>Periodo</th><th>Monto</th><th>Método</th></tr>
+                <tr>
+                  <th>Periodo</th>
+                  <th>Fecha de pago</th>
+                  <th>Método</th>
+                  <th>Referencia</th>
+                  <th>Monto</th>
+                  <th>Estatus</th>
+                </tr>
               </thead>
-              <tbody id="tabla-pagos"></tbody>
+              <tbody id="tabla-pagos-body"></tbody>
             </table>
           </div>
         </div>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 
   <script>
-    // Cuando despliegues el backend en Render, cambia esta línea por tu URL https://...onrender.com
-    const API_URL = ["localhost", "127.0.0.1"].includes(location.hostname)
-  ? "http://localhost:5000"
-  : "https://primer-entrega-de-proyecto.onrender.com";
+    const API_URL = (location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:")
+      ? "http://localhost:5000"
+      : "https://primer-entrega-de-proyecto.onrender.com";
 
-    let estadoSalones = [];
+    let perfilActual = null;
 
-    // Cambio de pestañas
-    document.querySelectorAll(".tab-btn").forEach((btn) => {
+    // Manejo de pestañas
+    document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".tab-btn, .panel").forEach((el) => el.classList.remove("active"));
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
         btn.classList.add("active");
-        document.getElementById("panel-" + btn.dataset.tab).classList.add("active");
+        document.getElementById(btn.dataset.tab).classList.add("active");
       });
     });
 
-    function generarReferencia() {
-      const rand = Math.floor(1000 + Math.random() * 9000);
-      document.getElementById("pag-referencia").value = `REF-2026-${rand}`;
-    }
-
-    async function cargarCatalogos() {
-      const res = await fetch(`${API_URL}/api/catalogos`);
-      const data = await res.json();
-
-      const mapaAlumno = document.getElementById("mapa-alumno");
-      const recAlumno = document.getElementById("rec-alumno");
-      const pagAlumno = document.getElementById("pag-alumno");
-
-      data.alumnos.forEach((a) => {
-        const texto = `${a.alumno} (${a.grupo})`;
-        mapaAlumno.add(new Option(texto, a.id_alumno));
-        recAlumno.add(new Option(texto, a.id_alumno));
-        pagAlumno.add(new Option(texto, a.id_alumno));
+    // Click en cualquier espacio del SVG para ver su nombre
+    document.querySelectorAll(".espacio-svg").forEach(el => {
+      el.addEventListener("click", () => {
+        const nombre = el.getAttribute("data-nombre") || el.id;
+        document.getElementById("mapa-status").innerHTML = `<strong>Espacio seleccionado:</strong> ${nombre}`;
       });
+    });
 
-      const recTutor = document.getElementById("rec-tutor");
-      data.tutores.forEach((t) => recTutor.add(new Option(`${t.tutor} (${t.parentesco})`, t.id_tutor)));
-
-      const recDocente = document.getElementById("rec-docente");
-      data.docentes.forEach((d) => recDocente.add(new Option(`${d.docente} — ${d.especialidad}`, d.id_docente)));
-
-      const pagPeriodo = document.getElementById("pag-periodo");
-      data.periodos.forEach((p) => {
-        pagPeriodo.add(new Option(`${p.nombre_periodo} ($${p.monto_base})`, p.id_periodo));
-      });
-    }
-
-    async function actualizarMapa() {
-      const dia = document.getElementById("mapa-dia").value;
-      const hora = document.getElementById("mapa-hora").value;
-      const idAlumno = document.getElementById("mapa-alumno").value;
-
-      // 1. Cargar estado de todos los salones en ese horario
-      const resAll = await fetch(`${API_URL}/api/mapa?dia=${dia}&hora=${hora}`);
-      estadoSalones = await resAll.json();
-
-      estadoSalones.forEach((s) => {
-        const rect = document.getElementById(s.codigo_svg);
-        const txt = document.getElementById("txt-" + s.codigo_svg);
-        if (!rect || !txt) return;
-        rect.classList.remove("ocupado", "destacado");
-        if (s.grupo) {
-          rect.classList.add("ocupado");
-          txt.textContent = `${s.grupo} · ${s.materia}`;
-        } else {
-          txt.textContent = "Disponible";
+    // Login
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const err = document.getElementById("login-error");
+      err.textContent = "Verificando acceso...";
+      try {
+        const res = await fetch(`${API_URL}/api/padres/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            curp: document.getElementById("curp").value.trim(),
+            password: document.getElementById("password").value
+          })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          err.textContent = data.error || "Credenciales inválidas.";
+          return;
         }
-      });
-
-      const detalle = document.getElementById("mapa-detalle");
-
-      // 2. Si eligió un alumno, resaltar su salón
-      if (idAlumno) {
-        const resAl = await fetch(`${API_URL}/api/mapa?dia=${dia}&hora=${hora}&id_alumno=${idAlumno}`);
-        const filas = await resAl.json();
-        if (filas.length > 0) {
-          const info = filas[0];
-          const rect = document.getElementById(info.codigo_svg);
-          if (rect) rect.classList.add("destacado");
-          detalle.innerHTML = `
-            <strong>${info.alumno} (${info.grupo})</strong> está en <strong>${info.clave_salon}</strong>
-            (${info.edificio}, ${info.planta})<br>
-            Clase: <strong>${info.materia}</strong> · Docente: <strong>${info.docente}</strong> · Horario: ${info.hora_inicio} - ${info.hora_fin}
-          `;
-        } else {
-          detalle.textContent = "El alumno no tiene clase registrada en ese bloque horario.";
-        }
-      } else {
-        detalle.textContent = `Mostrando ocupación de salones el ${dia} a las ${hora}. Haz clic en cualquier salón para ver detalles.`;
+        err.textContent = "";
+        perfilActual = data.perfil;
+        sessionStorage.setItem("padres_perfil", JSON.stringify(perfilActual));
+        iniciarPortal();
+      } catch (ex) {
+        err.textContent = "No se pudo conectar con el servidor. Intenta de nuevo en unos segundos.";
       }
-    }
-
-    // Clic directo sobre los salones del SVG
-    document.querySelectorAll("g[data-svg]").forEach((g) => {
-      g.addEventListener("click", () => {
-        const codigo = g.dataset.svg;
-        const s = estadoSalones.find((x) => x.codigo_svg === codigo);
-        const detalle = document.getElementById("mapa-detalle");
-        if (!s) return;
-        if (s.grupo) {
-          detalle.innerHTML = `
-            Salón <strong>${s.clave_salon}</strong> (${s.edificio}, ${s.planta})<br>
-            Grupo: <strong>${s.grupo}</strong> · Clase: <strong>${s.materia}</strong> · Docente: <strong>${s.docente}</strong> (${s.hora_inicio} - ${s.hora_fin})
-          `;
-        } else {
-          detalle.innerHTML = `Salón <strong>${s.clave_salon}</strong> (${s.edificio}, ${s.planta}) está <strong>disponible</strong> en este bloque.`;
-        }
-      });
     });
+
+    document.getElementById("btn-logout").addEventListener("click", () => {
+      sessionStorage.removeItem("padres_perfil");
+      perfilActual = null;
+      document.getElementById("app-screen").style.display = "none";
+      document.getElementById("login-screen").style.display = "flex";
+      document.getElementById("password").value = "";
+    });
+
+    function iniciarPortal() {
+      document.getElementById("login-screen").style.display = "none";
+      document.getElementById("app-screen").style.display = "block";
+
+      document.getElementById("header-alumno").textContent =
+        `${perfilActual.alumno} · Grupo ${perfilActual.grupo} · Salón ${perfilActual.clave_salon || "—"}`;
+      document.getElementById("info-nombre").textContent = perfilActual.alumno;
+      document.getElementById("info-curp").textContent = `CURP: ${perfilActual.curp}`;
+      document.getElementById("info-grupo-salon").textContent = `${perfilActual.grupo} — Salón ${perfilActual.clave_salon || "—"}`;
+      document.getElementById("info-edificio").textContent = perfilActual.edificio || "Planta Baja";
+      document.getElementById("info-docente").textContent = perfilActual.docente_titular;
+
+      const tutoresDiv = document.getElementById("info-tutores");
+      const selTutor = document.getElementById("select-tutor-resp");
+      tutoresDiv.innerHTML = "";
+      selTutor.innerHTML = "";
+      (perfilActual.tutores || []).forEach(t => {
+        const chip = document.createElement("span");
+        chip.className = "tutor-chip";
+        chip.textContent = `${t.nombre} (${t.parentesco})`;
+        tutoresDiv.appendChild(chip);
+
+        const opt = document.createElement("option");
+        opt.value = t.id_tutor;
+        opt.textContent = `${t.nombre} (${t.parentesco})`;
+        selTutor.appendChild(opt);
+      });
+
+      resaltarEspacio(perfilActual.codigo_svg, `Salón fijo asignado: ${perfilActual.clave_salon} (${perfilActual.grupo})`);
+      cargarRecados();
+      cargarHorario();
+      cargarPagos();
+    }
 
     async function cargarRecados() {
-      const res = await fetch(`${API_URL}/api/recados`);
-      const lista = await res.json();
-      const tbody = document.getElementById("tabla-recados");
-      tbody.innerHTML = lista.map((r) => `
-        <tr>
-          <td><strong>#${r.id_recado}</strong></td>
-          <td>${r.alumno}</td>
-          <td>${r.docente}</td>
-          <td><span class="badge">${r.tipo}</span></td>
-          <td>${r.asunto}</td>
-          <td>${r.estatus}</td>
-        </tr>
-      `).join("");
+      const cont = document.getElementById("lista-recados");
+      cont.innerHTML = "Cargando recados...";
+      const res = await fetch(`${API_URL}/api/recados?id_alumno=${perfilActual.id_alumno}`);
+      const recados = await res.json();
+      if (!recados.length) {
+        cont.innerHTML = `<p style="color:var(--muted);">No hay recados pendientes para ${perfilActual.alumno} ni para el grupo ${perfilActual.grupo}.</p>`;
+        return;
+      }
+      cont.innerHTML = "";
+      recados.forEach(r => {
+        const card = document.createElement("div");
+        card.className = "recado-item";
+        const yaRespondido = Boolean(r.estado_respuesta);
+        const badgeResp = yaRespondido
+          ? `<span class="badge badge-ok">${r.estado_respuesta} (${r.fecha_respuesta})</span>`
+          : `<span class="badge badge-warn">Pendiente: ${r.tipo_respuesta}</span>`;
+
+        let controles = "";
+        if (r.tipo_respuesta === "Texto") {
+          controles = `
+            <input type="text" id="txt-resp-${r.id_recado}" placeholder="Escribe tu respuesta para el docente..." value="${r.texto_respuesta || ""}" style="flex:1; min-width:220px; padding:8px 10px; border:1px solid var(--border); border-radius:8px;" />
+            <button class="btn btn-ok btn-sm" onclick="enviarRespuesta(${r.id_recado}, 'Respondido', true)">Enviar respuesta</button>
+          `;
+        } else {
+          const etiqueta = r.tipo_respuesta === "Confirmado" ? "Marcar Confirmado"
+                         : r.tipo_respuesta === "Aceptado" ? "Marcar Aceptado"
+                         : "Marcar Leído";
+          controles = `
+            <input type="text" id="txt-resp-${r.id_recado}" placeholder="Comentario opcional..." value="${r.texto_respuesta || ""}" style="flex:1; min-width:200px; padding:8px 10px; border:1px solid var(--border); border-radius:8px;" />
+            <button class="btn btn-ok btn-sm" onclick="enviarRespuesta(${r.id_recado}, '${r.tipo_respuesta}', false)">${etiqueta}</button>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="recado-head">
+            <div>
+              <strong>${r.asunto}</strong>
+              <span class="badge badge-info" style="margin-left:6px;">${r.tipo} · ${r.alcance}</span>
+            </div>
+            <div>${badgeResp}</div>
+          </div>
+          <p style="margin:6px 0 8px;">${r.mensaje}</p>
+          <div style="font-size:0.8rem; color:var(--muted);">
+            Enviado por: <strong>${r.docente}</strong> · ${r.fecha_envio}
+            ${r.respondio_tutor ? ` · Respondido por: <strong>${r.respondio_tutor}</strong>` : ""}
+          </div>
+          <div class="recado-resp-box">${controles}</div>
+        `;
+        cont.appendChild(card);
+      });
+    }
+
+    async function enviarRespuesta(idRecado, estado, requiereTexto) {
+      const input = document.getElementById(`txt-resp-${idRecado}`);
+      const texto = input ? input.value.trim() : "";
+      if (requiereTexto && !texto) {
+        alert("Este recado requiere que escribas una respuesta de texto.");
+        return;
+      }
+      const idTutor = document.getElementById("select-tutor-resp").value || null;
+      const res = await fetch(`${API_URL}/api/recados/${idRecado}/responder`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id_alumno: perfilActual.id_alumno,
+          id_tutor: idTutor ? Number(idTutor) : null,
+          estado_respuesta: estado,
+          texto_respuesta: texto
+        })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        alert(data.error || "No se pudo guardar la respuesta.");
+        return;
+      }
+      cargarRecados();
+    }
+
+    async function cargarHorario() {
+      const tbody = document.getElementById("tabla-horario-body");
+      tbody.innerHTML = `<tr><td colspan="6">Cargando horario semanal...</td></tr>`;
+      const res = await fetch(`${API_URL}/api/horarios?id_alumno=${perfilActual.id_alumno}`);
+      const rows = await res.json();
+
+      const bloques = ["08:00", "09:00", "10:30", "11:30", "12:30"];
+      const dias = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"];
+      const mapa = {};
+      rows.forEach(r => { mapa[`${r.dia_semana}_${r.hora_inicio}`] = r; });
+
+      tbody.innerHTML = "";
+      bloques.forEach(h => {
+        const tr = document.createElement("tr");
+        const fin = rows.find(r => r.hora_inicio === h)?.hora_fin || "";
+        let html = `<td><strong>${h}</strong><br><span style="font-size:0.76rem; color:var(--muted);">${fin}</span></td>`;
+        dias.forEach(d => {
+          const item = mapa[`${d}_${h}`];
+          if (item) {
+            const esp = (item.clave_salon === "COMP-01" || item.clave_salon === "CANCHA-01") ? "slot-especial" : "";
+            html += `<td class="slot-cell ${esp}">
+              <span class="slot-mat">${item.materia}</span>
+              <span class="slot-meta">${item.clave_salon} · ${item.docente}</span>
+            </td>`;
+          } else {
+            html += `<td class="slot-cell">—</td>`;
+          }
+        });
+        tr.innerHTML = html;
+        tbody.appendChild(tr);
+      });
     }
 
     async function cargarPagos() {
-      const res = await fetch(`${API_URL}/api/pagos`);
-      const lista = await res.json();
-      const tbody = document.getElementById("tabla-pagos");
-      tbody.innerHTML = lista.map((p) => `
+      const tbody = document.getElementById("tabla-pagos-body");
+      const res = await fetch(`${API_URL}/api/pagos?id_alumno=${perfilActual.id_alumno}`);
+      const pagos = await res.json();
+      if (!pagos.length) {
+        tbody.innerHTML = `<tr><td colspan="6">No hay pagos registrados aún.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = pagos.map(p => `
         <tr>
-          <td><strong>#${p.id_pago}</strong></td>
-          <td>${p.referencia}</td>
-          <td>${p.alumno}</td>
           <td>${p.periodo}</td>
-          <td>$${Number(p.monto_pagado).toFixed(2)}</td>
+          <td>${p.fecha_pago}</td>
           <td>${p.metodo_pago}</td>
+          <td><code>${p.referencia}</code></td>
+          <td>$${Number(p.monto_pagado).toFixed(2)}</td>
+          <td><span class="badge badge-ok">${p.estatus}</span></td>
         </tr>
       `).join("");
     }
 
-    document.getElementById("form-recado").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const box = document.getElementById("alert-recado");
-      const payload = {
-        id_tutor: Number(document.getElementById("rec-tutor").value),
-        id_alumno: Number(document.getElementById("rec-alumno").value),
-        id_docente: Number(document.getElementById("rec-docente").value),
-        tipo: document.getElementById("rec-tipo").value,
-        asunto: document.getElementById("rec-asunto").value.trim(),
-        mensaje: document.getElementById("rec-mensaje").value.trim(),
-      };
-      const res = await fetch(`${API_URL}/api/recados`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        box.className = "alert ok";
-        box.textContent = `Recado guardado en PostgreSQL con id_recado = ${data.recado.id_recado}`;
-        e.target.reset();
-        cargarRecados();
-      } else {
-        box.className = "alert err";
-        box.textContent = `Error: ${data.error}`;
+    function resaltarEspacio(codigoSvg, mensaje) {
+      document.querySelectorAll(".espacio-svg").forEach(el => el.classList.remove("espacio-activo"));
+      if (codigoSvg) {
+        const target = document.getElementById(codigoSvg);
+        if (target) target.classList.add("espacio-activo");
       }
+      document.getElementById("mapa-status").innerHTML = mensaje;
+    }
+
+    document.getElementById("btn-ver-fijo").addEventListener("click", () => {
+      resaltarEspacio(perfilActual.codigo_svg, `<strong>Salón fijo del grupo ${perfilActual.grupo}:</strong> ${perfilActual.clave_salon} (${perfilActual.edificio || "Planta Baja"})`);
     });
 
-    document.getElementById("form-pago").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const box = document.getElementById("alert-pago");
-      const payload = {
-        id_alumno: Number(document.getElementById("pag-alumno").value),
-        id_periodo: Number(document.getElementById("pag-periodo").value),
-        monto_pagado: Number(document.getElementById("pag-monto").value),
-        metodo_pago: document.getElementById("pag-metodo").value,
-        estatus: document.getElementById("pag-estatus").value,
-        referencia: document.getElementById("pag-referencia").value.trim(),
-      };
-      const res = await fetch(`${API_URL}/api/pagos`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+    document.getElementById("btn-ubicar-alumno").addEventListener("click", async () => {
+      const dia = document.getElementById("mapa-dia").value;
+      const hora = document.getElementById("mapa-hora").value;
+      const res = await fetch(`${API_URL}/api/mapa?dia=${dia}&hora=${hora}&id_alumno=${perfilActual.id_alumno}`);
       const data = await res.json();
-      if (res.ok) {
-        box.className = "alert ok";
-        box.textContent = `Pago guardado en PostgreSQL con id_pago = ${data.pago.id_pago} (Ref: ${data.pago.referencia})`;
-        generarReferencia();
-        cargarPagos();
-      } else {
-        box.className = "alert err";
-        box.textContent = `Restricción de BD: ${data.error}`;
+      if (!data.length) {
+        resaltarEspacio(null, `Sin clase registrada para ${dia} a las ${hora}.`);
+        return;
       }
+      const loc = data[0];
+      resaltarEspacio(
+        loc.codigo_svg,
+        `<strong>${loc.alumno} (${loc.grupo})</strong> el <strong>${loc.dia_semana} ${loc.hora_inicio}–${loc.hora_fin}</strong> está en <strong>${loc.clave_salon}</strong> (${loc.materia} con ${loc.docente}).`
+      );
     });
 
-    document.getElementById("btn-ubicar").addEventListener("click", actualizarMapa);
-    document.getElementById("mapa-hora").addEventListener("change", actualizarMapa);
-    document.getElementById("mapa-alumno").addEventListener("change", actualizarMapa);
-
-    // Arranque inicial
-    (async () => {
-      generarReferencia();
-      await cargarCatalogos();
-      await actualizarMapa();
-      await cargarRecados();
-      await cargarPagos();
-    })();
+    // Restaurar sesión si existe
+    const guardado = sessionStorage.getItem("padres_perfil");
+    if (guardado) {
+      perfilActual = JSON.parse(guardado);
+      iniciarPortal();
+    }
   </script>
 </body>
 </html>
