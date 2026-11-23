@@ -1,0 +1,299 @@
+group: Proyecto_Primaria
+description: Muestra normalizada con integridad referencial del Sistema de Gestion Escolar (PostgreSQL)
+docentes = {
+  id_docente:number, num_empleado:string, nombre:string, apellido_paterno:string, correo:string, especialidad:string, activo:string
+  1, 'DOC-001', 'Gabriela', 'Mendoza', 'docente_1a@primaria.edu.mx', 'Titular Primaria 1°A', 'true'
+  2, 'DOC-002', 'Laura', 'Muñoz', 'docente_1b@primaria.edu.mx', 'Titular Primaria 1°B', 'true'
+  3, 'DOC-003', 'Mariana', 'Serrano', 'docente_1c@primaria.edu.mx', 'Titular Primaria 1°C', 'true'
+  4, 'DOC-004', 'Ricardo', 'Salazar', 'docente_2a@primaria.edu.mx', 'Titular Primaria 2°A', 'true'
+  5, 'DOC-005', 'Claudia', 'Vega', 'docente_2b@primaria.edu.mx', 'Titular Primaria 2°B', 'true'
+  6, 'DOC-006', 'Jorge', 'Ibarra', 'docente_2c@primaria.edu.mx', 'Titular Primaria 2°C', 'true'
+  7, 'DOC-007', 'Verónica', 'Ortega', 'docente_3a@primaria.edu.mx', 'Titular Primaria 3°A', 'true'
+  8, 'DOC-008', 'Patricia', 'Nava', 'docente_3b@primaria.edu.mx', 'Titular Primaria 3°B', 'true'
+  19, 'DOC-019', 'Mónica', 'Chávez', 'docente_comp1@primaria.edu.mx', 'Computación (1° a 3°)', 'true'
+  21, 'DOC-021', 'Eduardo', 'Pineda', 'docente_ef1@primaria.edu.mx', 'Educación Física (1° a 3°)', 'true'
+}
+
+salones = {
+  id_salon:number, clave_salon:string, edificio:string, planta:string, capacidad:number, codigo_svg:string
+  1, 'A-101', 'Edificio A (Ala Izquierda)', 'Planta Baja', 30, 'salon-a101'
+  2, 'A-102', 'Edificio A (Ala Izquierda)', 'Planta Baja', 30, 'salon-a102'
+  3, 'A-103', 'Edificio A (Ala Izquierda)', 'Planta Baja', 30, 'salon-a103'
+  4, 'A-104', 'Edificio A (Ala Izquierda)', 'Planta Baja', 30, 'salon-a104'
+  5, 'A-105', 'Edificio A (Ala Izquierda)', 'Planta Baja', 30, 'salon-a105'
+  6, 'A-106', 'Edificio A (Ala Izquierda)', 'Planta Baja', 30, 'salon-a106'
+  7, 'B-201', 'Edificio B (Ala Superior)', 'Planta Baja', 30, 'salon-b201'
+  8, 'B-202', 'Edificio B (Ala Superior)', 'Planta Baja', 30, 'salon-b202'
+  19, 'COMP-01', 'Edificio A (Ala Izquierda)', 'Planta Baja', 30, 'zona-computo'
+  20, 'CANCHA-01', 'Zona Deportiva', 'Planta Baja', 60, 'zona-cancha'
+}
+
+grupos = {
+  id_grupo:number, grado:number, letra:string, ciclo_escolar:string, id_docente_titular:number, id_salon:number
+  1, 1, 'A', '2026-2027', 1, 1
+  2, 1, 'B', '2026-2027', 2, 2
+  3, 1, 'C', '2026-2027', 3, 3
+  4, 2, 'A', '2026-2027', 4, 4
+  5, 2, 'B', '2026-2027', 5, 5
+  6, 2, 'C', '2026-2027', 6, 6
+  7, 3, 'A', '2026-2027', 7, 7
+  8, 3, 'B', '2026-2027', 8, 8
+}
+
+tutores = {
+  id_tutor:number, nombre:string, apellido_paterno:string, apellido_materno:string, correo:string, telefono:string, parentesco:string
+  1, 'María', 'López', 'García', 'tutor1_1@familia.mx', '5520000011', 'Madre'
+  2, 'Roberto', 'López', 'García', 'tutor1_2@familia.mx', '5520000012', 'Padre'
+  3, 'Elena', 'Vargas', 'Mendoza', 'tutor2_1@familia.mx', '5520000021', 'Madre'
+  4, 'Héctor', 'Vargas', 'Mendoza', 'tutor2_2@familia.mx', '5520000022', 'Abuelo/a'
+  5, 'Laura', 'Ramírez', 'Sánchez', 'tutor3_1@familia.mx', '5520000031', 'Madre'
+  6, 'Jorge', 'Ramírez', 'Sánchez', 'tutor3_2@familia.mx', '5520000032', 'Padre'
+  7, 'Patricia', 'Castillo', 'Nava', 'tutor4_1@familia.mx', '5520000041', 'Madre'
+  8, 'Miguel', 'Cruz', 'Luna', 'tutor5_1@familia.mx', '5520000051', 'Padre'
+  9, 'Rosa', 'Cruz', 'Luna', 'tutor5_2@familia.mx', '5520000052', 'Abuelo/a'
+  10, 'Diana', 'Flores', 'Vega', 'tutor6_1@familia.mx', '5520000061', 'Madre'
+  11, 'Carlos', 'Flores', 'Vega', 'tutor6_2@familia.mx', '5520000062', 'Padre'
+  12, 'Ana', 'Martínez', 'Ruiz', 'tutor7_1@familia.mx', '5520000071', 'Madre'
+  13, 'Luis', 'Martínez', 'Ruiz', 'tutor7_2@familia.mx', '5520000072', 'Padre'
+  14, 'Sofía', 'Herrera', 'Díaz', 'tutor8_1@familia.mx', '5520000081', 'Madre'
+  15, 'Pedro', 'Herrera', 'Díaz', 'tutor8_2@familia.mx', '5520000082', 'Padre'
+  16, 'Fernando', 'Morales', 'Estrada', 'tutor9_1@familia.mx', '5520000091', 'Padre'
+  17, 'Carmen', 'Ortega', 'Pérez', 'tutor10_1@familia.mx', '5520000101', 'Madre'
+  18, 'Andrés', 'Ortega', 'Pérez', 'tutor10_2@familia.mx', '5520000102', 'Padre'
+  19, 'Gabriela', 'Navarro', 'Silva', 'tutor11_1@familia.mx', '5520000111', 'Madre'
+  20, 'Manuel', 'Navarro', 'Silva', 'tutor11_2@familia.mx', '5520000112', 'Abuelo/a'
+  21, 'Verónica', 'Pineda', 'Castro', 'tutor12_1@familia.mx', '5520000121', 'Madre'
+  22, 'Sergio', 'Pineda', 'Castro', 'tutor12_2@familia.mx', '5520000122', 'Padre'
+  23, 'Lucía', 'Hernández', 'Pérez', 'tutor13_1@familia.mx', '5520000131', 'Madre'
+  24, 'Raúl', 'Hernández', 'Pérez', 'tutor13_2@familia.mx', '5520000132', 'Padre'
+  25, 'Mónica', 'Delgado', 'Ríos', 'tutor14_1@familia.mx', '5520000141', 'Madre'
+  26, 'Iván', 'Delgado', 'Ríos', 'tutor14_2@familia.mx', '5520000142', 'Padre'
+  27, 'Claudia', 'Gómez', 'Castro', 'tutor15_1@familia.mx', '5520000151', 'Madre'
+}
+
+alumnos = {
+  id_alumno:number, curp:string, nombre:string, apellido_paterno:string, apellido_materno:string, fecha_nacimiento:string, id_tutor:number, id_grupo:number
+  1, 'LOGR190512HDFRRL01', 'Mateo', 'López', 'García', '2019-05-12', 1, 1
+  7, 'MARV180823MDFRRS07', 'Valentina', 'Martínez', 'Ruiz', '2018-08-23', 12, 4
+  2, 'VAMC190821MDFRRL02', 'Camila', 'Vargas', 'Mendoza', '2019-08-21', 3, 1
+  3, 'RAMD190315HDFRRL03', 'Diego', 'Ramírez', 'Sánchez', '2019-03-15', 5, 2
+  4, 'CASS191104MDFRRL04', 'Sofía', 'Castillo', 'Nava', '2019-11-04', 7, 2
+  5, 'CRUE190622HDFRRL05', 'Emiliano', 'Cruz', 'Luna', '2019-06-22', 8, 3
+  6, 'FLOR190910MDFRRL06', 'Renata', 'Flores', 'Vega', '2019-09-10', 10, 3
+  8, 'HERL180419HDFRRS08', 'Leonardo', 'Herrera', 'Díaz', '2018-04-19', 14, 4
+  9, 'MORR180711MDFRRS09', 'Regina', 'Morales', 'Estrada', '2018-07-11', 16, 5
+  10, 'ORTS180228HDFRRS10', 'Santiago', 'Ortega', 'Pérez', '2018-02-28', 17, 5
+  11, 'NAVX181005MDFRRS11', 'Ximena', 'Navarro', 'Silva', '2018-10-05', 19, 6
+  12, 'PIND180117HDFRRS12', 'Daniel', 'Pineda', 'Castro', '2018-01-17', 21, 6
+  13, 'HERS170315HDFRRP13', 'Santiago', 'Hernández', 'Pérez', '2017-03-15', 23, 7
+  14, 'DELV170929MDFRRP14', 'Valeria', 'Delgado', 'Ríos', '2017-09-29', 25, 7
+  15, 'GOMS170514HDFRRP15', 'Sebastián', 'Gómez', 'Castro', '2017-05-14', 27, 8
+}
+
+alumno_tutores = {
+  id_alumno:number, id_tutor:number, es_principal:string
+  1, 1, 'true'
+  1, 2, 'false'
+  2, 3, 'true'
+  2, 4, 'false'
+  3, 5, 'true'
+  3, 6, 'false'
+  4, 7, 'true'
+  5, 8, 'true'
+  5, 9, 'false'
+  6, 10, 'true'
+  6, 11, 'false'
+  7, 12, 'true'
+  7, 13, 'false'
+  8, 14, 'true'
+  8, 15, 'false'
+  9, 16, 'true'
+  10, 17, 'true'
+  10, 18, 'false'
+  11, 19, 'true'
+  11, 20, 'false'
+  12, 21, 'true'
+  12, 22, 'false'
+  13, 23, 'true'
+  13, 24, 'false'
+  14, 25, 'true'
+  14, 26, 'false'
+  15, 27, 'true'
+}
+
+materias = {
+  id_materia:number, clave_materia:string, nombre:string, grado_sugerido:number
+  1, 'ESP-101', 'Español', 1
+  2, 'MAT-101', 'Matemáticas', 1
+  3, 'CNAT-201', 'Ciencias Naturales', 3
+  4, 'HIST-301', 'Historia', 4
+  5, 'GEO-401', 'Geografía', 5
+  6, 'FCYE-501', 'Formación Cívica y Ética', 6
+  7, 'EDFI-001', 'Educación Física', 1
+  8, 'COMP-001', 'Computación', 1
+}
+
+calificaciones = {
+  id_calificacion:number, id_alumno:number, id_materia:number, creditos:number, calificacion:number, ciclo_escolar:string
+  1, 1, 1, 8, 8.20, '2026-2027'
+  2, 1, 2, 8, 8.30, '2026-2027'
+  3, 1, 3, 8, 8.40, '2026-2027'
+  4, 2, 1, 8, 8.30, '2026-2027'
+  5, 2, 2, 8, 8.40, '2026-2027'
+  6, 2, 3, 8, 8.50, '2026-2027'
+  7, 3, 1, 8, 8.40, '2026-2027'
+  8, 3, 2, 8, 8.50, '2026-2027'
+  9, 3, 3, 8, 8.60, '2026-2027'
+  10, 4, 1, 8, 8.50, '2026-2027'
+  11, 4, 2, 8, 8.60, '2026-2027'
+  12, 4, 3, 8, 8.70, '2026-2027'
+  13, 5, 1, 8, 8.60, '2026-2027'
+  14, 5, 2, 8, 8.70, '2026-2027'
+  15, 5, 3, 8, 8.80, '2026-2027'
+  16, 6, 1, 8, 8.70, '2026-2027'
+  17, 6, 2, 8, 8.80, '2026-2027'
+  18, 6, 3, 8, 8.90, '2026-2027'
+  19, 7, 1, 8, 8.80, '2026-2027'
+  20, 7, 2, 8, 8.90, '2026-2027'
+  21, 7, 3, 8, 9.00, '2026-2027'
+  22, 8, 1, 8, 8.90, '2026-2027'
+  23, 8, 2, 8, 9.00, '2026-2027'
+  24, 8, 3, 8, 9.10, '2026-2027'
+  25, 9, 1, 8, 9.00, '2026-2027'
+}
+
+horarios = {
+  id_horario:number, id_grupo:number, id_materia:number, id_docente:number, id_salon:number, dia_semana:string, hora_inicio:string, hora_fin:string
+  1, 1, 8, 19, 19, 'Lunes', '08:00:00', '09:00:00'
+  2, 1, 5, 1, 1, 'Lunes', '09:00:00', '10:00:00'
+  3, 1, 6, 1, 1, 'Lunes', '10:30:00', '11:30:00'
+  4, 1, 1, 1, 1, 'Lunes', '11:30:00', '12:30:00'
+  5, 1, 2, 1, 1, 'Lunes', '12:30:00', '13:30:00'
+  6, 1, 5, 1, 1, 'Martes', '08:00:00', '09:00:00'
+  7, 1, 6, 1, 1, 'Martes', '09:00:00', '10:00:00'
+  8, 1, 1, 1, 1, 'Martes', '10:30:00', '11:30:00'
+  9, 1, 2, 1, 1, 'Martes', '11:30:00', '12:30:00'
+  10, 1, 3, 1, 1, 'Martes', '12:30:00', '13:30:00'
+  11, 1, 6, 1, 1, 'Miercoles', '08:00:00', '09:00:00'
+  12, 1, 7, 21, 20, 'Miercoles', '09:00:00', '10:00:00'
+  13, 1, 2, 1, 1, 'Miercoles', '10:30:00', '11:30:00'
+  14, 1, 3, 1, 1, 'Miercoles', '11:30:00', '12:30:00'
+  15, 1, 4, 1, 1, 'Miercoles', '12:30:00', '13:30:00'
+  16, 1, 1, 1, 1, 'Jueves', '08:00:00', '09:00:00'
+  17, 1, 2, 1, 1, 'Jueves', '09:00:00', '10:00:00'
+  18, 1, 3, 1, 1, 'Jueves', '10:30:00', '11:30:00'
+  19, 1, 4, 1, 1, 'Jueves', '11:30:00', '12:30:00'
+  20, 1, 5, 1, 1, 'Jueves', '12:30:00', '13:30:00'
+  21, 1, 2, 1, 1, 'Viernes', '08:00:00', '09:00:00'
+  22, 1, 3, 1, 1, 'Viernes', '09:00:00', '10:00:00'
+  23, 1, 4, 1, 1, 'Viernes', '10:30:00', '11:30:00'
+  24, 1, 5, 1, 1, 'Viernes', '11:30:00', '12:30:00'
+  25, 1, 6, 1, 1, 'Viernes', '12:30:00', '13:30:00'
+}
+
+periodos_colegiatura = {
+  id_periodo:number, nombre_periodo:string, monto_base:number, fecha_limite:string
+  1, 'Septiembre 2026', 2500.00, '2026-09-10'
+  2, 'Octubre 2026', 2500.00, '2026-10-10'
+  3, 'Noviembre 2026', 2500.00, '2026-11-10'
+  4, 'Diciembre 2026', 2500.00, '2026-12-10'
+}
+
+pagos_colegiatura = {
+  id_pago:number, id_alumno:number, id_periodo:number, fecha_pago:string, monto_pagado:number, metodo_pago:string, estatus:string, referencia:string
+  1, 1, 1, '2026-11-13T02:46:58.089689', 2500.00, 'Transferencia', 'Pagado', 'REF-2026-01-1'
+  2, 1, 2, '2026-11-13T02:46:58.089689', 2500.00, 'Transferencia', 'Pagado', 'REF-2026-01-2'
+  3, 1, 3, '2026-11-13T02:46:58.089689', 2500.00, 'Transferencia', 'Pagado', 'REF-2026-01-3'
+  4, 1, 4, '2026-11-13T02:46:58.089689', 2500.00, 'Transferencia', 'Pagado', 'REF-2026-01-4'
+  5, 2, 1, '2026-11-13T02:46:58.089689', 2500.00, 'Tarjeta', 'Pagado', 'REF-2026-02-1'
+  6, 2, 2, '2026-11-13T02:46:58.089689', 2500.00, 'Tarjeta', 'Pagado', 'REF-2026-02-2'
+  7, 2, 3, '2026-11-13T02:46:58.089689', 2500.00, 'Tarjeta', 'Pagado', 'REF-2026-02-3'
+  8, 2, 4, '2026-11-13T02:46:58.089689', 2500.00, 'Tarjeta', 'Pagado', 'REF-2026-02-4'
+  9, 3, 1, '2026-11-13T02:46:58.089689', 2500.00, 'Efectivo', 'Pagado', 'REF-2026-03-1'
+  10, 3, 2, '2026-11-13T02:46:58.089689', 2500.00, 'Efectivo', 'Pagado', 'REF-2026-03-2'
+  11, 3, 3, '2026-11-13T02:46:58.089689', 2500.00, 'Efectivo', 'Pagado', 'REF-2026-03-3'
+  12, 3, 4, '2026-11-13T02:46:58.089689', 2500.00, 'Efectivo', 'Pagado', 'REF-2026-03-4'
+  13, 4, 1, '2026-11-13T02:46:58.089689', 2500.00, 'Transferencia', 'Pagado', 'REF-2026-04-1'
+  14, 4, 2, '2026-11-13T02:46:58.089689', 2500.00, 'Transferencia', 'Pagado', 'REF-2026-04-2'
+  15, 4, 3, '2026-11-13T02:46:58.089689', 2500.00, 'Transferencia', 'Pagado', 'REF-2026-04-3'
+  16, 4, 4, '2026-11-13T02:46:58.089689', 2500.00, 'Transferencia', 'Pagado', 'REF-2026-04-4'
+  17, 5, 1, '2026-11-13T02:46:58.089689', 2500.00, 'Tarjeta', 'Pagado', 'REF-2026-05-1'
+  18, 5, 2, '2026-11-13T02:46:58.089689', 2500.00, 'Tarjeta', 'Pagado', 'REF-2026-05-2'
+  19, 5, 3, '2026-11-13T02:46:58.089689', 2500.00, 'Tarjeta', 'Pagado', 'REF-2026-05-3'
+  20, 5, 4, '2026-11-13T02:46:58.089689', 2500.00, 'Tarjeta', 'Pagado', 'REF-2026-05-4'
+  21, 6, 1, '2026-11-13T02:46:58.089689', 2500.00, 'Efectivo', 'Pagado', 'REF-2026-06-1'
+  22, 6, 2, '2026-11-13T02:46:58.089689', 2500.00, 'Efectivo', 'Pagado', 'REF-2026-06-2'
+  23, 6, 3, '2026-11-13T02:46:58.089689', 2500.00, 'Efectivo', 'Pagado', 'REF-2026-06-3'
+  24, 6, 4, '2026-11-13T02:46:58.089689', 2500.00, 'Efectivo', 'Pagado', 'REF-2026-06-4'
+  25, 7, 1, '2026-11-13T02:46:58.089689', 2500.00, 'Transferencia', 'Pagado', 'REF-2026-07-1'
+}
+
+recados = {
+  id_recado:number, id_tutor:string, id_alumno:number, id_docente:number, tipo:string, asunto:string, mensaje:string, estatus:string, fecha_envio:string, id_grupo:number, tipo_respuesta:string
+  1, null, null, 1, 'Aviso', 'Junta de entrega de boletas 1°A', 'Favor de confirmar asistencia el viernes a las 08:30 en el salón A-101.', 'Enviado', '2026-11-23T02:46:58.089689', 1, 'Confirmado'
+  2, null, 1, 1, 'Recado', 'Material de matemáticas', 'Mateo requiere traer su ábaco y regla mañana.', 'Enviado', '2026-11-23T02:46:58.089689', 1, 'Leido'
+  3, null, null, 4, 'Aviso', 'Salida cultural 2°A', 'Se solicita autorización para la visita al museo escolar.', 'Enviado', '2026-11-23T02:46:58.089689', 4, 'Aceptado'
+  4, null, null, 7, 'Cita', 'Seguimiento de lectura 3°A', 'Favor de escribir qué horario prefieren para la revisión semanal.', 'Enviado', '2026-11-23T02:46:58.089689', 7, 'Texto'
+}
+
+recado_respuestas = {
+  id_respuesta:number, id_recado:number, id_alumno:number, id_tutor:number, estado_respuesta:string, texto_respuesta:string, fecha_respuesta:string
+  1, 1, 1, 1, 'Confirmado', 'Asistiremos puntuales.', '2026-11-23T02:46:58.089689'
+}
+
+usuarios = {
+  id_usuario:number, usuario:string, correo:string, rol:string, id_docente:number, id_alumno:number, activo:string
+  4, 'enfermeria', 'enfermeria@primaria.edu.mx', 'Enfermeria', null, null, 'true'
+  5, 'cafeteria', 'cafeteria@primaria.edu.mx', 'Cafeteria', null, null, 'true'
+  6, 'mantenimiento', 'mantenimiento@primaria.edu.mx', 'Mantenimiento', null, null, 'true'
+  7, 'docente_1a', 'docente_1a@primaria.edu.mx', 'Docente', 1, null, 'true'
+  8, 'docente_1b', 'docente_1b@primaria.edu.mx', 'Docente', 2, null, 'true'
+  9, 'docente_1c', 'docente_1c@primaria.edu.mx', 'Docente', 3, null, 'true'
+  10, 'docente_2a', 'docente_2a@primaria.edu.mx', 'Docente', 4, null, 'true'
+  11, 'docente_2b', 'docente_2b@primaria.edu.mx', 'Docente', 5, null, 'true'
+  12, 'docente_2c', 'docente_2c@primaria.edu.mx', 'Docente', 6, null, 'true'
+  13, 'docente_3a', 'docente_3a@primaria.edu.mx', 'Docente', 7, null, 'true'
+  14, 'docente_3b', 'docente_3b@primaria.edu.mx', 'Docente', 8, null, 'true'
+  25, 'docente_comp1', 'docente_comp1@primaria.edu.mx', 'Docente', 19, null, 'true'
+  27, 'docente_ef1', 'docente_ef1@primaria.edu.mx', 'Docente', 21, null, 'true'
+  29, 'LOGR190512HDFRRL01', 'logr190512hdfrrl01@alumnos.primaria.edu.mx', 'Alumno', null, 1, 'true'
+  30, 'VAMC190821MDFRRL02', 'vamc190821mdfrrl02@alumnos.primaria.edu.mx', 'Alumno', null, 2, 'true'
+  31, 'RAMD190315HDFRRL03', 'ramd190315hdfrrl03@alumnos.primaria.edu.mx', 'Alumno', null, 3, 'true'
+  32, 'CASS191104MDFRRL04', 'cass191104mdfrrl04@alumnos.primaria.edu.mx', 'Alumno', null, 4, 'true'
+  33, 'CRUE190622HDFRRL05', 'crue190622hdfrrl05@alumnos.primaria.edu.mx', 'Alumno', null, 5, 'true'
+  34, 'FLOR190910MDFRRL06', 'flor190910mdfrrl06@alumnos.primaria.edu.mx', 'Alumno', null, 6, 'true'
+  35, 'MARV180823MDFRRS07', 'marv180823mdfrrs07@alumnos.primaria.edu.mx', 'Alumno', null, 7, 'true'
+  36, 'HERL180419HDFRRS08', 'herl180419hdfrrs08@alumnos.primaria.edu.mx', 'Alumno', null, 8, 'true'
+  37, 'MORR180711MDFRRS09', 'morr180711mdfrrs09@alumnos.primaria.edu.mx', 'Alumno', null, 9, 'true'
+  38, 'ORTS180228HDFRRS10', 'orts180228hdfrrs10@alumnos.primaria.edu.mx', 'Alumno', null, 10, 'true'
+  39, 'NAVX181005MDFRRS11', 'navx181005mdfrrs11@alumnos.primaria.edu.mx', 'Alumno', null, 11, 'true'
+  40, 'PIND180117HDFRRS12', 'pind180117hdfrrs12@alumnos.primaria.edu.mx', 'Alumno', null, 12, 'true'
+}
+
+registros_enfermeria = {
+  id_atencion:number, id_alumno:number, id_usuario_atiende:number, fecha_hora:string, motivo:string, observaciones:string, requirio_aviso_tutor:string, estatus:string
+  1, 1, 4, '2026-11-23T02:46:58.089689', 'Raspón en rodilla', 'Se limpió con antiséptico en el recreo.', 'false', 'Atendido'
+  2, 7, 4, '2026-11-23T02:46:58.089689', 'Dolor de cabeza leve', 'Descansó 15 minutos con hidratación.', 'true', 'Atendido'
+}
+
+ventas_cafeteria = {
+  id_venta:number, folio:string, fecha_hora:string, id_alumno:number, concepto:string, total:number, id_usuario_registra:number
+  1, 'V-901', '2026-11-23T02:46:58.089689', 1, 'Desayuno paquete + agua', 35.00, 5
+  2, 'V-902', '2026-11-23T02:46:58.089689', 7, 'Sándwich y fruta picada', 50.00, 5
+}
+
+reportes_mantenimiento = {
+  id_reporte:number, folio:string, ubicacion:string, descripcion:string, fecha_reporte:string, estado:string, id_usuario_registra:number
+  1, 'MANT-01', 'Edificio A, salón A-103', 'Revisión de luminaria principal', '2026-11-18', 'Completado', 6
+  2, 'MANT-02', 'Canchas (Malla Sombra)', 'Ajuste de tensor en malla sombra', '2026-11-21', 'En proceso', 6
+}
+
+personal = {
+  id_empleado:number, clave_empleado:string, nombre:string, puesto:string, salario:number, area:string, activo:string
+  1, 'EMP-100', 'Patricia Morales', 'Dirección', 22000.00, 'Dirección general (DIR-01)', 'true'
+  2, 'EMP-101', 'Sofía Herrera', 'Administrativo', 12500.00, 'Control escolar y colegiaturas', 'true'
+  3, 'EMP-102', 'Laura Domínguez', 'Personal de enfermería', 11200.00, 'Enfermería matutina (ENF-01)', 'true'
+  4, 'EMP-103', 'Jorge Salinas', 'Personal de cafetería', 9800.00, 'Cafetería escolar (CAF-01)', 'true'
+  5, 'EMP-104', 'Miguel Ángel Cruz', 'Mantenimiento', 10500.00, 'Instalaciones y mantenimiento', 'true'
+  6, 'EMP-105', 'Gabriela Mendoza', 'Docente titular', 14500.00, 'Grupo 1°A (Salón A-101)', 'true'
+}
