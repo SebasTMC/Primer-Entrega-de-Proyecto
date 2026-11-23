@@ -36,5 +36,25 @@ services:
     ports:
       - "5000:5000"
 
+  runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.runner
+    container_name: primaria_runner
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-primaria_db}
+      DB_USER: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-primaria_dev}
+      RELAX_OUT: /app/relax/grupo.txt
+    volumes:
+      - ./consultas:/app/consultas:ro
+      - ./scripts:/app/scripts:ro
+      - ./relax:/app/relax
+
 volumes:
   primaria_pgdata:
