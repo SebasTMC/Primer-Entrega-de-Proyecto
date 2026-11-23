@@ -924,11 +924,21 @@ def manejar_recados():
         id_doc = d.get("id_docente")
 
         with conn.cursor() as cur:
-            if id_al and not id_gr:
+            # Si el docente es titular de un grupo, siempre se fuerza a su único grupo
+            if id_doc:
+                cur.execute("SELECT id_grupo FROM grupos WHERE id_docente_titular = %s;", (id_doc,))
+                titular_row = cur.fetchone()
+                if titular_row:
+                    id_gr = titular_row["id_grupo"]
+
+            if id_al:
                 cur.execute("SELECT id_grupo FROM alumnos WHERE id_alumno = %s;", (id_al,))
-                row = cur.fetchone()
-                if row:
-                    id_gr = row["id_grupo"]
+                al_row = cur.fetchone()
+                if not al_row:
+                    return jsonify({"ok": False, "error": "Alumno no encontrado."}), 404
+                if id_gr and int(al_row["id_grupo"]) != int(id_gr):
+                    return jsonify({"ok": False, "error": "El alumno no pertenece al grupo asignado al docente."}), 400
+                id_gr = al_row["id_grupo"]
             if not id_gr and id_doc:
                 cur.execute("SELECT id_grupo FROM grupos WHERE id_docente_titular = %s;", (id_doc,))
                 row = cur.fetchone()

@@ -836,12 +836,17 @@ function openForm(k) {
     `,
     recados: `
       ${S.rol === "Docente" ? "" : `<label>Docente remitente<select name="id_docente">${opt(cat.docentes, "id_docente", d => `${d.docente} (${d.especialidad})`)}</select></label>`}
-      <label>Grupo destinatario
-        <select name="id_grupo">${opt(cat.grupos, "id_grupo", g => `${g.grupo} · ${g.docente_titular}`, S.id_grupo)}</select>
-      </label>
+      ${(S.rol === "Docente" && S.id_grupo)
+        ? `<label>Grupo asignado (solo tu grupo)
+             <input type="hidden" name="id_grupo" value="${S.id_grupo}">
+             <input value="${esc(S.grupo)} · ${esc(S.nombre)} (${esc(S.clave_salon || "")})" disabled>
+           </label>`
+        : `<label>Grupo destinatario
+             <select name="id_grupo">${opt(cat.grupos, "id_grupo", g => `${g.grupo} · ${g.docente_titular}`, S.id_grupo)}</select>
+           </label>`}
       <label>Alumno específico (opcional — dejar vacío para enviar a todo el grupo)
         <select name="id_alumno">
-          <option value="">-- Todo el grupo seleccionado --</option>
+          <option value="">-- Todo el grupo ${S.rol === "Docente" && S.grupo ? esc(S.grupo) : "seleccionado"} --</option>
           ${opt(alumnosFiltrados, "id_alumno", a => `${a.alumno} (${a.grupo})`)}
         </select>
       </label>
@@ -849,12 +854,10 @@ function openForm(k) {
         <label>Tipo de recado
           <select name="tipo"><option>Aviso</option><option>Recado</option><option>Cita</option><option>Justificante</option></select>
         </label>
-        <label>Respuesta solicitada a padres
+        <label>Modo de respuesta para padres
           <select name="tipo_respuesta">
-            <option value="Leido">Botón: Leído</option>
-            <option value="Confirmado">Botón: Confirmado</option>
-            <option value="Aceptado">Botón: Aceptado</option>
-            <option value="Texto">Respuesta de Texto libre</option>
+            <option value="Leido">Solo confirmación (Leído / Confirmado / Aceptado)</option>
+            <option value="Texto">Acepta respuesta con texto</option>
           </select>
         </label>
       </div>

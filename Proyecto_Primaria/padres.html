@@ -590,13 +590,12 @@
             <button class="btn btn-ok btn-sm" onclick="enviarRespuesta(${r.id_recado}, 'Respondido', true)">Enviar respuesta</button>
           `;
         } else {
-          const etiqueta = r.tipo_respuesta === "Confirmado" ? "Marcar Confirmado"
-                         : r.tipo_respuesta === "Aceptado" ? "Marcar Aceptado"
-                         : "Marcar Leído";
-          controles = `
-            <input type="text" id="txt-resp-${r.id_recado}" placeholder="Comentario opcional..." value="${r.texto_respuesta || ""}" style="flex:1; min-width:200px; padding:8px 10px; border:1px solid var(--border); border-radius:8px;" />
-            <button class="btn btn-ok btn-sm" onclick="enviarRespuesta(${r.id_recado}, '${r.tipo_respuesta}', false)">${etiqueta}</button>
-          `;
+          const ops = ["Leido", "Confirmado", "Aceptado"];
+          const labels = { Leido: "Leído", Confirmado: "Confirmado", Aceptado: "Aceptado" };
+          controles = ops.map(op => {
+            const cls = r.estado_respuesta === op ? "btn btn-ok btn-sm" : "btn btn-outline btn-sm";
+            return `<button class="${cls}" onclick="enviarRespuesta(${r.id_recado}, '${op}', false)">${labels[op]}</button>`;
+          }).join("");
         }
 
         card.innerHTML = `
