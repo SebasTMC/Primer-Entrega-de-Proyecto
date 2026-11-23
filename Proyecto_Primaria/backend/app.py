@@ -31,7 +31,7 @@ def health():
     return jsonify({"ok": True, "servicio": "Proyecto_Primaria API"}), 200
 
 
-# ---------------- LOGIN ----------------
+# ---------------- LOGIN GENERAL ----------------
 @app.route("/api/login", methods=["POST"])
 def login():
     datos = request.get_json(force=True)
@@ -48,10 +48,18 @@ def login():
                            d.nombre || ' ' || d.apellido_paterno,
                            a.nombre || ' ' || a.apellido_paterno,
                            u.rol
-                       ) AS nombre
+                       ) AS nombre,
+                       COALESCE(gt.id_grupo, ga.id_grupo) AS id_grupo,
+                       COALESCE(gt.grado || '°' || gt.letra, ga.grado || '°' || ga.letra) AS grupo,
+                       COALESCE(st.clave_salon, sa.clave_salon) AS clave_salon,
+                       COALESCE(st.codigo_svg, sa.codigo_svg) AS codigo_svg
                 FROM usuarios u
                 LEFT JOIN docentes d ON d.id_docente = u.id_docente
+                LEFT JOIN grupos gt ON gt.id_docente_titular = d.id_docente
+                LEFT JOIN salones st ON st.id_salon = gt.id_salon
                 LEFT JOIN alumnos a ON a.id_alumno = u.id_alumno
+                LEFT JOIN grupos ga ON ga.id_grupo = a.id_grupo
+                LEFT JOIN salones sa ON sa.id_salon = ga.id_salon
                 WHERE (LOWER(u.usuario) = %s OR LOWER(u.correo) = %s)
                   AND u.password_hash = %s
                   AND u.activo = TRUE;
@@ -64,6 +72,57 @@ def login():
         conn.close()
 
 
+# ---------------- LOGIN PORTAL DE PADRES (POR ALUMNO / CURP) ----------------
+@app.route("/api/padres/login", methods=["POST"])
+def login_padres():
+    datos = request.get_json(force=True)
+    identificador = (datos.get("curp") or datos.get("usuario") or "").strip().lower()
+    password = datos.get("password", "")
+    pwd_hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
+
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT u.id_usuario, u.usuario, u.rol,
+                       a.id_alumno, TRIM(a.curp) AS curp,
+                       a.nombre || ' ' || a.apellido_paterno || COALESCE(' ' || a.apellido_materno, '') AS alumno,
+                       a.id_grupo, g.grado, g.letra,
+                       g.grado || '°' || g.letra AS grupo,
+                       s.clave_salon, s.edificio, s.codigo_svg,
+                       d.id_docente AS id_docente_titular,
+                       d.nombre || ' ' || d.apellido_paterno AS docente_titular
+                FROM usuarios u
+                JOIN alumnos a ON a.id_alumno = u.id_alumno
+                JOIN grupos g ON g.id_grupo = a.id_grupo
+                JOIN docentes d ON d.id_docente = g.id_docente_titular
+                LEFT JOIN salones s ON s.id_salon = g.id_salon
+                WHERE (LOWER(TRIM(a.curp)) = %s OR LOWER(u.usuario) = %s)
+                  AND u.password_hash = %s
+                  AND u.rol = 'Alumno'
+                  AND u.activo = TRUE;
+            """, (identificador, identificador, pwd_hash))
+            perfil = cur.fetchone()
+
+            if not perfil:
+                return jsonify({"ok": False, "error": "CURP o contraseña incorrectos."}), 401
+
+            cur.execute("""
+                SELECT t.id_tutor,
+                       t.nombre || ' ' || t.apellido_paterno || COALESCE(' ' || t.apellido_materno, '') AS nombre,
+                       t.parentesco, t.telefono, t.correo, at.es_principal
+                FROM alumno_tutores at
+                JOIN tutores t ON t.id_tutor = at.id_tutor
+                WHERE at.id_alumno = %s
+                ORDER BY at.es_principal DESC, t.id_tutor;
+            """, (perfil["id_alumno"],))
+            perfil["tutores"] = cur.fetchall()
+
+        return jsonify({"ok": True, "perfil": perfil}), 200
+    finally:
+        conn.close()
+
+
 # ---------------- CATÁLOGOS ----------------
 @app.route("/api/catalogos", methods=["GET"])
 def obtener_catalogos():
@@ -71,31 +130,53 @@ def obtener_catalogos():
     try:
         with conn.cursor() as cur:
             cur.execute("""
-                SELECT a.id_alumno, a.curp,
+                SELECT a.id_alumno, TRIM(a.curp) AS curp,
                        a.nombre || ' ' || a.apellido_paterno AS alumno,
                        a.id_tutor, a.id_grupo,
-                       g.grado || '°' || g.letra AS grupo
+                       g.grado || '°' || g.letra AS grupo,
+                       s.clave_salon, s.codigo_svg
                 FROM alumnos a
                 JOIN grupos g ON g.id_grupo = a.id_grupo
-                ORDER BY a.id_alumno;
+                LEFT JOIN salones s ON s.id_salon = g.id_salon
+                ORDER BY g.grado, g.letra, a.apellido_paterno, a.nombre;
             """)
             alumnos = cur.fetchall()
 
             cur.execute("""
-                SELECT id_tutor, nombre || ' ' || apellido_paterno AS tutor, parentesco, telefono
-                FROM tutores ORDER BY id_tutor;
+                SELECT t.id_tutor,
+                       t.nombre || ' ' || t.apellido_paterno AS tutor,
+                       t.parentesco, t.telefono,
+                       at.id_alumno
+                FROM tutores t
+                LEFT JOIN alumno_tutores at ON at.id_tutor = t.id_tutor
+                ORDER BY t.id_tutor;
             """)
             tutores = cur.fetchall()
 
             cur.execute("""
-                SELECT id_docente, nombre || ' ' || apellido_paterno AS docente, especialidad
-                FROM docentes WHERE activo = TRUE ORDER BY id_docente;
+                SELECT d.id_docente,
+                       d.nombre || ' ' || d.apellido_paterno AS docente,
+                       d.especialidad,
+                       g.id_grupo AS id_grupo_titular,
+                       g.grado || '°' || g.letra AS grupo_titular
+                FROM docentes d
+                LEFT JOIN grupos g ON g.id_docente_titular = d.id_docente
+                WHERE d.activo = TRUE
+                ORDER BY d.id_docente;
             """)
             docentes = cur.fetchall()
 
             cur.execute("""
-                SELECT id_grupo, grado || '°' || letra AS grupo, ciclo_escolar
-                FROM grupos ORDER BY grado, letra;
+                SELECT g.id_grupo, g.grado, g.letra,
+                       g.grado || '°' || g.letra AS grupo,
+                       g.ciclo_escolar,
+                       g.id_docente_titular,
+                       d.nombre || ' ' || d.apellido_paterno AS docente_titular,
+                       g.id_salon, s.clave_salon, s.codigo_svg
+                FROM grupos g
+                JOIN docentes d ON d.id_docente = g.id_docente_titular
+                LEFT JOIN salones s ON s.id_salon = g.id_salon
+                ORDER BY g.grado, g.letra;
             """)
             grupos = cur.fetchall()
 
@@ -131,44 +212,163 @@ def obtener_catalogos():
         conn.close()
 
 
-# ---------------- ALUMNOS ----------------
+# ---------------- ALUMNOS Y TUTORES EXCLUSIVOS ----------------
 @app.route("/api/alumnos", methods=["GET", "POST"])
 def manejar_alumnos():
+    id_grupo = request.args.get("id_grupo")
+    conn = get_connection()
+    try:
+        if request.method == "GET":
+            with conn.cursor() as cur:
+                query = """
+                    SELECT a.id_alumno, TRIM(a.curp) AS curp,
+                           a.nombre || ' ' || a.apellido_paterno || COALESCE(' ' || a.apellido_materno, '') AS nombre_completo,
+                           TO_CHAR(a.fecha_nacimiento, 'YYYY-MM-DD') AS fecha_nacimiento,
+                           a.id_grupo, g.grado || '°' || g.letra AS grupo,
+                           s.clave_salon,
+                           a.id_tutor,
+                           t.nombre || ' ' || t.apellido_paterno AS tutor,
+                           t.telefono,
+                           COALESCE(
+                               STRING_AGG(
+                                   tx.nombre || ' ' || tx.apellido_paterno || ' (' || tx.parentesco || ')',
+                                   ' / ' ORDER BY at.es_principal DESC, tx.id_tutor
+                               ),
+                               t.nombre || ' ' || t.apellido_paterno
+                           ) AS tutores_exclusivos,
+                           COUNT(at.id_tutor) AS total_tutores
+                    FROM alumnos a
+                    JOIN grupos g ON g.id_grupo = a.id_grupo
+                    LEFT JOIN salones s ON s.id_salon = g.id_salon
+                    JOIN tutores t ON t.id_tutor = a.id_tutor
+                    LEFT JOIN alumno_tutores at ON at.id_alumno = a.id_alumno
+                    LEFT JOIN tutores tx ON tx.id_tutor = at.id_tutor
+                """
+                params = []
+                if id_grupo:
+                    query += " WHERE a.id_grupo = %s"
+                    params.append(id_grupo)
+                query += """
+                    GROUP BY a.id_alumno, g.grado, g.letra, s.clave_salon, t.nombre, t.apellido_paterno, t.telefono
+                    ORDER BY g.grado, g.letra, a.id_alumno;
+                """
+                cur.execute(query, tuple(params))
+                return jsonify(cur.fetchall()), 200
+
+        d = request.get_json(force=True)
+        curp = d["curp"].strip().upper()
+        with conn.cursor() as cur:
+            # Permite crear tutor nuevo exclusivo o usar id_tutor existente
+            id_tutor = d.get("id_tutor")
+            if not id_tutor and d.get("tutor_nombre"):
+                cur.execute("""
+                    INSERT INTO tutores (nombre, apellido_paterno, apellido_materno, correo, telefono, parentesco)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                    RETURNING id_tutor;
+                """, (
+                    d["tutor_nombre"].strip(),
+                    d.get("tutor_apellido_paterno", d["apellido_paterno"]).strip(),
+                    d.get("tutor_apellido_materno", "").strip() or None,
+                    d["tutor_correo"].strip().lower(),
+                    d["tutor_telefono"].strip(),
+                    d.get("tutor_parentesco", "Madre"),
+                ))
+                id_tutor = cur.fetchone()["id_tutor"]
+
+            cur.execute("""
+                INSERT INTO alumnos (curp, nombre, apellido_paterno, apellido_materno, fecha_nacimiento, id_tutor, id_grupo)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                RETURNING id_alumno, TRIM(curp) AS curp;
+            """, (
+                curp,
+                d["nombre"].strip(),
+                d["apellido_paterno"].strip(),
+                d.get("apellido_materno", "").strip() or None,
+                d["fecha_nacimiento"],
+                id_tutor,
+                d["id_grupo"],
+            ))
+            nuevo = cur.fetchone()
+
+            cur.execute("""
+                INSERT INTO alumno_tutores (id_alumno, id_tutor, es_principal)
+                VALUES (%s, %s, TRUE);
+            """, (nuevo["id_alumno"], id_tutor))
+
+            # Segundo tutor exclusivo opcional
+            if d.get("tutor2_nombre"):
+                cur.execute("""
+                    INSERT INTO tutores (nombre, apellido_paterno, apellido_materno, correo, telefono, parentesco)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                    RETURNING id_tutor;
+                """, (
+                    d["tutor2_nombre"].strip(),
+                    d.get("tutor2_apellido_paterno", d["apellido_paterno"]).strip(),
+                    d.get("tutor2_apellido_materno", "").strip() or None,
+                    d["tutor2_correo"].strip().lower(),
+                    d["tutor2_telefono"].strip(),
+                    d.get("tutor2_parentesco", "Padre"),
+                ))
+                id_tutor2 = cur.fetchone()["id_tutor"]
+                cur.execute("""
+                    INSERT INTO alumno_tutores (id_alumno, id_tutor, es_principal)
+                    VALUES (%s, %s, FALSE);
+                """, (nuevo["id_alumno"], id_tutor2))
+
+            # Crear cuenta automática para Portal de Padres (contraseña por defecto: familia123)
+            pwd_hash = hashlib.sha256(d.get("password", "familia123").encode("utf-8")).hexdigest()
+            cur.execute("""
+                INSERT INTO usuarios (usuario, correo, password_hash, rol, id_alumno)
+                VALUES (%s, %s, %s, 'Alumno', %s)
+                ON CONFLICT (usuario) DO NOTHING;
+            """, (curp, f"{curp.lower()}@alumnos.primaria.edu.mx", pwd_hash, nuevo["id_alumno"]))
+
+        conn.commit()
+        return jsonify({"ok": True, "alumno": nuevo}), 201
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"ok": False, "error": str(e)}), 400
+    finally:
+        conn.close()
+
+
+@app.route("/api/alumnos/<int:id_alumno>/tutores", methods=["GET", "POST"])
+def manejar_tutores_alumno(id_alumno):
     conn = get_connection()
     try:
         if request.method == "GET":
             with conn.cursor() as cur:
                 cur.execute("""
-                    SELECT a.id_alumno, a.curp,
-                           a.nombre || ' ' || a.apellido_paterno || COALESCE(' ' || a.apellido_materno, '') AS nombre_completo,
-                           TO_CHAR(a.fecha_nacimiento, 'YYYY-MM-DD') AS fecha_nacimiento,
-                           a.id_grupo, g.grado || '°' || g.letra AS grupo,
-                           a.id_tutor, t.nombre || ' ' || t.apellido_paterno AS tutor, t.telefono
-                    FROM alumnos a
-                    JOIN grupos g ON g.id_grupo = a.id_grupo
-                    JOIN tutores t ON t.id_tutor = a.id_tutor
-                    ORDER BY a.id_alumno;
-                """)
+                    SELECT t.id_tutor, t.nombre, t.apellido_paterno, t.apellido_materno,
+                           t.correo, t.telefono, t.parentesco, at.es_principal
+                    FROM alumno_tutores at
+                    JOIN tutores t ON t.id_tutor = at.id_tutor
+                    WHERE at.id_alumno = %s
+                    ORDER BY at.es_principal DESC, t.id_tutor;
+                """, (id_alumno,))
                 return jsonify(cur.fetchall()), 200
 
         d = request.get_json(force=True)
         with conn.cursor() as cur:
             cur.execute("""
-                INSERT INTO alumnos (curp, nombre, apellido_paterno, apellido_materno, fecha_nacimiento, id_tutor, id_grupo)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-                RETURNING id_alumno, curp;
+                INSERT INTO tutores (nombre, apellido_paterno, apellido_materno, correo, telefono, parentesco)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                RETURNING id_tutor;
             """, (
-                d["curp"].strip().upper(),
                 d["nombre"].strip(),
                 d["apellido_paterno"].strip(),
                 d.get("apellido_materno", "").strip() or None,
-                d["fecha_nacimiento"],
-                d["id_tutor"],
-                d["id_grupo"],
+                d["correo"].strip().lower(),
+                d["telefono"].strip(),
+                d["parentesco"],
             ))
-            nuevo = cur.fetchone()
+            id_tutor = cur.fetchone()["id_tutor"]
+            cur.execute("""
+                INSERT INTO alumno_tutores (id_alumno, id_tutor, es_principal)
+                VALUES (%s, %s, FALSE);
+            """, (id_alumno, id_tutor))
         conn.commit()
-        return jsonify({"ok": True, "alumno": nuevo}), 201
+        return jsonify({"ok": True, "id_tutor": id_tutor}), 201
     except Exception as e:
         conn.rollback()
         return jsonify({"ok": False, "error": str(e)}), 400
@@ -198,33 +398,33 @@ def eliminar_alumno(id_alumno):
 @app.route("/api/calificaciones", methods=["GET", "POST"])
 def manejar_calificaciones():
     id_alumno = request.args.get("id_alumno")
+    id_grupo = request.args.get("id_grupo")
     conn = get_connection()
     try:
         if request.method == "GET":
             with conn.cursor() as cur:
+                query = """
+                    SELECT c.id_calificacion, c.id_alumno, TRIM(a.curp) AS curp,
+                           a.nombre || ' ' || a.apellido_paterno AS alumno,
+                           g.grado || '°' || g.letra AS grupo,
+                           c.id_materia, m.nombre AS materia,
+                           c.creditos, c.calificacion, c.ciclo_escolar
+                    FROM calificaciones c
+                    JOIN alumnos a ON a.id_alumno = c.id_alumno
+                    JOIN grupos g ON g.id_grupo = a.id_grupo
+                    JOIN materias m ON m.id_materia = c.id_materia
+                """
+                params, filtros = [], []
                 if id_alumno:
-                    cur.execute("""
-                        SELECT c.id_calificacion, c.id_alumno, a.curp,
-                               a.nombre || ' ' || a.apellido_paterno AS alumno,
-                               c.id_materia, m.nombre AS materia,
-                               c.creditos, c.calificacion, c.ciclo_escolar
-                        FROM calificaciones c
-                        JOIN alumnos a ON a.id_alumno = c.id_alumno
-                        JOIN materias m ON m.id_materia = c.id_materia
-                        WHERE c.id_alumno = %s
-                        ORDER BY m.nombre;
-                    """, (id_alumno,))
-                else:
-                    cur.execute("""
-                        SELECT c.id_calificacion, c.id_alumno, a.curp,
-                               a.nombre || ' ' || a.apellido_paterno AS alumno,
-                               c.id_materia, m.nombre AS materia,
-                               c.creditos, c.calificacion, c.ciclo_escolar
-                        FROM calificaciones c
-                        JOIN alumnos a ON a.id_alumno = c.id_alumno
-                        JOIN materias m ON m.id_materia = c.id_materia
-                        ORDER BY c.id_calificacion DESC;
-                    """)
+                    filtros.append("c.id_alumno = %s")
+                    params.append(id_alumno)
+                if id_grupo:
+                    filtros.append("a.id_grupo = %s")
+                    params.append(id_grupo)
+                if filtros:
+                    query += " WHERE " + " AND ".join(filtros)
+                query += " ORDER BY c.id_calificacion DESC;"
+                cur.execute(query, tuple(params))
                 return jsonify(cur.fetchall()), 200
 
         d = request.get_json(force=True)
@@ -269,11 +469,13 @@ def eliminar_calificacion(id_cal):
         conn.close()
 
 
-# ---------------- HORARIOS ----------------
+# ---------------- HORARIOS SEMANALES ----------------
 @app.route("/api/horarios", methods=["GET", "POST"])
 def manejar_horarios():
     id_docente = request.args.get("id_docente")
     id_grupo = request.args.get("id_grupo")
+    id_alumno = request.args.get("id_alumno")
+    dia = request.args.get("dia_semana")
     conn = get_connection()
     try:
         if request.method == "GET":
@@ -282,9 +484,10 @@ def manejar_horarios():
                     SELECT h.id_horario, h.dia_semana,
                            TO_CHAR(h.hora_inicio, 'HH24:MI') AS hora_inicio,
                            TO_CHAR(h.hora_fin, 'HH24:MI') AS hora_fin,
+                           g.id_grupo,
                            g.grado || '°' || g.letra AS grupo,
                            m.nombre AS materia,
-                           s.clave_salon, s.edificio,
+                           s.clave_salon, s.edificio, s.codigo_svg,
                            d.nombre || ' ' || d.apellido_paterno AS docente
                     FROM horarios h
                     JOIN grupos g ON g.id_grupo = h.id_grupo
@@ -292,17 +495,31 @@ def manejar_horarios():
                     JOIN salones s ON s.id_salon = h.id_salon
                     JOIN docentes d ON d.id_docente = h.id_docente
                 """
-                params = []
-                filtros = []
+                params, filtros = [], []
                 if id_docente:
                     filtros.append("h.id_docente = %s")
                     params.append(id_docente)
                 if id_grupo:
                     filtros.append("h.id_grupo = %s")
                     params.append(id_grupo)
+                if id_alumno:
+                    filtros.append("h.id_grupo = (SELECT id_grupo FROM alumnos WHERE id_alumno = %s)")
+                    params.append(id_alumno)
+                if dia:
+                    filtros.append("h.dia_semana = %s")
+                    params.append(dia)
                 if filtros:
                     query += " WHERE " + " AND ".join(filtros)
-                query += " ORDER BY h.hora_inicio, g.grado;"
+                query += """
+                    ORDER BY CASE h.dia_semana
+                                WHEN 'Lunes' THEN 1
+                                WHEN 'Martes' THEN 2
+                                WHEN 'Miercoles' THEN 3
+                                WHEN 'Jueves' THEN 4
+                                WHEN 'Viernes' THEN 5
+                             END,
+                             h.hora_inicio, g.grado, g.letra;
+                """
                 cur.execute(query, tuple(params))
                 return jsonify(cur.fetchall()), 200
 
@@ -631,35 +848,106 @@ def eliminar_usuario(id_usr):
         conn.close()
 
 
-# ---------------- RECADOS ----------------
+# ---------------- RECADOS (DOCENTE -> GRUPO/ALUMNO; PADRES RESPONDEN) ----------------
 @app.route("/api/recados", methods=["GET", "POST"])
 def manejar_recados():
+    id_alumno = request.args.get("id_alumno")
+    id_docente = request.args.get("id_docente")
+    id_grupo = request.args.get("id_grupo")
     conn = get_connection()
     try:
         if request.method == "GET":
             with conn.cursor() as cur:
-                cur.execute("""
-                    SELECT r.id_recado, r.tipo, r.asunto, r.mensaje, r.estatus,
+                # Vista exclusiva de Portal de Padres (solo recados de ese alumno o su grupo)
+                if id_alumno:
+                    cur.execute("""
+                        SELECT r.id_recado, r.tipo, r.asunto, r.mensaje, r.tipo_respuesta, r.estatus,
+                               TO_CHAR(r.fecha_envio, 'YYYY-MM-DD HH24:MI') AS fecha_envio,
+                               CASE WHEN r.id_alumno IS NOT NULL THEN 'Individual' ELSE 'Grupal' END AS alcance,
+                               d.nombre || ' ' || d.apellido_paterno AS docente,
+                               g.grado || '°' || g.letra AS grupo,
+                               rr.estado_respuesta,
+                               rr.texto_respuesta,
+                               TO_CHAR(rr.fecha_respuesta, 'YYYY-MM-DD HH24:MI') AS fecha_respuesta,
+                               t.nombre || ' ' || t.apellido_paterno AS respondio_tutor
+                        FROM recados r
+                        JOIN docentes d ON d.id_docente = r.id_docente
+                        LEFT JOIN grupos g ON g.id_grupo = r.id_grupo
+                        LEFT JOIN recado_respuestas rr
+                               ON rr.id_recado = r.id_recado AND rr.id_alumno = %s
+                        LEFT JOIN tutores t ON t.id_tutor = rr.id_tutor
+                        WHERE r.id_alumno = %s
+                           OR (r.id_alumno IS NULL AND r.id_grupo = (SELECT id_grupo FROM alumnos WHERE id_alumno = %s))
+                        ORDER BY r.fecha_envio DESC, r.id_recado DESC;
+                    """, (id_alumno, id_alumno, id_alumno))
+                    return jsonify(cur.fetchall()), 200
+
+                # Vista Docente / Director / Administrativo
+                query = """
+                    SELECT r.id_recado, r.tipo, r.asunto, r.mensaje, r.tipo_respuesta, r.estatus,
                            TO_CHAR(r.fecha_envio, 'YYYY-MM-DD HH24:MI') AS fecha_envio,
-                           t.nombre || ' ' || t.apellido_paterno AS tutor,
+                           r.id_grupo,
+                           g.grado || '°' || g.letra AS grupo,
+                           r.id_alumno,
                            a.nombre || ' ' || a.apellido_paterno AS alumno,
-                           d.nombre || ' ' || d.apellido_paterno AS docente
+                           COALESCE(a.nombre || ' ' || a.apellido_paterno, 'Todo el grupo ' || g.grado || '°' || g.letra) AS destinatario,
+                           d.id_docente,
+                           d.nombre || ' ' || d.apellido_paterno AS docente,
+                           COUNT(rr.id_respuesta) AS total_respuestas
                     FROM recados r
-                    JOIN tutores t ON t.id_tutor = r.id_tutor
-                    JOIN alumnos a ON a.id_alumno = r.id_alumno
                     JOIN docentes d ON d.id_docente = r.id_docente
+                    LEFT JOIN grupos g ON g.id_grupo = r.id_grupo
+                    LEFT JOIN alumnos a ON a.id_alumno = r.id_alumno
+                    LEFT JOIN recado_respuestas rr ON rr.id_recado = r.id_recado
+                """
+                params, filtros = [], []
+                if id_docente:
+                    filtros.append("r.id_docente = %s")
+                    params.append(id_docente)
+                if id_grupo:
+                    filtros.append("r.id_grupo = %s")
+                    params.append(id_grupo)
+                if filtros:
+                    query += " WHERE " + " AND ".join(filtros)
+                query += """
+                    GROUP BY r.id_recado, g.grado, g.letra, a.nombre, a.apellido_paterno, d.id_docente, d.nombre, d.apellido_paterno
                     ORDER BY r.fecha_envio DESC, r.id_recado DESC
-                    LIMIT 50;
-                """)
+                    LIMIT 60;
+                """
+                cur.execute(query, tuple(params))
                 return jsonify(cur.fetchall()), 200
 
+        # POST: El docente (o dirección) envía un recado a su grupo o a un alumno específico
         d = request.get_json(force=True)
+        id_al = d.get("id_alumno") or None
+        id_gr = d.get("id_grupo") or None
+        id_doc = d.get("id_docente")
+
         with conn.cursor() as cur:
+            if id_al and not id_gr:
+                cur.execute("SELECT id_grupo FROM alumnos WHERE id_alumno = %s;", (id_al,))
+                row = cur.fetchone()
+                if row:
+                    id_gr = row["id_grupo"]
+            if not id_gr and id_doc:
+                cur.execute("SELECT id_grupo FROM grupos WHERE id_docente_titular = %s;", (id_doc,))
+                row = cur.fetchone()
+                if row:
+                    id_gr = row["id_grupo"]
+
             cur.execute("""
-                INSERT INTO recados (id_tutor, id_alumno, id_docente, tipo, asunto, mensaje)
-                VALUES (%s, %s, %s, %s, %s, %s)
-                RETURNING id_recado, estatus;
-            """, (d["id_tutor"], d["id_alumno"], d["id_docente"], d["tipo"], d["asunto"], d["mensaje"]))
+                INSERT INTO recados (id_grupo, id_alumno, id_docente, tipo, asunto, mensaje, tipo_respuesta, estatus)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, 'Enviado')
+                RETURNING id_recado, tipo_respuesta, estatus;
+            """, (
+                id_gr,
+                id_al,
+                id_doc,
+                d.get("tipo", "Aviso"),
+                d["asunto"].strip(),
+                d["mensaje"].strip(),
+                d.get("tipo_respuesta", "Leido"),
+            ))
             nuevo = cur.fetchone()
         conn.commit()
         return jsonify({"ok": True, "recado": nuevo}), 201
@@ -670,11 +958,88 @@ def manejar_recados():
         conn.close()
 
 
-@app.route("/api/recados/<int:id_recado>", methods=["PATCH"])
-def actualizar_estatus_recado(id_recado):
-    d = request.get_json(force=True)
+@app.route("/api/recados/<int:id_recado>/respuestas", methods=["GET"])
+def obtener_respuestas_recado(id_recado):
     conn = get_connection()
     try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT rr.id_respuesta, rr.estado_respuesta, rr.texto_respuesta,
+                       TO_CHAR(rr.fecha_respuesta, 'YYYY-MM-DD HH24:MI') AS fecha_respuesta,
+                       a.nombre || ' ' || a.apellido_paterno AS alumno,
+                       g.grado || '°' || g.letra AS grupo,
+                       COALESCE(t.nombre || ' ' || t.apellido_paterno || ' (' || t.parentesco || ')', 'Familia') AS tutor
+                FROM recado_respuestas rr
+                JOIN alumnos a ON a.id_alumno = rr.id_alumno
+                JOIN grupos g ON g.id_grupo = a.id_grupo
+                LEFT JOIN tutores t ON t.id_tutor = rr.id_tutor
+                WHERE rr.id_recado = %s
+                ORDER BY rr.fecha_respuesta DESC;
+            """, (id_recado,))
+            return jsonify(cur.fetchall()), 200
+    finally:
+        conn.close()
+
+
+@app.route("/api/recados/<int:id_recado>/responder", methods=["POST"])
+def responder_recado(id_recado):
+    d = request.get_json(force=True)
+    id_alumno = d["id_alumno"]
+    id_tutor = d.get("id_tutor")
+    estado = d["estado_respuesta"]
+    texto = (d.get("texto_respuesta") or "").strip() or None
+
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            if not id_tutor:
+                cur.execute("""
+                    SELECT id_tutor FROM alumno_tutores
+                    WHERE id_alumno = %s ORDER BY es_principal DESC LIMIT 1;
+                """, (id_alumno,))
+                row = cur.fetchone()
+                id_tutor = row["id_tutor"] if row else None
+
+            cur.execute("""
+                INSERT INTO recado_respuestas (id_recado, id_alumno, id_tutor, estado_respuesta, texto_respuesta, fecha_respuesta)
+                VALUES (%s, %s, %s, %s, %s, CURRENT_TIMESTAMP)
+                ON CONFLICT (id_recado, id_alumno)
+                DO UPDATE SET
+                    id_tutor = EXCLUDED.id_tutor,
+                    estado_respuesta = EXCLUDED.estado_respuesta,
+                    texto_respuesta = EXCLUDED.texto_respuesta,
+                    fecha_respuesta = CURRENT_TIMESTAMP
+                RETURNING id_respuesta, estado_respuesta, texto_respuesta;
+            """, (id_recado, id_alumno, id_tutor, estado, texto))
+            resp = cur.fetchone()
+
+            cur.execute("""
+                UPDATE recados
+                SET estatus = CASE WHEN estatus = 'Enviado' THEN 'Leido' ELSE estatus END
+                WHERE id_recado = %s;
+            """, (id_recado,))
+        conn.commit()
+        return jsonify({"ok": True, "respuesta": resp}), 200
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"ok": False, "error": str(e)}), 400
+    finally:
+        conn.close()
+
+
+@app.route("/api/recados/<int:id_recado>", methods=["PATCH", "DELETE"])
+def actualizar_estatus_recado(id_recado):
+    conn = get_connection()
+    try:
+        if request.method == "DELETE":
+            with conn.cursor() as cur:
+                cur.execute("DELETE FROM recados WHERE id_recado = %s RETURNING id_recado;", (id_recado,))
+                if not cur.fetchone():
+                    return jsonify({"ok": False, "error": "Recado no encontrado"}), 404
+            conn.commit()
+            return jsonify({"ok": True}), 200
+
+        d = request.get_json(force=True)
         with conn.cursor() as cur:
             cur.execute("""
                 UPDATE recados SET estatus = %s
@@ -695,11 +1060,12 @@ def actualizar_estatus_recado(id_recado):
 # ---------------- PAGOS DE COLEGIATURA ----------------
 @app.route("/api/pagos", methods=["GET", "POST"])
 def manejar_pagos():
+    id_alumno = request.args.get("id_alumno")
     conn = get_connection()
     try:
         if request.method == "GET":
             with conn.cursor() as cur:
-                cur.execute("""
+                query = """
                     SELECT p.id_pago, p.referencia, p.monto_pagado, p.metodo_pago, p.estatus,
                            TO_CHAR(p.fecha_pago, 'YYYY-MM-DD HH24:MI') AS fecha_pago,
                            a.nombre || ' ' || a.apellido_paterno AS alumno,
@@ -707,9 +1073,13 @@ def manejar_pagos():
                     FROM pagos_colegiatura p
                     JOIN alumnos a ON a.id_alumno = p.id_alumno
                     JOIN periodos_colegiatura per ON per.id_periodo = p.id_periodo
-                    ORDER BY p.fecha_pago DESC, p.id_pago DESC
-                    LIMIT 50;
-                """)
+                """
+                params = []
+                if id_alumno:
+                    query += " WHERE p.id_alumno = %s"
+                    params.append(id_alumno)
+                query += " ORDER BY p.fecha_pago DESC, p.id_pago DESC LIMIT 60;"
+                cur.execute(query, tuple(params))
                 return jsonify(cur.fetchall()), 200
 
         d = request.get_json(force=True)
