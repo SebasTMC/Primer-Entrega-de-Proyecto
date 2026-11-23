@@ -72,11 +72,13 @@ p.empty,.hint{color:var(--mut)}
 .toast{margin-bottom:16px;padding:11px 14px;border-radius:8px;font-size:13.5px;display:none}
 .toast.ok{display:block;background:#e3f5ec;color:var(--ok);border:1px solid #a7e3c6}
 .toast.err{display:block;background:#fdecea;color:var(--err);border:1px solid #f5c2be}
-dialog{border:0;border-radius:12px;padding:0;width:min(520px,92vw);box-shadow:0 24px 60px rgba(12,35,64,.3);margin:auto}
+dialog{border:0;border-radius:12px;padding:0;width:min(580px,94vw);box-shadow:0 24px 60px rgba(12,35,64,.3);margin:auto;max-height:90vh;overflow-y:auto}
 dialog::backdrop{background:rgba(12,35,64,.5)}
 dialog header,#lf header{background:var(--blue);padding:18px 24px}
 dialog h2,#lf h2{color:#fff;margin:0}
-#ff,#lb{padding:22px 24px;display:grid;gap:12px}
+#ff,#lb,#info-body{padding:22px 24px;display:grid;gap:12px}
+.form-sec{font-size:12.5px;font-weight:700;text-transform:uppercase;color:var(--blue-d);border-bottom:1px solid var(--rule);padding-bottom:4px;margin-top:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 label{display:grid;gap:5px;font-size:13px;font-weight:600;color:#33445f}
 label input,label select,label textarea{padding:9px 12px;border:1px solid var(--rule);border-radius:8px;font-size:14.5px;font-weight:400;color:var(--ink);background:#fff}
 .foot{display:flex;justify-content:flex-end;gap:10px;padding:0 24px 22px}
@@ -84,20 +86,19 @@ label input,label select,label textarea{padding:9px 12px;border:1px solid var(--
 body.out #login{display:grid}body.out aside,body.out main{display:none}
 #lf{background:#fff;border:1px solid var(--rule);border-radius:12px;width:min(430px,100%);box-shadow:0 20px 50px rgba(12,35,64,.12);overflow:hidden}
 #le{color:var(--err);font-size:13px;min-height:18px}
-.quick-roles{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
-.quick-roles button{background:var(--soft);border:1px solid var(--rule);color:var(--blue-d);padding:4px 9px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600}
-.quick-roles button:hover{background:#d6e3fb}
-/* Mapa SVG */
-.map-bar{display:grid;grid-template-columns:1.3fr 1fr 1fr auto;gap:10px;align-items:end;margin-bottom:14px}
-.svg-wrap{background:#f8fafc;border:1px solid var(--rule);border-radius:10px;padding:10px}
-.svg-wrap svg{width:100%;height:auto;display:block}
-.salon-box{fill:#e2e8f0;stroke:#475569;stroke-width:2;cursor:pointer;transition:.2s}
-.salon-box:hover{fill:#bfdbfe}
-.salon-box.ocupado{fill:#dbeafe;stroke:#1b4fd8}
-.salon-box.destacado{fill:#34d399;stroke:#065f46;stroke-width:3.5}
-.salon-label{font-size:13px;font-weight:700;fill:#0c2340;pointer-events:none}
-.salon-sub{font-size:11px;fill:#33445f;pointer-events:none}
+/* Mapa SVG nuevo */
+.map-bar{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:10px;align-items:end;margin-bottom:14px}
+.svg-wrap{background:#f8fafc;border:1px solid var(--rule);border-radius:10px;padding:12px;overflow:auto;text-align:center}
+.svg-wrap svg{max-width:100%;height:auto;display:block;margin:auto}
+.espacio-svg{cursor:pointer;transition:.2s}
+.espacio-svg:hover{opacity:.82}
+.espacio-ocupado{stroke:#38bdf8 !important;stroke-width:3 !important}
+.espacio-activo{stroke:#f59e0b !important;stroke-width:4.5 !important;filter:drop-shadow(0 0 8px rgba(245,158,11,.95))}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;font-size:12.5px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.swatch{width:13px;height:13px;border-radius:3px;display:inline-block;border:1px solid #334155}
 .info-box{margin-top:12px;padding:12px 14px;border-radius:8px;background:var(--soft);border:1px solid var(--rule);font-size:14px}
+.resp-card{border:1px solid var(--rule);border-radius:8px;padding:10px 12px;background:#f8fafc}
 @media(max-width:900px){
  body{flex-direction:column}
  aside{width:100%;height:auto;position:static;gap:10px;padding:16px}
@@ -106,32 +107,24 @@ body.out #login{display:grid}body.out aside,body.out main{display:none}
  #nav button{white-space:nowrap;border-left:0;border-bottom:3px solid transparent}
  #nav button.on{border-bottom-color:var(--blue)}
  main{padding:24px 18px}
- .strip,.strip.s3{grid-template-columns:1fr 1fr}.two,.map-bar{grid-template-columns:1fr}
+ .strip,.strip.s3,.grid2{grid-template-columns:1fr}
+ .two,.map-bar{grid-template-columns:1fr}
  #head{flex-direction:column;align-items:flex-start}
 }
 </style>
 </head>
 <body class="out">
 
+<!-- LOGIN LIMPIO SIN CREDENCIALES VISIBLES -->
 <div id="login">
  <form id="lf">
   <header><h2>Iniciar sesión</h2></header>
   <div id="lb">
-   <label>Usuario o correo<input id="lu" autocomplete="username" placeholder="Ej. director" required></label>
-   <label>Contraseña<input id="lc" type="password" autocomplete="current-password" placeholder="primaria123" required></label>
+   <label>Usuario o correo<input id="lu" autocomplete="username" placeholder="Ingresa tu usuario o correo" required></label>
+   <label>Contraseña<input id="lc" type="password" autocomplete="current-password" placeholder="Ingresa tu contraseña" required></label>
    <p id="le" role="alert"></p>
    <button class="pri">Entrar al sistema</button>
    <a href="padres.html" class="ghost">¿Eres padre o tutor? Ir al Portal de Padres →</a>
-   <p class="hint">Acceso rápido de prueba (clave: <b>primaria123</b>):</p>
-   <div class="quick-roles">
-     <button type="button" data-u="director">Director</button>
-     <button type="button" data-u="administrativo">Admin</button>
-     <button type="button" data-u="docente">Docente</button>
-     <button type="button" data-u="enfermeria">Enfermería</button>
-     <button type="button" data-u="cafeteria">Cafetería</button>
-     <button type="button" data-u="mantenimiento">Mantenimiento</button>
-     <button type="button" data-u="2026-PRI-001">Alumno</button>
-   </div>
   </div>
  </form>
 </div>
@@ -157,6 +150,7 @@ body.out #login{display:grid}body.out aside,body.out main{display:none}
   <div id="view"></div>
 </main>
 
+<!-- MODAL DE FORMULARIOS -->
 <dialog id="dlg">
   <form id="form">
     <header><h2 id="ft"></h2></header>
@@ -168,9 +162,17 @@ body.out #login{display:grid}body.out aside,body.out main{display:none}
   </form>
 </dialog>
 
+<!-- MODAL DE CONSULTA (RESPUESTAS DE RECADOS / TUTORES EXCLUSIVOS) -->
+<dialog id="dlg-info">
+  <header><h2 id="info-title"></h2></header>
+  <div id="info-body"></div>
+  <div class="foot">
+    <button type="button" class="pri" onclick="$('#dlg-info').close()">Cerrar</button>
+  </div>
+</dialog>
+
 <script>
-// Cuando despliegues en Render, cambia esta línea por tu URL https://...onrender.com
-const API_URL = ["localhost", "127.0.0.1"].includes(location.hostname)
+const API_URL = ["localhost", "127.0.0.1", ""].includes(location.hostname)
   ? "http://localhost:5000"
   : "https://primer-entrega-de-proyecto.onrender.com";
 const SK = "escuela-sesion-pg";
@@ -180,13 +182,12 @@ const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt
 const money = n => "$" + Number(n || 0).toLocaleString("es-MX", {minimumFractionDigits: 2});
 
 const ST = {
-  "Completado":"ok", "Atendido":"ok", "Pagado":"ok",
-  "En proceso":"wip", "Leido":"wip", "En observacion":"warn",
+  "Completado":"ok", "Atendido":"ok", "Pagado":"ok", "Confirmado":"ok", "Aceptado":"ok", "Respondido":"ok",
+  "En proceso":"wip", "Leido":"wip", "Texto":"wip", "En observacion":"warn",
   "Pendiente":"warn", "Parcial":"warn", "Enviado":"warn",
   "Canalizado":"err"
 };
 
-/* Matriz de permisos por rol (w = ver y escribir, r = solo lectura). Director tiene acceso total. */
 const PERM = {
   Administrativo: {alumnos:"w", academico:"w", horario:"w", mapa:"r", recados:"w", pagos:"w", personal:"r"},
   Docente:        {alumnos:"r", academico:"w", horario:"r", mapa:"r", recados:"w", enfermeria:"r"},
@@ -204,12 +205,12 @@ const GROUPS = [
 
 const TITLES = {
   dash: ["Panel de la escuela", "Resumen en tiempo real desde PostgreSQL."],
-  mio: ["Mi espacio", "Tu horario, salón y calificaciones registradas."],
-  alumnos: ["Alumnos y tutores", "Matrículas, CURP, grupos y responsables legales.", "Agregar alumno"],
+  mio: ["Mi espacio", "Tu horario semanal, salón y calificaciones registradas."],
+  alumnos: ["Alumnos y tutores", "Matrículas, CURP, grupos, salón fijo y tutores exclusivos (máx. 2).", "Agregar alumno"],
   academico: ["Gestión académica", "Calificaciones registradas por alumno y materia.", "Registrar calificación"],
-  horario: ["Horarios", "Clases por grupo, materia, docente y salón.", "Agregar clase"],
-  mapa: ["Mapa interactivo", "Ubicación de grupos y salones en tiempo real."],
-  recados: ["Recados de padres", "Avisos y justificantes enviados desde el Portal de Padres."],
+  horario: ["Horarios (L–V)", "Clases semanales por grupo, materia, docente y salón.", "Agregar clase"],
+  mapa: ["Croquis interactivo", "Ubicación de grupos y espacios escolares de Lunes a Viernes."],
+  recados: ["Recados a padres", "Envía recados a tu grupo o a un alumno y revisa las respuestas de las familias.", "Enviar recado"],
   pagos: ["Colegiaturas", "Pagos de colegiatura registrados por periodo.", "Registrar pago"],
   personal: ["Personal", "Plantilla laboral, puestos y sueldos mensuales.", "Agregar empleado"],
   enfermeria: ["Enfermería", "Bitácora de atenciones médicas brindadas a alumnos.", "Registrar atención"],
@@ -241,14 +242,6 @@ async function api(path, opts = {}) {
   return data;
 }
 
-/* Botones de autocompletado de login */
-document.querySelectorAll(".quick-roles button").forEach(b => {
-  b.addEventListener("click", () => {
-    $("#lu").value = b.dataset.u;
-    $("#lc").value = "primaria123";
-  });
-});
-
 /* Login y sesión */
 $("#lf").onsubmit = async e => {
   e.preventDefault();
@@ -275,9 +268,10 @@ function logout() {
 
 async function start() {
   document.body.classList.remove("out");
-  $("#who").textContent = `${S.nombre} · ${S.rol}`;
+  const extraRol = S.grupo ? ` · ${S.grupo} (${S.clave_salon || ""})` : "";
+  $("#who").textContent = `${S.nombre} · ${S.rol}${extraRol}`;
   cat = await api("/api/catalogos");
-  cur = ok("dash") ? "dash" : ok("mio") ? "mio" : Object.keys(PERM[S.rol] || {})[0];
+  cur = ok("dash") ? "dash" : ok("mio") ? "mio" : (S.rol === "Docente" ? "recados" : Object.keys(PERM[S.rol] || {})[0]);
   q = "";
   nav();
   await render();
@@ -327,7 +321,7 @@ async function renderDash() {
   const prom = cals.length ? (cals.reduce((s, r) => s + Number(r.calificacion), 0) / cals.length).toFixed(1) : "–";
   const abiertos = mant.filter(r => r.estado !== "Completado").length;
   const fig = [
-    [alumnos.length, "alumnos registrados"],
+    [alumnos.length, "alumnos en 18 grupos"],
     [personal.length, "empleados en plantilla"],
     [prom, "promedio general"],
     [abiertos, "reportes de mantenimiento abiertos"]
@@ -341,7 +335,7 @@ async function renderDash() {
     <div class="strip">${fig.map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join("")}</div>
     <div class="two">
       <section class="panel">
-        <h2>Alumnos por grupo</h2>
+        <h2>Alumnos por grupo (1°A – 6°C)</h2>
         ${Object.keys(por).sort().map(g => `<div class="bar"><span>${esc(g)}</span><i style="width:${por[g] / max * 100}%"></i><em>${por[g]}</em></div>`).join("") || '<p class="empty">Sin alumnos.</p>'}
       </section>
       <section class="panel">
@@ -372,65 +366,208 @@ async function renderMine() {
   $("#view").innerHTML = `
     <div class="strip s3">
       <div><b>${esc(me.nombre_completo)}</b><span>${esc(me.curp)}</span></div>
-      <div><b>${esc(me.grupo)}</b><span>grupo asignado</span></div>
+      <div><b>${esc(me.grupo)} · ${esc(me.clave_salon || "—")}</b><span>grupo y salón fijo</span></div>
       <div><b>${prom}</b><span>promedio general</span></div>
     </div>
     <div class="two">
-      <section class="panel"><h2>Horario de ${esc(me.grupo)}</h2>${mkTbl(["Día", "Hora", "Materia", "Salón"], hors.map(r => [r.dia_semana, `${r.hora_inicio}-${r.hora_fin}`, r.materia, r.clave_salon]))}</section>
+      <section class="panel"><h2>Horario semanal de ${esc(me.grupo)}</h2>${mkTbl(["Día", "Hora", "Materia", "Salón"], hors.map(r => [r.dia_semana, `${r.hora_inicio}-${r.hora_fin}`, r.materia, r.clave_salon]))}</section>
       <section class="panel"><h2>Calificaciones</h2>${mkTbl(["Materia", "Créditos", "Calificación"], cals.map(r => [r.materia, r.creditos, r.calificacion]))}</section>
     </div>
-    <p class="hint" style="margin-top:14px">Tutor responsable: ${esc(me.tutor)} · Tel: ${esc(me.telefono)}</p>
+    <p class="hint" style="margin-top:14px">Tutores exclusivos: ${esc(me.tutores_exclusivos)} · Tel: ${esc(me.telefono)}</p>
   `;
 }
 
-/* ---------------- MAPA INTERACTIVO SVG ---------------- */
+/* ---------------- NUEVO CROQUIS INTERACTIVO SVG ---------------- */
 async function renderMapa() {
   $("#view").innerHTML = `
     <div class="panel">
       <div class="map-bar">
         <label>Buscar alumno (opcional)
-          <select id="m-al"><option value="">-- Ver todos los salones --</option>${cat.alumnos.map(a => `<option value="${a.id_alumno}">${esc(a.alumno)} (${esc(a.grupo)})</option>`).join("")}</select>
+          <select id="m-al"><option value="">-- Ver ocupación general --</option>${cat.alumnos.map(a => `<option value="${a.id_alumno}">${esc(a.alumno)} (${esc(a.grupo)})</option>`).join("")}</select>
         </label>
         <label>Día
-          <select id="m-dia"><option value="Lunes">Lunes</option></select>
+          <select id="m-dia">
+            <option value="Lunes">Lunes</option>
+            <option value="Martes">Martes</option>
+            <option value="Miercoles">Miércoles</option>
+            <option value="Jueves">Jueves</option>
+            <option value="Viernes">Viernes</option>
+          </select>
         </label>
-        <label>Bloque de horario
+        <label>Bloque horario
           <select id="m-hora">
             <option value="08:00">08:00 - 09:00</option>
             <option value="09:00">09:00 - 10:00</option>
             <option value="10:30">10:30 - 11:30</option>
+            <option value="11:30">11:30 - 12:30</option>
+            <option value="12:30">12:30 - 13:30</option>
           </select>
         </label>
         <button class="pri" onclick="cargarMapa()">Consultar</button>
       </div>
       <div class="svg-wrap">
-        <svg viewBox="0 0 820 420" aria-label="Mapa escolar">
-          <text x="20" y="25" font-size="14" font-weight="700" fill="#5a6b85">EDIFICIO A — PLANTA BAJA</text>
-          <g data-svg="salon-a101"><rect id="salon-a101" class="salon-box" x="20" y="38" width="170" height="95" rx="8"/><text x="35" y="65" class="salon-label">A-101</text><text id="txt-salon-a101" x="35" y="88" class="salon-sub">Disponible</text></g>
-          <g data-svg="salon-a102"><rect id="salon-a102" class="salon-box" x="210" y="38" width="170" height="95" rx="8"/><text x="225" y="65" class="salon-label">A-102</text><text id="txt-salon-a102" x="225" y="88" class="salon-sub">Disponible</text></g>
-          <g data-svg="salon-a103"><rect id="salon-a103" class="salon-box" x="400" y="38" width="170" height="95" rx="8"/><text x="415" y="65" class="salon-label">A-103</text><text id="txt-salon-a103" x="415" y="88" class="salon-sub">Disponible</text></g>
-          <text x="20" y="170" font-size="14" font-weight="700" fill="#5a6b85">EDIFICIO A — PLANTA ALTA</text>
-          <g data-svg="salon-a201"><rect id="salon-a201" class="salon-box" x="20" y="183" width="170" height="95" rx="8"/><text x="35" y="210" class="salon-label">A-201</text><text id="txt-salon-a201" x="35" y="233" class="salon-sub">Disponible</text></g>
-          <g data-svg="salon-a202"><rect id="salon-a202" class="salon-box" x="210" y="183" width="170" height="95" rx="8"/><text x="225" y="210" class="salon-label">A-202</text><text id="txt-salon-a202" x="225" y="233" class="salon-sub">Disponible</text></g>
-          <g data-svg="salon-a203"><rect id="salon-a203" class="salon-box" x="400" y="183" width="170" height="95" rx="8"/><text x="415" y="210" class="salon-label">A-203</text><text id="txt-salon-a203" x="415" y="233" class="salon-sub">Disponible</text></g>
-          <text x="605" y="25" font-size="14" font-weight="700" fill="#5a6b85">EDIFICIO B</text>
-          <g data-svg="salon-lab01"><rect id="salon-lab01" class="salon-box" x="605" y="38" width="195" height="240" rx="10"/><text x="625" y="70" class="salon-label">LAB-01 (Cómputo)</text><text id="txt-salon-lab01" x="625" y="96" class="salon-sub">Disponible</text></g>
-          <text x="20" y="312" font-size="14" font-weight="700" fill="#5a6b85">PATIO CENTRAL</text>
-          <g data-svg="zona-cancha"><rect id="zona-cancha" class="salon-box" x="20" y="325" width="780" height="75" rx="10"/><text x="35" y="355" class="salon-label">CANCHA DEPORTIVA</text><text id="txt-zona-cancha" x="35" y="378" class="salon-sub">Disponible</text></g>
+        <svg id="croquis" viewBox="0 0 920 620" xmlns="http://www.w3.org/2000/svg" aria-label="Croquis escolar">
+          <rect width="920" height="620" fill="#f8fafc" rx="12" />
+
+          <g transform="translate(500, 150) rotate(38)">
+            <rect id="zona-verde-norte" class="espacio-svg" x="0" y="-155" width="235" height="150" rx="6"
+                  fill="#bbf7d0" stroke="#16a34a" stroke-width="3" data-nombre="Área Verde Norte" />
+            <text x="117" y="-76" text-anchor="middle" font-size="13" font-weight="700" fill="#166534" pointer-events="none">ÁREA VERDE NORTE</text>
+          </g>
+
+          <g transform="translate(495, 165) rotate(38)">
+            <rect id="zona-biblioteca" class="espacio-svg" x="0" y="-28" width="250" height="28" rx="3"
+                  fill="#fbcfe8" stroke="#db2777" stroke-width="2.5" data-nombre="Biblioteca (BIB-01)" />
+            <text x="125" y="-10" text-anchor="middle" font-size="11" font-weight="700" fill="#9d174d" pointer-events="none">BIBLIOTECA (BIB-01)</text>
+          </g>
+
+          <g transform="translate(115, 425) rotate(-42)">
+            <rect id="zona-computo" class="espacio-svg" x="0" y="0" width="60" height="58" rx="3"
+                  fill="#fecaca" stroke="#dc2626" stroke-width="2.5" data-nombre="Salón de Cómputo (COMP-01)" />
+            <text x="30" y="33" text-anchor="middle" font-size="10" font-weight="700" fill="#991b1b" pointer-events="none">CÓMP.</text>
+
+            <rect id="salon-a101" class="espacio-svg" x="62"  y="0" width="46" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón A-101 (1°A)" />
+            <text x="85"  y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">A-101</text>
+            <text x="85"  y="42" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">1°A</text>
+
+            <rect id="salon-a102" class="espacio-svg" x="108" y="0" width="46" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón A-102 (1°B)" />
+            <text x="131" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">A-102</text>
+            <text x="131" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">1°B</text>
+
+            <rect id="salon-a103" class="espacio-svg" x="154" y="0" width="46" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón A-103 (1°C)" />
+            <text x="177" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">A-103</text>
+            <text x="177" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">1°C</text>
+
+            <rect id="salon-a104" class="espacio-svg" x="200" y="0" width="46" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón A-104 (2°A)" />
+            <text x="223" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">A-104</text>
+            <text x="223" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">2°A</text>
+
+            <rect id="salon-a105" class="espacio-svg" x="246" y="0" width="46" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón A-105 (2°B)" />
+            <text x="269" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">A-105</text>
+            <text x="269" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">2°B</text>
+
+            <rect id="salon-a106" class="espacio-svg" x="292" y="0" width="46" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón A-106 (2°C)" />
+            <text x="315" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">A-106</text>
+            <text x="315" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">2°C</text>
+
+            <rect id="zona-banos-poniente" class="espacio-svg" x="340" y="0" width="54" height="58" rx="3"
+                  fill="#bfdbfe" stroke="#2563eb" stroke-width="2.5" data-nombre="Baños Poniente (BAN-01)" />
+            <text x="367" y="33" text-anchor="middle" font-size="10" font-weight="700" fill="#1e40af" pointer-events="none">BAÑOS</text>
+          </g>
+
+          <g transform="translate(450, 140) rotate(38)">
+            <rect id="zona-banos-oriente" class="espacio-svg" x="0" y="0" width="54" height="58" rx="3"
+                  fill="#bfdbfe" stroke="#2563eb" stroke-width="2.5" data-nombre="Baños Oriente (BAN-02)" />
+            <text x="27" y="33" text-anchor="middle" font-size="10" font-weight="700" fill="#1e40af" pointer-events="none">BAÑOS</text>
+
+            <rect id="salon-b201" class="espacio-svg" x="56"  y="0" width="44" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón B-201 (3°A)" />
+            <text x="78"  y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">B-201</text>
+            <text x="78"  y="42" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">3°A</text>
+
+            <rect id="salon-b202" class="espacio-svg" x="100" y="0" width="44" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón B-202 (3°B)" />
+            <text x="122" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">B-202</text>
+            <text x="122" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">3°B</text>
+
+            <rect id="salon-b203" class="espacio-svg" x="144" y="0" width="44" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón B-203 (3°C)" />
+            <text x="166" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">B-203</text>
+            <text x="166" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">3°C</text>
+
+            <rect id="salon-b204" class="espacio-svg" x="188" y="0" width="44" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón B-204 (4°A)" />
+            <text x="210" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">B-204</text>
+            <text x="210" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">4°A</text>
+
+            <rect id="salon-b205" class="espacio-svg" x="232" y="0" width="44" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón B-205 (4°B)" />
+            <text x="254" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">B-205</text>
+            <text x="254" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">4°B</text>
+
+            <rect id="salon-b206" class="espacio-svg" x="276" y="0" width="44" height="58" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón B-206 (4°C)" />
+            <text x="298" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">B-206</text>
+            <text x="298" y="42" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">4°C</text>
+          </g>
+
+          <polygon id="zona-verde-centro1" class="espacio-svg" points="270,390 365,315 445,425 340,475"
+                   fill="#dcfce7" stroke="#16a34a" stroke-width="2.5" data-nombre="Área Verde Central Poniente" />
+          <text x="355" y="405" text-anchor="middle" font-size="11" font-weight="700" fill="#166534" pointer-events="none">JARDÍN 1</text>
+
+          <polygon id="zona-verde-centro2" class="espacio-svg" points="390,305 460,260 570,375 470,415"
+                   fill="#dcfce7" stroke="#16a34a" stroke-width="2.5" data-nombre="Área Verde Central Oriente" />
+          <text x="475" y="348" text-anchor="middle" font-size="11" font-weight="700" fill="#166534" pointer-events="none">JARDÍN 2</text>
+
+          <g transform="translate(325, 515) rotate(-22)">
+            <rect id="zona-direccion" class="espacio-svg" x="0" y="0" width="64" height="56" rx="3"
+                  fill="#e9d5ff" stroke="#7e22ce" stroke-width="2.5" data-nombre="Dirección Escolar (DIR-01)" />
+            <text x="32" y="32" text-anchor="middle" font-size="10" font-weight="700" fill="#6b21a8" pointer-events="none">DIR.</text>
+
+            <rect id="salon-c301" class="espacio-svg" x="66"  y="0" width="44" height="56" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón C-301 (5°A)" />
+            <text x="88"  y="25" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">C-301</text>
+            <text x="88"  y="41" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">5°A</text>
+
+            <rect id="salon-c302" class="espacio-svg" x="110" y="0" width="44" height="56" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón C-302 (5°B)" />
+            <text x="132" y="25" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">C-302</text>
+            <text x="132" y="41" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">5°B</text>
+
+            <rect id="salon-c303" class="espacio-svg" x="154" y="0" width="44" height="56" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón C-303 (5°C)" />
+            <text x="176" y="25" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">C-303</text>
+            <text x="176" y="41" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">5°C</text>
+
+            <rect id="salon-c304" class="espacio-svg" x="198" y="0" width="44" height="56" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón C-304 (6°A)" />
+            <text x="220" y="25" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">C-304</text>
+            <text x="220" y="41" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">6°A</text>
+
+            <rect id="salon-c305" class="espacio-svg" x="242" y="0" width="44" height="56" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón C-305 (6°B)" />
+            <text x="264" y="25" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">C-305</text>
+            <text x="264" y="41" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">6°B</text>
+
+            <rect id="salon-c306" class="espacio-svg" x="286" y="0" width="44" height="56" fill="#1e293b" stroke="#0f172a" stroke-width="2" data-nombre="Salón C-306 (6°C)" />
+            <text x="308" y="25" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" pointer-events="none">C-306</text>
+            <text x="308" y="41" text-anchor="middle" font-size="9" fill="#cbd5e1" pointer-events="none">6°C</text>
+          </g>
+
+          <g transform="translate(650, 395) rotate(-32)">
+            <rect id="zona-cafeteria" class="espacio-svg" x="0" y="0" width="54" height="54" rx="4"
+                  fill="#e2e8f0" stroke="#64748b" stroke-width="2.5" data-nombre="Cafetería Escolar (CAF-01)" />
+            <text x="27" y="31" text-anchor="middle" font-size="10" font-weight="700" fill="#334155" pointer-events="none">CAFÉ</text>
+
+            <rect id="zona-enfermeria" class="espacio-svg" x="64" y="-6" width="54" height="58" rx="4"
+                  fill="#fde68a" stroke="#92400e" stroke-width="2.5" data-nombre="Enfermería Escolar (ENF-01)" />
+            <text x="91" y="27" text-anchor="middle" font-size="10" font-weight="700" fill="#78350f" pointer-events="none">ENF.</text>
+          </g>
+
+          <g transform="translate(720, 320) rotate(-52)">
+            <rect id="zona-cancha" class="espacio-svg" x="0" y="0" width="185" height="72" rx="6"
+                  fill="#fef08a" stroke="#eab308" stroke-width="3" data-nombre="Canchas de Básquet y Malla Sombra (CANCHA-01)" />
+            <text x="92" y="32" text-anchor="middle" font-size="11" font-weight="700" fill="#854d0e" pointer-events="none">CANCHAS BÁSQUET</text>
+            <text x="92" y="48" text-anchor="middle" font-size="10" fill="#a16207" pointer-events="none">Malla Sombra</text>
+          </g>
         </svg>
       </div>
-      <div id="m-det" class="info-box">Haz clic en cualquier salón para ver detalles.</div>
+      <div class="legend">
+        <span><i class="swatch" style="background:#1e293b;"></i>Salones (1°A–6°C)</span>
+        <span><i class="swatch" style="background:#fecaca; border-color:#dc2626;"></i>Cómputo</span>
+        <span><i class="swatch" style="background:#bfdbfe; border-color:#2563eb;"></i>Baños</span>
+        <span><i class="swatch" style="background:#fbcfe8; border-color:#db2777;"></i>Biblioteca</span>
+        <span><i class="swatch" style="background:#e9d5ff; border-color:#7e22ce;"></i>Dirección</span>
+        <span><i class="swatch" style="background:#e2e8f0; border-color:#64748b;"></i>Cafetería</span>
+        <span><i class="swatch" style="background:#fde68a; border-color:#92400e;"></i>Enfermería</span>
+        <span><i class="swatch" style="background:#fef08a; border-color:#eab308;"></i>Canchas / Malla sombra</span>
+        <span><i class="swatch" style="background:#bbf7d0; border-color:#16a34a;"></i>Áreas verdes</span>
+      </div>
+      <div id="m-det" class="info-box">Haz clic en cualquier salón o área para ver su ocupación actual.</div>
     </div>
   `;
-  document.querySelectorAll("g[data-svg]").forEach(g => {
-    g.onclick = () => {
-      const s = estadoSalones.find(x => x.codigo_svg === g.dataset.svg);
-      if (!s) return;
-      $("#m-det").innerHTML = s.grupo
-        ? `Salón <b>${esc(s.clave_salon)}</b> (${esc(s.edificio)}, ${esc(s.planta)}) · Grupo <b>${esc(s.grupo)}</b> · ${esc(s.materia)} · Docente: <b>${esc(s.docente)}</b> (${s.hora_inicio}–${s.hora_fin})`
-        : `Salón <b>${esc(s.clave_salon)}</b> (${esc(s.edificio)}, ${esc(s.planta)}) está <b>disponible</b> en este horario.`;
+  document.querySelectorAll(".espacio-svg").forEach(el => {
+    el.onclick = () => {
+      const s = estadoSalones.find(x => x.codigo_svg === el.id);
+      if (s && s.grupo) {
+        $("#m-det").innerHTML = `<b>${esc(s.clave_salon)}</b> (${esc(s.edificio)}) · Grupo <b>${esc(s.grupo)}</b> · ${esc(s.materia)} · Docente: <b>${esc(s.docente)}</b> (${s.hora_inicio}–${s.hora_fin})`;
+      } else if (s) {
+        $("#m-det").innerHTML = `<b>${esc(s.clave_salon)}</b> (${esc(s.edificio)}) está <b>disponible</b> en este bloque horario.`;
+      } else {
+        $("#m-det").innerHTML = `<b>Espacio seleccionado:</b> ${esc(el.dataset.nombre || el.id)}`;
+      }
     };
   });
+  $("#m-dia").onchange = cargarMapa;
   $("#m-hora").onchange = cargarMapa;
   $("#m-al").onchange = cargarMapa;
   await cargarMapa();
@@ -439,75 +576,85 @@ async function renderMapa() {
 async function cargarMapa() {
   const dia = $("#m-dia").value, hora = $("#m-hora").value, idAl = $("#m-al").value;
   estadoSalones = await api(`/api/mapa?dia=${dia}&hora=${hora}`);
+  document.querySelectorAll(".espacio-svg").forEach(el => el.classList.remove("espacio-ocupado", "espacio-activo"));
   estadoSalones.forEach(s => {
-    const r = document.getElementById(s.codigo_svg), t = document.getElementById("txt-" + s.codigo_svg);
-    if (!r || !t) return;
-    r.classList.remove("ocupado", "destacado");
-    if (s.grupo) { r.classList.add("ocupado"); t.textContent = `${s.grupo} · ${s.materia}`; }
-    else t.textContent = "Disponible";
+    const r = document.getElementById(s.codigo_svg);
+    if (r && s.grupo) r.classList.add("espacio-ocupado");
   });
   if (idAl) {
     const res = await api(`/api/mapa?dia=${dia}&hora=${hora}&id_alumno=${idAl}`);
     if (res.length) {
       const info = res[0];
-      document.getElementById(info.codigo_svg)?.classList.add("destacado");
-      $("#m-det").innerHTML = `<b>${esc(info.alumno)} (${esc(info.grupo)})</b> está en <b>${esc(info.clave_salon)}</b> (${esc(info.edificio)}, ${esc(info.planta)}) · Clase: <b>${esc(info.materia)}</b> · Docente: <b>${esc(info.docente)}</b>`;
-    } else $("#m-det").textContent = "El alumno no tiene clase en ese bloque.";
+      document.getElementById(info.codigo_svg)?.classList.add("espacio-activo");
+      $("#m-det").innerHTML = `<b>${esc(info.alumno)} (${esc(info.grupo)})</b> está en <b>${esc(info.clave_salon)}</b> (${esc(info.edificio)}) · Clase: <b>${esc(info.materia)}</b> · Docente: <b>${esc(info.docente)}</b> (${info.hora_inicio}–${info.hora_fin})`;
+    } else {
+      $("#m-det").textContent = "El alumno no tiene clase registrada en ese bloque.";
+    }
   } else {
-    $("#m-det").textContent = `Mostrando ocupación de salones el ${dia} a las ${hora}.`;
+    $("#m-det").textContent = `Mostrando ocupación de salones el ${dia} a las ${hora}. Haz clic en cualquier espacio para ver detalles.`;
   }
 }
 
 /* ---------------- MÓDULOS CON TABLA EN POSTGRESQL ---------------- */
 const CONFIG = {
   alumnos: {
-    ep: "/api/alumnos", id: "id_alumno",
-    cols: [["curp","CURP"],["nombre_completo","Alumno"],["grupo","Grupo","tag"],["tutor","Tutor"],["telefono","Teléfono"]]
+    ep: () => (S.rol === "Docente" && S.id_grupo) ? `/api/alumnos?id_grupo=${S.id_grupo}` : "/api/alumnos",
+    baseEp: "/api/alumnos", id: "id_alumno",
+    cols: [["curp","CURP"],["nombre_completo","Alumno"],["grupo","Grupo","tag"],["clave_salon","Salón"],["tutores_exclusivos","Tutores exclusivos (máx. 2)"]],
+    extra: r => {
+      const btnVer = `<button onclick="verTutores(${r.id_alumno}, '${esc(r.nombre_completo)}')">Tutores (${r.total_tutores}/2)</button>`;
+      const btnAdd = (lvl("alumnos") === "w" && Number(r.total_tutores) < 2)
+        ? `<button onclick="openAgregarTutor(${r.id_alumno}, '${esc(r.nombre_completo)}')">+ 2.° Tutor</button>` : "";
+      return btnVer + btnAdd;
+    }
   },
   academico: {
-    ep: "/api/calificaciones", id: "id_calificacion",
-    cols: [["curp","CURP"],["alumno","Alumno"],["materia","Asignatura"],["creditos","Créditos"],["calificacion","Calificación","tag"]]
+    ep: () => (S.rol === "Docente" && S.id_grupo) ? `/api/calificaciones?id_grupo=${S.id_grupo}` : "/api/calificaciones",
+    baseEp: "/api/calificaciones", id: "id_calificacion",
+    cols: [["curp","CURP"],["alumno","Alumno"],["grupo","Grupo","tag"],["materia","Asignatura"],["creditos","Créditos"],["calificacion","Calificación","tag"]]
   },
   horario: {
-    ep: "/api/horarios", id: "id_horario",
+    ep: () => (S.rol === "Docente" && S.id_docente) ? `/api/horarios?id_docente=${S.id_docente}` : "/api/horarios",
+    baseEp: "/api/horarios", id: "id_horario",
     cols: [["grupo","Grupo","tag"],["dia_semana","Día"],["hora_inicio","Inicio"],["hora_fin","Fin"],["materia","Asignatura"],["clave_salon","Salón"],["docente","Docente"]]
   },
   recados: {
-    ep: "/api/recados", id: "id_recado", noDel: true,
-    cols: [["id_recado","ID"],["alumno","Alumno"],["tutor","Tutor"],["docente","Docente"],["tipo","Tipo","tag"],["asunto","Asunto"],["estatus","Estatus","tag"]],
-    extra: r => `<button onclick="patchStatus('/api/recados/${r.id_recado}',{estatus:'Leido'})">Leído</button><button onclick="patchStatus('/api/recados/${r.id_recado}',{estatus:'Atendido'})">Atendido</button>`
+    ep: () => (S.rol === "Docente" && S.id_docente) ? `/api/recados?id_docente=${S.id_docente}` : "/api/recados",
+    baseEp: "/api/recados", id: "id_recado",
+    cols: [["fecha_envio","Fecha"],["destinatario","Destinatario"],["docente","Docente"],["tipo","Tipo","tag"],["asunto","Asunto"],["tipo_respuesta","Respuesta req.","tag"],["total_respuestas","Respuestas"]],
+    extra: r => `<button onclick="verRespuestas(${r.id_recado}, '${esc(r.asunto)}')">Ver respuestas (${r.total_respuestas})</button>`
   },
   pagos: {
-    ep: "/api/pagos", id: "id_pago", noDel: true,
+    ep: () => "/api/pagos", baseEp: "/api/pagos", id: "id_pago", noDel: true,
     cols: [["referencia","Referencia"],["alumno","Alumno"],["periodo","Periodo"],["monto_pagado","Monto","money"],["metodo_pago","Método"],["estatus","Estatus","tag"]]
   },
   personal: {
-    ep: "/api/personal", id: "id_empleado",
+    ep: () => "/api/personal", baseEp: "/api/personal", id: "id_empleado",
     cols: [["clave_empleado","Clave"],["nombre","Nombre"],["puesto","Puesto","tag"],["salario","Salario","money"],["area","Área"]]
   },
   enfermeria: {
-    ep: "/api/enfermeria", id: "id_atencion",
+    ep: () => "/api/enfermeria", baseEp: "/api/enfermeria", id: "id_atencion",
     cols: [["fecha_hora","Fecha"],["alumno","Alumno"],["grupo","Grupo","tag"],["motivo","Motivo"],["observaciones","Observaciones"],["estatus","Estatus","tag"]],
     extra: r => `<button onclick="patchStatus('/api/enfermeria/${r.id_atencion}',{estatus:'Atendido'})">Atendido</button>`
   },
   cafeteria: {
-    ep: "/api/cafeteria", id: "id_venta",
+    ep: () => "/api/cafeteria", baseEp: "/api/cafeteria", id: "id_venta",
     cols: [["folio","Folio"],["fecha_hora","Fecha"],["alumno","Alumno"],["concepto","Concepto"],["total","Total","money"]]
   },
   mantenimiento: {
-    ep: "/api/mantenimiento", id: "id_reporte",
+    ep: () => "/api/mantenimiento", baseEp: "/api/mantenimiento", id: "id_reporte",
     cols: [["folio","Folio"],["ubicacion","Ubicación"],["descripcion","Descripción"],["fecha_reporte","Fecha"],["estado","Estado","tag"]],
     extra: r => `<button onclick="patchStatus('/api/mantenimiento/${r.id_reporte}',{estado:'En proceso'})">Proceso</button><button onclick="patchStatus('/api/mantenimiento/${r.id_reporte}',{estado:'Completado'})">Completado</button>`
   },
   usuarios: {
-    ep: "/api/usuarios", id: "id_usuario",
+    ep: () => "/api/usuarios", baseEp: "/api/usuarios", id: "id_usuario",
     cols: [["usuario","Usuario"],["correo","Correo"],["rol","Rol","tag"]]
   }
 };
 
 async function renderModule(k) {
   const cfg = CONFIG[k];
-  cache[k] = await api(cfg.ep);
+  cache[k] = await api(cfg.ep());
   $("#view").innerHTML = `
     <div class="sheet">
       <div class="tools">
@@ -538,11 +685,85 @@ function fillTable(k) {
         return `<td>${esc(val)}</td>`;
       }).join("")}
       <td class="act">
-        ${w && cfg.extra ? cfg.extra(r) : ""}
+        ${cfg.extra ? cfg.extra(r) : ""}
         ${w && !cfg.noDel ? `<button class="del" onclick="delRow('${k}',${r[cfg.id]})">Eliminar</button>` : ""}
       </td>
     </tr>
   `).join("") || `<tr><td class="empty" colspan="9">Sin registros que coincidan.</td></tr>`;
+}
+
+async function verRespuestas(idRecado, asunto) {
+  $("#info-title").textContent = `Respuestas: ${asunto}`;
+  $("#info-body").innerHTML = `<p class="empty">Consultando respuestas...</p>`;
+  $("#dlg-info").showModal();
+  try {
+    const resps = await api(`/api/recados/${idRecado}/respuestas`);
+    if (!resps.length) {
+      $("#info-body").innerHTML = `<p class="empty">Aún ninguna familia ha respondido este recado.</p>`;
+      return;
+    }
+    $("#info-body").innerHTML = resps.map(r => `
+      <div class="resp-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+          <b>${esc(r.alumno)} (${esc(r.grupo)})</b>
+          <span class="tag ${ST[r.estado_respuesta] || "ok"}">${esc(r.estado_respuesta)}</span>
+        </div>
+        <div class="hint" style="margin-top:4px;">Tutor: ${esc(r.tutor)} · ${esc(r.fecha_respuesta)}</div>
+        ${r.texto_respuesta ? `<p style="margin-top:6px;">"${esc(r.texto_respuesta)}"</p>` : ""}
+      </div>
+    `).join("");
+  } catch (err) {
+    $("#info-body").innerHTML = `<p class="empty">Error: ${esc(err.message)}</p>`;
+  }
+}
+
+async function verTutores(idAlumno, nombre) {
+  $("#info-title").textContent = `Tutores exclusivos de ${nombre}`;
+  $("#info-body").innerHTML = `<p class="empty">Consultando tutores...</p>`;
+  $("#dlg-info").showModal();
+  try {
+    const tuts = await api(`/api/alumnos/${idAlumno}/tutores`);
+    if (!tuts.length) {
+      $("#info-body").innerHTML = `<p class="empty">Sin tutores registrados.</p>`;
+      return;
+    }
+    $("#info-body").innerHTML = tuts.map(t => `
+      <div class="resp-card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <b>${esc(t.nombre)} ${esc(t.apellido_paterno)} ${esc(t.apellido_materno || "")}</b>
+          <span class="tag ${t.es_principal ? "ok" : ""}">${esc(t.parentesco)}${t.es_principal ? " · Principal" : ""}</span>
+        </div>
+        <div class="hint" style="margin-top:4px;">Tel: ${esc(t.telefono)} · Correo: ${esc(t.correo)}</div>
+      </div>
+    `).join("");
+  } catch (err) {
+    $("#info-body").innerHTML = `<p class="empty">Error: ${esc(err.message)}</p>`;
+  }
+}
+
+function openAgregarTutor(idAlumno, nombre) {
+  $("#ft").textContent = `Agregar 2.° tutor exclusivo a ${nombre}`;
+  $("#ff").innerHTML = `
+    <input type="hidden" name="id_alumno_target" value="${idAlumno}">
+    <div class="grid2">
+      <label>Nombre<input name="nombre" required></label>
+      <label>Apellido paterno<input name="apellido_paterno" required></label>
+    </div>
+    <div class="grid2">
+      <label>Apellido materno<input name="apellido_materno"></label>
+      <label>Parentesco
+        <select name="parentesco">
+          <option>Padre</option><option>Madre</option><option>Abuelo/a</option><option>Tutor Legal</option><option>Otro</option>
+        </select>
+      </label>
+    </div>
+    <div class="grid2">
+      <label>Teléfono<input name="telefono" required></label>
+      <label>Correo<input name="correo" type="email" required></label>
+    </div>
+  `;
+  $("#dlg").dataset.k = "tutor_extra";
+  $("#dlg").showModal();
 }
 
 async function patchStatus(ep, body) {
@@ -556,29 +777,92 @@ async function patchStatus(ep, body) {
 async function delRow(k, id) {
   if (!confirm("¿Eliminar este registro de PostgreSQL?")) return;
   try {
-    await api(`${CONFIG[k].ep}/${id}`, {method: "DELETE"});
+    await api(`${CONFIG[k].baseEp}/${id}`, {method: "DELETE"});
     toast("Registro eliminado de PostgreSQL.");
     await renderModule(k);
   } catch (err) { toast(err.message, "err"); }
 }
 
 /* ---------------- FORMULARIOS DE ALTA ---------------- */
-const opt = (arr, vKey, lFn) => arr.map(x => `<option value="${x[vKey]}">${esc(lFn(x))}</option>`).join("");
+const opt = (arr, vKey, lFn, selVal = null) => arr.map(x => `<option value="${x[vKey]}" ${String(x[vKey]) === String(selVal) ? "selected" : ""}>${esc(lFn(x))}</option>`).join("");
 
 function openForm(k) {
   const rand = Math.floor(1000 + Math.random() * 9000);
+  const alumnosFiltrados = (S.rol === "Docente" && S.id_grupo)
+    ? cat.alumnos.filter(a => a.id_grupo === S.id_grupo)
+    : cat.alumnos;
+
   const forms = {
     alumnos: `
-      <label>CURP (18 caracteres)<input name="curp" maxlength="18" required></label>
-      <label>Nombre<input name="nombre" required></label>
-      <label>Apellido paterno<input name="apellido_paterno" required></label>
-      <label>Apellido materno<input name="apellido_materno"></label>
-      <label>Fecha de nacimiento<input name="fecha_nacimiento" type="date" value="2018-05-10" required></label>
-      <label>Grupo<select name="id_grupo">${opt(cat.grupos, "id_grupo", g => g.grupo)}</select></label>
-      <label>Tutor<select name="id_tutor">${opt(cat.tutores, "id_tutor", t => `${t.tutor} (${t.parentesco})`)}</select></label>
+      <div class="form-sec">Datos del alumno</div>
+      <div class="grid2">
+        <label>CURP (18 caracteres)<input name="curp" maxlength="18" required></label>
+        <label>Grupo<select name="id_grupo">${opt(cat.grupos, "id_grupo", g => `${g.grupo} (${g.clave_salon || ""})`)}</select></label>
+      </div>
+      <div class="grid2">
+        <label>Nombre<input name="nombre" required></label>
+        <label>Apellido paterno<input name="apellido_paterno" required></label>
+      </div>
+      <div class="grid2">
+        <label>Apellido materno<input name="apellido_materno"></label>
+        <label>Fecha de nacimiento<input name="fecha_nacimiento" type="date" value="2018-05-10" required></label>
+      </div>
+
+      <div class="form-sec">Tutor 1 exclusivo (obligatorio)</div>
+      <div class="grid2">
+        <label>Nombre<input name="tutor_nombre" required></label>
+        <label>Apellido paterno<input name="tutor_apellido_paterno" required></label>
+      </div>
+      <div class="grid2">
+        <label>Parentesco
+          <select name="tutor_parentesco"><option>Madre</option><option>Padre</option><option>Abuelo/a</option><option>Tutor Legal</option><option>Otro</option></select>
+        </label>
+        <label>Teléfono<input name="tutor_telefono" required></label>
+      </div>
+      <label>Correo<input name="tutor_correo" type="email" required></label>
+
+      <div class="form-sec">Tutor 2 exclusivo (opcional — máx. 2 por alumno)</div>
+      <div class="grid2">
+        <label>Nombre<input name="tutor2_nombre" placeholder="Dejar vacío si solo tiene 1"></label>
+        <label>Apellido paterno<input name="tutor2_apellido_paterno"></label>
+      </div>
+      <div class="grid2">
+        <label>Parentesco
+          <select name="tutor2_parentesco"><option>Padre</option><option>Madre</option><option>Abuelo/a</option><option>Tutor Legal</option><option>Otro</option></select>
+        </label>
+        <label>Teléfono<input name="tutor2_telefono"></label>
+      </div>
+      <label>Correo<input name="tutor2_correo" type="email"></label>
+    `,
+    recados: `
+      ${S.rol === "Docente" ? "" : `<label>Docente remitente<select name="id_docente">${opt(cat.docentes, "id_docente", d => `${d.docente} (${d.especialidad})`)}</select></label>`}
+      <label>Grupo destinatario
+        <select name="id_grupo">${opt(cat.grupos, "id_grupo", g => `${g.grupo} · ${g.docente_titular}`, S.id_grupo)}</select>
+      </label>
+      <label>Alumno específico (opcional — dejar vacío para enviar a todo el grupo)
+        <select name="id_alumno">
+          <option value="">-- Todo el grupo seleccionado --</option>
+          ${opt(alumnosFiltrados, "id_alumno", a => `${a.alumno} (${a.grupo})`)}
+        </select>
+      </label>
+      <div class="grid2">
+        <label>Tipo de recado
+          <select name="tipo"><option>Aviso</option><option>Recado</option><option>Cita</option><option>Justificante</option></select>
+        </label>
+        <label>Respuesta solicitada a padres
+          <select name="tipo_respuesta">
+            <option value="Leido">Botón: Leído</option>
+            <option value="Confirmado">Botón: Confirmado</option>
+            <option value="Aceptado">Botón: Aceptado</option>
+            <option value="Texto">Respuesta de Texto libre</option>
+          </select>
+        </label>
+      </div>
+      <label>Asunto<input name="asunto" placeholder="Ej. Junta de padres o material requerido" required></label>
+      <label>Mensaje<textarea name="mensaje" rows="3" required></textarea></label>
     `,
     academico: `
-      <label>Alumno<select name="id_alumno">${opt(cat.alumnos, "id_alumno", a => `${a.alumno} (${a.grupo})`)}</select></label>
+      <label>Alumno<select name="id_alumno">${opt(alumnosFiltrados, "id_alumno", a => `${a.alumno} (${a.grupo})`)}</select></label>
       <label>Asignatura<select name="id_materia">${opt(cat.materias, "id_materia", m => m.nombre)}</select></label>
       <label>Créditos<input name="creditos" type="number" value="8" min="1" required></label>
       <label>Calificación (0 a 10)<input name="calificacion" type="number" step="0.1" min="0" max="10" required></label>
@@ -588,9 +872,19 @@ function openForm(k) {
       <label>Asignatura<select name="id_materia">${opt(cat.materias, "id_materia", m => m.nombre)}</select></label>
       <label>Docente<select name="id_docente">${opt(cat.docentes, "id_docente", d => d.docente)}</select></label>
       <label>Salón<select name="id_salon">${opt(cat.salones, "id_salon", s => `${s.clave_salon} (${s.edificio})`)}</select></label>
-      <label>Día<select name="dia_semana"><option>Lunes</option><option>Martes</option><option>Miércoles</option><option>Jueves</option><option>Viernes</option></select></label>
-      <label>Hora inicio<input name="hora_inicio" type="time" value="11:30" required></label>
-      <label>Hora fin<input name="hora_fin" type="time" value="12:30" required></label>
+      <label>Día
+        <select name="dia_semana">
+          <option value="Lunes">Lunes</option>
+          <option value="Martes">Martes</option>
+          <option value="Miercoles">Miércoles</option>
+          <option value="Jueves">Jueves</option>
+          <option value="Viernes">Viernes</option>
+        </select>
+      </label>
+      <div class="grid2">
+        <label>Hora inicio<input name="hora_inicio" type="time" value="11:30" required></label>
+        <label>Hora fin<input name="hora_fin" type="time" value="12:30" required></label>
+      </div>
     `,
     pagos: `
       <label>Alumno<select name="id_alumno">${opt(cat.alumnos, "id_alumno", a => `${a.alumno} (${a.grupo})`)}</select></label>
@@ -628,7 +922,7 @@ function openForm(k) {
     usuarios: `
       <label>Usuario<input name="usuario" required></label>
       <label>Correo<input name="correo" type="email" required></label>
-      <label>Contraseña<input name="password" type="password" value="primaria123" required></label>
+      <label>Contraseña<input name="password" type="password" required></label>
       <label>Rol<select name="rol"><option>Director</option><option>Administrativo</option><option>Docente</option><option>Enfermeria</option><option>Cafeteria</option><option>Mantenimiento</option><option>Alumno</option></select></label>
     `
   };
@@ -642,10 +936,25 @@ $("#form").onsubmit = async e => {
   e.preventDefault();
   const k = $("#dlg").dataset.k;
   const body = Object.fromEntries(new FormData(e.target));
-  if (k === "enfermeria") body.id_usuario_atiende = S.id_usuario;
-  if (k === "cafeteria" || k === "mantenimiento") body.id_usuario_registra = S.id_usuario;
+
   try {
-    await api(CONFIG[k].ep, {method: "POST", body: JSON.stringify(body)});
+    if (k === "tutor_extra") {
+      const idAl = body.id_alumno_target;
+      await api(`/api/alumnos/${idAl}/tutores`, {method: "POST", body: JSON.stringify(body)});
+      $("#dlg").close();
+      toast("Segundo tutor exclusivo registrado en PostgreSQL.");
+      await renderModule("alumnos");
+      return;
+    }
+
+    if (k === "enfermeria") body.id_usuario_atiende = S.id_usuario;
+    if (k === "cafeteria" || k === "mantenimiento") body.id_usuario_registra = S.id_usuario;
+    if (k === "recados") {
+      if (S.rol === "Docente") body.id_docente = S.id_docente;
+      if (!body.id_alumno) delete body.id_alumno;
+    }
+
+    await api(CONFIG[k].baseEp, {method: "POST", body: JSON.stringify(body)});
     $("#dlg").close();
     toast("Registro guardado en PostgreSQL.");
     cat = await api("/api/catalogos");
