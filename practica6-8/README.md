@@ -31,13 +31,10 @@ docker compose up --build --exit-code-from runner runner
 
 ## Clean-Environment Verification Log
 
-> **Pending teammate verification:** Before the final merge, another team member must clone the repository into a fresh folder, execute the single command above, and record the result below.
-
-* **Verified by:** *(Teammate Name)*
-* **Date:** *(YYYY-MM-DD)*
-* **Commit hash:** *(git rev-parse --short HEAD)*
-* **Result:** *(Pending)*
-
+- **Verified by:** Bryan David Encarnación Lorenzana
+- **Date:** 2026-11-24
+- **Commit hash:** `be8e281`
+- **Result:** Passed (exit code 0, 18 tables created, 13 queries executed, and `grupo.txt` generated successfully)                                                                                                                                                
 ## Generative AI Disclosure
 
 Generative AI tools (Gemini) were used as a technical assistant to draft boilerplate scripts (`exportar-grupo.py`, `run_all.py`, Docker Compose runner setup) and structure Markdown documentation templates. All functional dependencies, business rules, SQL queries, and database results were reviewed, executed, and verified directly by the team against PostgreSQL and RelaX.
