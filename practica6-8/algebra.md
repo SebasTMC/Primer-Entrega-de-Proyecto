@@ -29,19 +29,19 @@ ORDER BY num_empleado;
 
 ---
 
-#### 2. Salones de Planta Alta con capacidad $\ge 30$ (`02-seleccion-proyeccion-salones.sql`)
-* **Pregunta:** ¿Qué salones ubicados en Planta Alta tienen capacidad para al menos 30 personas?
+#### 2. Salones de Planta Baja con capacidad $\ge 30$ (`02-seleccion-proyeccion-salones.sql`)
+* **Pregunta:** ¿Qué salones ubicados en Planta Baja tienen capacidad para al menos 30 personas?
 * **Álgebra relacional (RelaX):**
 ~~~text
 pi clave_salon, edificio, capacidad (
-  sigma planta = 'Planta Alta' and capacidad >= 30 (salones)
+  sigma planta = 'Planta Baja' and capacidad >= 30 (salones)
 )
 ~~~
 * **SQL equivalente:**
 ~~~sql
 SELECT clave_salon, edificio, capacidad
 FROM salones
-WHERE planta = 'Planta Alta' AND capacidad >= 30
+WHERE planta = 'Planta Baja' AND capacidad >= 30
 ORDER BY clave_salon;
 ~~~
 * **Captura de RelaX (árbol y resultado):** `![Consulta 02](evidencias/02-seleccion-salones.png)`

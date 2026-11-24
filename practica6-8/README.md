@@ -6,10 +6,10 @@ From the `practica6-8/` directory on a clean machine with Docker installed, run:
 
 ~~~bash
 cp .env.example .env
-docker compose up --build --exit-code-from runner
+docker compose up --build --exit-code-from runner runner
 ~~~
 
-*(On Windows PowerShell: `Copy-Item .env.example .env` followed by `docker compose up --build --exit-code-from runner`.)*
+*(On Windows PowerShell: `Copy-Item .env.example .env` followed by `docker compose up --build --exit-code-from runner runner`.)*
 
 ### Expected Output
 1. PostgreSQL 16 (`primaria_db`) starts and automatically runs all numbered migrations (`01` through `05`) to create and populate the normalized 18-table schema.
